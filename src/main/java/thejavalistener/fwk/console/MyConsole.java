@@ -5,13 +5,17 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -32,12 +36,26 @@ public class MyConsole extends MyConsoleBase
     static
     {
     	MyAwt.setWindowsLookAndFeel();
-    	io = new MyConsole(true);
+    	io = new MyConsole();
+    }
+    
+    private boolean _suggestCloseableMode()
+    {
+		for(StackTraceElement elm:Thread.currentThread().getStackTrace())
+		{
+			if(elm.getClassName().startsWith("javax.swing"))
+			{
+				return true;
+			}
+		}
+		
+		return false;
     }
     
 	public MyConsole()
 	{
-		this(true);
+		this(false);
+		setClosable(_suggestCloseableMode());
 	}
 	
 	public MyConsole(boolean closeable)
@@ -425,6 +443,8 @@ public class MyConsole extends MyConsoleBase
 			// comienzo a escuchar
 			escuchaMenu.setMenuRange(menuRange);
 			textPane.addKeyListener(escuchaMenu);
+			textPane.c().addFocusListener(escuchaMenu);
+			textPane.c().addMouseListener(escuchaMenu);
 			
 			textPane.setEditable(true);
 
@@ -432,6 +452,8 @@ public class MyConsole extends MyConsoleBase
 			
 			// dejo de escuchar
 			textPane.removeKeyListener(escuchaMenu);
+			textPane.c().removeFocusListener(escuchaMenu);
+			textPane.c().removeMouseListener(escuchaMenu);
 			textPane.setEditable(false);
 			return escuchaMenu.getSelectedOption();				
 		}
@@ -442,7 +464,7 @@ public class MyConsole extends MyConsoleBase
 		}
 	}	
 	
-	class EscuchaMenu extends KeyAdapter
+	class EscuchaMenu extends KeyAdapter implements FocusListener,MouseListener
 	{
 		private int [][] menuRange;
 		private int curr = 0;
@@ -488,21 +510,37 @@ public class MyConsole extends MyConsoleBase
 
 			if( !consume )
 			{
-				int d = menuRange[curr][0];
-				int h = menuRange[curr][1];
-	
-				SwingUtilities.invokeLater(new Runnable() {
-				    @Override
-				    public void run() {
-				        textPane.c().setSelectionStart(d);
-				        textPane.c().setSelectionEnd(h);
-				    }
-				});
+				_selectMenuOption();
+//				int d = menuRange[curr][0];
+//				int h = menuRange[curr][1];
+//	
+//				SwingUtilities.invokeLater(new Runnable() {
+//				    @Override
+//				    public void run() {
+//				        textPane.c().setSelectionStart(d);
+//				        textPane.c().setSelectionEnd(h);
+//				    }
+//				});
 			}
 			else
 			{
 				e.consume();
 			}
+		}
+		
+		private void _selectMenuOption()
+		{
+			int d = menuRange[curr][0];
+			int h = menuRange[curr][1];
+
+			SwingUtilities.invokeLater(new Runnable() {
+			    @Override
+			    public void run() {
+			        textPane.c().setSelectionStart(d);
+			        textPane.c().setSelectionEnd(h);
+			    }
+			});
+			
 		}
 		
 		@Override
@@ -518,6 +556,48 @@ public class MyConsole extends MyConsoleBase
 		public int getSelectedOption()
 		{
 			return curr;
+		}
+
+		@Override
+		public void focusGained(FocusEvent e)
+		{
+			_selectMenuOption();
+		}
+
+
+		@Override
+		public void focusLost(FocusEvent e)
+		{
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+			e.consume();
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e)
+		{			
+			e.consume();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+			e.consume();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e)
+		{
+			e.consume();
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e)
+		{
+			e.consume();
 		}
 	}
 	
