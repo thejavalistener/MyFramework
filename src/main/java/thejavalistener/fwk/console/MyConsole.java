@@ -118,18 +118,6 @@ public class MyConsole extends MyConsoleBase
 		}
 	}	
 	
-	private boolean _pisaCorchetesX(KeyEvent e)
-	{
-		String txt = textPane.getCompatibleText();
-		int cierra = txt.lastIndexOf("]");
-		int abre = txt.lastIndexOf("[");
-		int caret = textPane.getCaretPosition();
-		int kc = e.getKeyCode();
-		return (kc==KeyEvent.VK_UP)||(kc==KeyEvent.VK_DOWN)||(kc==KeyEvent.VK_LEFT&&caret<=abre+1)||(kc==KeyEvent.VK_BACK_SPACE&&caret<=abre+1)||(kc==KeyEvent.VK_RIGHT&&caret>=cierra)
-				||(kc==KeyEvent.VK_PAGE_DOWN||kc==KeyEvent.VK_PAGE_UP);
-	}
-
-	
 	public class EscuchaRead extends KeyAdapter
 	{
 		private InputConfigurator iconfig;
@@ -493,7 +481,7 @@ public class MyConsole extends MyConsoleBase
 				consume = false;
 			}
 			
-			if( e.getKeyCode()==KeyEvent.VK_ENTER )
+			if( e.getKeyCode()==KeyEvent.VK_ENTER && textPane.getSelectedText()!=null)
 			{
 				// borro el menu
 				int from = menuRange[0][0]-1;
@@ -511,16 +499,6 @@ public class MyConsole extends MyConsoleBase
 			if( !consume )
 			{
 				_selectMenuOption();
-//				int d = menuRange[curr][0];
-//				int h = menuRange[curr][1];
-//	
-//				SwingUtilities.invokeLater(new Runnable() {
-//				    @Override
-//				    public void run() {
-//				        textPane.c().setSelectionStart(d);
-//				        textPane.c().setSelectionEnd(h);
-//				    }
-//				});
 			}
 			else
 			{
@@ -568,37 +546,33 @@ public class MyConsole extends MyConsoleBase
 		@Override
 		public void focusLost(FocusEvent e)
 		{
+			_selectMenuOption();
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-			e.consume();
+			_selectMenuOption();
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e)
 		{			
-			e.consume();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e)
 		{
-			e.consume();
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e)
 		{
-			e.consume();
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e)
 		{
-			e.consume();
 		}
 	}
-	
 }
