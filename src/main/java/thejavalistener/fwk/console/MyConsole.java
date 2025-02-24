@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -71,7 +72,9 @@ public class MyConsole extends MyConsoleBase
 	{
 		if( wait )
 		{
-		    // bloquea
+			MyLog.out("bloqueado!");
+
+			// bloquea
 		    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 		    secondaryLoop = eventQueue.createSecondaryLoop();
 			secondaryLoop.enter();
@@ -79,6 +82,7 @@ public class MyConsole extends MyConsoleBase
 		else
 		{
 			// desbloquea
+			MyLog.out("desbloqueado!");
 			secondaryLoop.exit();
 		}
 	}
@@ -276,10 +280,11 @@ public class MyConsole extends MyConsoleBase
 			if(keyEspected==null||keyEspected.equals(keyPressed))//||keyPressed==10)
 			{
 				runnable.run();
-				
-				// desbloqueo
-				
-				secondaryLoop.exit();
+
+				setWaiting(false);
+//				// desbloqueo
+//				
+//				secondaryLoop.exit();
 				
 		        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() 
 		        {
@@ -431,7 +436,6 @@ public class MyConsole extends MyConsoleBase
 			// comienzo a escuchar
 			escuchaMenu.setMenuRange(menuRange);
 			textPane.addKeyListener(escuchaMenu);
-			textPane.c().addFocusListener(escuchaMenu);
 			textPane.c().addMouseListener(escuchaMenu);
 			
 			textPane.setEditable(true);
@@ -440,7 +444,6 @@ public class MyConsole extends MyConsoleBase
 			
 			// dejo de escuchar
 			textPane.removeKeyListener(escuchaMenu);
-			textPane.c().removeFocusListener(escuchaMenu);
 			textPane.c().removeMouseListener(escuchaMenu);
 			textPane.setEditable(false);
 			return escuchaMenu.getSelectedOption();				
@@ -452,7 +455,7 @@ public class MyConsole extends MyConsoleBase
 		}
 	}	
 	
-	class EscuchaMenu extends KeyAdapter implements FocusListener,MouseListener
+	class EscuchaMenu extends KeyAdapter implements MouseListener
 	{
 		private int [][] menuRange;
 		private int curr = 0;
@@ -534,19 +537,6 @@ public class MyConsole extends MyConsoleBase
 		public int getSelectedOption()
 		{
 			return curr;
-		}
-
-		@Override
-		public void focusGained(FocusEvent e)
-		{
-			_selectMenuOption();
-		}
-
-
-		@Override
-		public void focusLost(FocusEvent e)
-		{
-			_selectMenuOption();
 		}
 
 		@Override

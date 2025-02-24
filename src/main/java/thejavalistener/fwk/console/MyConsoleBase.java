@@ -26,6 +26,7 @@ import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -64,9 +65,6 @@ public abstract class MyConsoleBase
 	private MyConsoleStyle style;
 	private Map<String,String> customStyles=new HashMap<>();
 
-	// pressAnyKey
-//	protected boolean waitingForPressAnyKey = false;
-	
 	private SimpleFontBanner defaultFontBanner = new SimpleFontBanner();
 	
 	protected boolean reading=false;
@@ -130,7 +128,7 @@ public abstract class MyConsoleBase
 		customStyles.put("defaultStyle",style.defaultStyle);
 
 		container=getContainer();
-		container = new JFrame();
+//		container = new JFrame();
 		
 		textPane=new MyTextPane(false,true);
 		textPane.addKeyListener(new EscuchaCTRLCyESC());
@@ -165,7 +163,7 @@ public abstract class MyConsoleBase
 	
 	public Window getContainer()
 	{
-		return container!=null?container=new JFrame():container;
+		return container!=null?container:(container=new JFrame());
 	}	
 	
 
@@ -458,6 +456,7 @@ public abstract class MyConsoleBase
 	public void open()
 	{
 		init();
+		
 		if(!container.isVisible())
 		{
 			container.setVisible(true);
