@@ -1,7 +1,5 @@
 package thejavalistener.fwk.awt.link;
 
-import static org.hamcrest.CoreMatchers.theInstance;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
