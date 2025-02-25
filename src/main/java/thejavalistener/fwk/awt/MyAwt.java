@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class MyAwt
-{
+{ //pp
 	public static void beep()
 	{
 		Toolkit.getDefaultToolkit().beep();
