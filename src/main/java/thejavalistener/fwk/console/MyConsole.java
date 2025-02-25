@@ -40,7 +40,7 @@ public class MyConsole extends MyConsoleBase
     	io = new MyConsole();
     }
     
-    public MyConsoleBase locomia()
+    public MyConsoleBase locomia1()
     {
     	println("ABANICO LOCOMIA!");
     	return this;
