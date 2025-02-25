@@ -40,6 +40,13 @@ public class MyConsole extends MyConsoleBase
     	io = new MyConsole();
     }
     
+    public MyConsoleBase locomia()
+    {
+    	println("ABANICO LOCOMIA!");
+    	return this;
+    }
+
+    
     private boolean _suggestCloseableMode()
     {
 		for(StackTraceElement elm:Thread.currentThread().getStackTrace())
