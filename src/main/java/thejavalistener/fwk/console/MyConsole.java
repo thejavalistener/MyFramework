@@ -34,7 +34,7 @@ public class MyConsole extends MyConsoleBase
 	// bloqueo
     private SecondaryLoop secondaryLoop = null; 
     
-    static
+    static 
     {
     	MyAwt.setWindowsLookAndFeel();
     	io = new MyConsole();
