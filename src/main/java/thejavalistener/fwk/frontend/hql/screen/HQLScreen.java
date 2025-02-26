@@ -77,9 +77,10 @@ public class HQLScreen extends MyAbstractScreen
 		// CENTER
 		splitPane = new MySplitPane(MySplitPane.HORIZONTAL,scrollSQL,tpResultados.c());
 		
-		Integer dividerLocation = getProperties().discover("myframework.hqlscreen.dividerLocation",200);
+		String pkg = getClass().getName();
+		Integer dividerLocation = getProperties().discover(pkg+".dividerLocation",200);
 		splitPane.setDividerLocation(dividerLocation);
-		splitPane.setMySplitePaneListener(i->getProperties().put("myframework.hqlscreen.dividerLocation",(Integer)i));
+		splitPane.setMySplitePaneListener(i->getProperties().put(pkg+".dividerLocation",(Integer)i));
 		splitPane.setDividerSize(1);
 
 		JPanel pCenter = new JPanel(new BorderLayout());

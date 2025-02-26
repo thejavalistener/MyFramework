@@ -3,19 +3,14 @@ package thejavalistener.fwk.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Embeddable;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import thejavalistener.fwk.backend.DaoSupport;
-import thejavalistener.fwk.util.MyAssert;
-import thejavalistener.fwk.util.MyBean;
 import thejavalistener.fwk.util.MyJson;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.Pair;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -43,8 +38,9 @@ public class MyProperties extends DaoSupport
 	@Transactional
 	public void put(String name,Object value)
 	{
-		String sql = "FROM myframework.properties.MyFrameworkProperty p WHERE p.name=:name";
-		MyFrameworkProperty p = querySingleRow(sql,"name",name);
+		String pkg = getClass().getPackageName();
+		String sql = "FROM "+pkg+".MyFrameworkProperty p WHERE p.name='"+name+"'";
+		MyFrameworkProperty p = querySingleRow(sql);
 
 		String jsonString = MyJson.toJson(value);
 		
@@ -91,7 +87,8 @@ public class MyProperties extends DaoSupport
 		String dom = _fullName(domainClass,subdomain);
 		dom+=dom.endsWith(".")?"":".";
 		
-		String sql = "FROM myframework.properties.MyFrameworkProperty p WHERE p.name LIKE '"+dom+"%' ";
+		String pkg = getClass().getPackageName();
+		String sql = "FROM "+pkg+".MyFrameworkProperty p WHERE p.name LIKE '"+dom+"%' ";
 		List<MyFrameworkProperty> lst = queryMultipleRows(sql);
 		
 		List<Pair> ret = new ArrayList<>();
@@ -122,8 +119,14 @@ public class MyProperties extends DaoSupport
 	
 	public <T> T get(String name)
 	{
-		String sql = "SELECT p.value FROM myframework.properties.MyFrameworkProperty p WHERE p.name=:name";
-		String jsonString = querySingleRow(sql,"name",name);
+		String pkg = getClass().getPackageName();
+//		String sql = "SELECT p.value FROM "+pkg+".MyFrameworkProperty p WHERE p.name=:name ";
+		String sql = "SELECT p.value FROM "+pkg+".MyFrameworkProperty p WHERE p.name='"+name+"' ";
+		MyLog.out("name="+name);
+		MyLog.out(sql);
+		
+//		String jsonString = querySingleRow(sql,"name");
+		String jsonString = querySingleRow(sql);
 		
 		if( jsonString==null )
 		{
@@ -151,7 +154,8 @@ public class MyProperties extends DaoSupport
 		T s = get(name);
 		if( s!=null )
 		{
-			String sql = "DELETE myframework.properties.MyFrameworkProperty p WHERE p.name=:name";
+			String pkg = getClass().getPackageName();
+			String sql = "DELETE "+pkg+".MyFrameworkProperty p WHERE p.name=:name";
 			update(sql,"name",name);
 		}
 		
@@ -161,7 +165,8 @@ public class MyProperties extends DaoSupport
 	@Transactional
 	public int removeAll()
 	{
-		String sql = "DELETE myframework.properties.MyFrameworkProperty p ";
+		String pkg = getClass().getPackageName();
+		String sql = "DELETE "+pkg+".MyFrameworkProperty p ";
 		return update(sql);
 	}
 

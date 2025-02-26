@@ -14,7 +14,7 @@ public class MyFrameworkProperty
 	@Column
 	private String name;
 	
-	@Column
+	@Column 
 	private String value;
 	
 	public String getName()
