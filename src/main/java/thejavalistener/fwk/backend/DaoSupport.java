@@ -17,7 +17,7 @@ import thejavalistener.fwk.util.string.MyString;
 public class DaoSupport
 {
 	@PersistenceContext
-	private EntityManager em;
+	protected EntityManager em;
 
 	public <T> T querySingleRow(String hql,Object ...params)
 	{

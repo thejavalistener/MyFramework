@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import thejavalistener.fwk.util.MyThread;
@@ -20,23 +21,27 @@ import thejavalistener.fwk.util.UDate;
 
 public class MyString
 {
+	public static final String DATE_DDMMYYYY_REGEX="^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
+	public static final String DATE_YYYYMMDD_REGEX="^(?:(?:(?:1[6-9]|[2-9]\\d)?\\d{2})(\\/|-|\\.)(?:0?[13578]|1[02])\\1(?:31))$|^(?:(?:(?:1[6-9]|[2-9]\\d)?\\d{2})(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2(?:29|30))$|^(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(\\/|-|\\.)0?2\\3(?:29)$|^(?:(?:(?:1[6-9]|[2-9]\\d)?\\d{2})(\\/|-|\\.)(?:0?[1-9]|1[0-2])\\4(?:0?[1-9]|1\\d|2[0-8]))$";
+
 	public static String ts()
 	{
 		return ts(26);
 	}
 	
-	public static int countDifferentChars(String s,char c)
+	public static int countDifferentChars(String s, char c)
 	{
 		return s.length()-charCount(s,c);
 	}
 
 	public static boolean isPrintableChar(char c)
 	{
-		return Character.isDigit(c) || Character.isAlphabetic(c) || isSymbol(c);
-//		Character.UnicodeBlock block=Character.UnicodeBlock.of(c);
-//		return (!Character.isISOControl(c))&&c!=KeyEvent.CHAR_UNDEFINED&&block!=null&&block!=Character.UnicodeBlock.SPECIALS;
+		return Character.isDigit(c)||Character.isAlphabetic(c)||isSymbol(c);
+		// Character.UnicodeBlock block=Character.UnicodeBlock.of(c);
+		// return
+		// (!Character.isISOControl(c))&&c!=KeyEvent.CHAR_UNDEFINED&&block!=null&&block!=Character.UnicodeBlock.SPECIALS;
 	}
-	
+
 	public static boolean isSymbol(char c)
 	{
 		// Verificar si el carácter es un símbolo
@@ -44,65 +49,67 @@ public class MyString
 		return symbols.indexOf(c)>=0;
 	}
 
-   public static boolean isSOControlOrDeadKey(int keyCode,int keyChar)
-   {
-	   System.out.println(keyCode);
-        // Verificar teclas de función (F1-F12)
-        if (keyCode >= KeyEvent.VK_F1 && keyCode <= KeyEvent.VK_F12) {
-            return true;
-        }
+	public static boolean isSOControlOrDeadKey(int keyCode, int keyChar)
+	{
+		System.out.println(keyCode);
+		// Verificar teclas de función (F1-F12)
+		if(keyCode>=KeyEvent.VK_F1&&keyCode<=KeyEvent.VK_F12)
+		{
+			return true;
+		}
 
-        // Verificar teclas especiales
-        switch (keyCode) {
-            case KeyEvent.VK_CONTROL:
-            case KeyEvent.VK_ALT:
-            case KeyEvent.VK_ALT_GRAPH:
-            case KeyEvent.VK_WINDOWS:
-            case KeyEvent.VK_SHIFT:
-            case KeyEvent.VK_CAPS_LOCK:
-            case KeyEvent.VK_TAB:
-            case KeyEvent.VK_ENTER:
-            case KeyEvent.VK_BACK_SPACE:
-            case KeyEvent.VK_DELETE:
-            case KeyEvent.VK_ESCAPE:
-            case KeyEvent.VK_CONTEXT_MENU:
-            case KeyEvent.VK_PRINTSCREEN:
-            case KeyEvent.VK_SCROLL_LOCK:
-            case KeyEvent.VK_PAUSE:
-            case KeyEvent.VK_INSERT:
-            case KeyEvent.VK_HOME:
-            case KeyEvent.VK_END:
-            case KeyEvent.VK_PAGE_UP:
-            case KeyEvent.VK_PAGE_DOWN:
-            case KeyEvent.VK_NUM_LOCK:
-            case 129: // apóstrofe hacia la der´
-                return true;
-        }
-        
-        switch(keyChar)
-        {
-        	case '´':
-        	case '`':
-        	case '^':
-        		return true;
-        }
-        
+		// Verificar teclas especiales
+		switch(keyCode)
+		{
+			case KeyEvent.VK_CONTROL:
+			case KeyEvent.VK_ALT:
+			case KeyEvent.VK_ALT_GRAPH:
+			case KeyEvent.VK_WINDOWS:
+			case KeyEvent.VK_SHIFT:
+			case KeyEvent.VK_CAPS_LOCK:
+			case KeyEvent.VK_TAB:
+			case KeyEvent.VK_ENTER:
+			case KeyEvent.VK_BACK_SPACE:
+			case KeyEvent.VK_DELETE:
+			case KeyEvent.VK_ESCAPE:
+			case KeyEvent.VK_CONTEXT_MENU:
+			case KeyEvent.VK_PRINTSCREEN:
+			case KeyEvent.VK_SCROLL_LOCK:
+			case KeyEvent.VK_PAUSE:
+			case KeyEvent.VK_INSERT:
+			case KeyEvent.VK_HOME:
+			case KeyEvent.VK_END:
+			case KeyEvent.VK_PAGE_UP:
+			case KeyEvent.VK_PAGE_DOWN:
+			case KeyEvent.VK_NUM_LOCK:
+			case 129: // apóstrofe hacia la der´
+				return true;
+		}
 
-        // Verificar si es un carácter muerto (diéresis, acentos, etc.)
-        if (Character.getType(keyChar) == Character.NON_SPACING_MARK) {
-            return true;
-        }
+		switch(keyChar)
+		{
+			case '´':
+			case '`':
+			case '^':
+				return true;
+		}
 
-        return false;
-    }
-	
+		// Verificar si es un carácter muerto (diéresis, acentos, etc.)
+		if(Character.getType(keyChar)==Character.NON_SPACING_MARK)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	public static String ts(int radix)
 	{
 		MyThread.sleep(30);
 		return Long.toString(System.currentTimeMillis(),radix).toUpperCase();
 
 	}
-	
+
 	public static String[] extract(String s, String iDelim, String fDelim)
 	{
 		return extract(s,iDelim,fDelim,new StringBuffer());
@@ -110,7 +117,7 @@ public class MyString
 
 	public static String[] extract(String s, String iDelim, String fDelim, StringBuffer mainString)
 	{
-		
+
 		ArrayList<String> resultList=new ArrayList<>();
 		mainString.setLength(0); // Limpiar el contenido del StringBuffer
 
@@ -155,7 +162,13 @@ public class MyString
 		return -1;
 	}
 
-	public static boolean match(String s, Function<Character,Boolean> func)
+	public static boolean matches(String s, String regex)
+	{
+		Pattern p=Pattern.compile(regex);
+		return p.matcher(s).matches();
+	}
+
+	public static boolean matches(String s, Function<Character,Boolean> func)
 	{
 		for(int i=0; i<s.length(); i++)
 		{
@@ -404,20 +417,19 @@ public class MyString
 		c=Character.toUpperCase(c);
 		return isInRange(c,'0','9')||isInRange(c,'A','F');
 	}
-	
-	public static boolean isInRange(String s,int lo, int up)
+
+	public static boolean isInRange(String s, int lo, int up)
 	{
 		if(MyString.isEmptyOrNull(s))
 		{
 			return false;
 		}
-		
-		int i = Integer.parseInt(s);
-		return i>=lo && i<=up;
+
+		int i=Integer.parseInt(s);
+		return i>=lo&&i<=up;
 	}
 
-
-	public static boolean isInRange(char c,char lo,char up)
+	public static boolean isInRange(char c, char lo, char up)
 	{
 		return c>=lo&&c<=up;
 	}
@@ -1226,16 +1238,16 @@ public class MyString
 		return wordList(s).get(i);
 	}
 
-	public static boolean oneOf(String s,String ...options)
+	public static boolean oneOf(String s, String... options)
 	{
 		for(String x:options)
 		{
-			if( x.equals(s) )
+			if(x.equals(s))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
