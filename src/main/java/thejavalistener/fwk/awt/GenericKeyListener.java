@@ -10,6 +10,7 @@ public class GenericKeyListener implements KeyListener
 {
 	private List<ProcEstr> process = new ArrayList<>();
 	
+	// p
 	public void onAll(Consumer<KeyEvent> p)
 	{
 		process.add(new ProcEstr(null,null,p));
