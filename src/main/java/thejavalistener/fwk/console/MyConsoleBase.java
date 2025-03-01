@@ -26,24 +26,23 @@ import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
-import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
 public abstract class MyConsoleBase
 {
-	protected static final TriFunction<Character,Integer,String,Character> STRING=(c, kc, s) -> c;
-	protected static final TriFunction<Character,Integer,String,Character> HEX=(c, kc, s) -> MyString.isHexDigit(c)||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> CHAR=(c, kc, s) -> s.length()<3||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> INTEGER=(c, kc, s) -> Character.isDigit(c)|| c=='-'&& s.length()==0 || _validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> DOUBLE=(c, kc, s) -> s.isEmpty()&&c=='-'||Character.isDigit(c)||c=='.'&&s.indexOf('.')<0||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> BOOLEAN=(c, kc, s) -> MyString.parseBoolean(s)!=null||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> UPPERCASE=(c, kc, s) -> Character.toUpperCase(c);
-	protected static final TriFunction<Character,Integer,String,Character> LOWERCASE=(c, kc, s) -> Character.toLowerCase(c);
-	protected static final TriFunction<Character,Integer,String,Character> PASSWORD=(c, kc, s) -> '*';
-	protected static final TriFunction<Character,Integer,String,Character> FLAG=(c, kc, s) -> c=='1'||c=='0'&&s.length()<2||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> AÑZ=(c, kc, s) -> c>='A'&&c<='Z'||c=='Ñ'||_validKeyCode(kc)?c:null;
-	protected static final TriFunction<Character,Integer,String,Character> AZ=(c, kc, s) -> c>='A'&&c<='Z'||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> STRING=(c, kc, s) -> c;
+	public static final TriFunction<Character,Integer,String,Character> HEX=(c, kc, s) -> MyString.isHexDigit(c)||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> CHAR=(c, kc, s) -> s.length()<3||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> INTEGER=(c, kc, s) -> Character.isDigit(c)|| c=='-'&& s.length()==0 || _validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> DOUBLE=(c, kc, s) -> s.isEmpty()&&c=='-'||Character.isDigit(c)||c=='.'&&s.indexOf('.')<0||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> BOOLEAN=(c, kc, s) -> MyString.parseBoolean(s)!=null||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> UPPERCASE=(c, kc, s) -> Character.toUpperCase(c);
+	public static final TriFunction<Character,Integer,String,Character> LOWERCASE=(c, kc, s) -> Character.toLowerCase(c);
+	public static final TriFunction<Character,Integer,String,Character> PASSWORD=(c, kc, s) -> '*';
+	public static final TriFunction<Character,Integer,String,Character> FLAG=(c, kc, s) -> c=='1'||c=='0'&&s.length()<2||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> AÑZ=(c, kc, s) -> c>='A'&&c<='Z'||c=='Ñ'||_validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> AZ=(c, kc, s) -> c>='A'&&c<='Z'||_validKeyCode(kc)?c:null;
 
 	protected abstract String _readString(InputConfigurator isconfig);
 	protected abstract int _pressAnyKey(Integer k, Runnable r);
@@ -58,7 +57,7 @@ public abstract class MyConsoleBase
 
 	protected MyTextPane textPane;
 	protected JScrollPane scrollPane;
-	protected Window container;
+	protected Container container;
 	protected Window parent;
 
 	// STYLE
@@ -133,16 +132,29 @@ public abstract class MyConsoleBase
 		textPane=new MyTextPane(false,true);
 		textPane.addKeyListener(new EscuchaCTRLCyESC());
 		scrollPane=new JScrollPane(textPane.c());
-		container.add(scrollPane,BorderLayout.CENTER);
+		
+		if( container instanceof Window || container instanceof JFrame ) 
+		{
+			container.add(scrollPane,BorderLayout.CENTER);
 
-		MyAwt.setProportionalSize(.7,container,null);
-		MyAwt.center(container,null);
-
-		EscuchaWindow escuchaWindow=new EscuchaWindow();
-
-		container.addWindowListener(escuchaWindow);
-		container.addWindowFocusListener(escuchaWindow);
+			Window wcont = (Window)container;
+			MyAwt.setProportionalSize(.7,wcont,null);
+			MyAwt.center(wcont,null);
+	
+			EscuchaWindow escuchaWindow=new EscuchaWindow();
+	
+			wcont.addWindowListener(escuchaWindow);
+			wcont.addWindowFocusListener(escuchaWindow);
+		}
+		
 		textPane.addMouseListener(new EscuchaMouse());
+		
+		init();
+	}
+	
+	public JScrollPane getScrollPane()
+	{
+		return scrollPane;
 	}
 
 	protected void init()
@@ -156,12 +168,13 @@ public abstract class MyConsoleBase
 			textPane.setBackground(style.background);
 			textPane.setForeground(style.foreground);
 			textPane.setCaretColor(style.caretColor);
+			textPane.setEditable(false);
 			cs(getDefaultStyle());
 			scrollPane.setBorder(null);
 		}
 	}
 	
-	public Window getContainer()
+	public Container getContainer()
 	{
 		return container!=null?container:(container=new JFrame());
 	}	
@@ -792,13 +805,16 @@ public abstract class MyConsoleBase
 	
 	public void closeAndExit()
 	{
-		Window c = getContainer();
+		Container c = getContainer();
 		int r=JOptionPane.showConfirmDialog(c,"¿Esta acción finalizará el programa?","Confirmación",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
 		if(r==JOptionPane.YES_OPTION)
 		{
 			// container.setVisible(false);
 			close();
-			container.dispose();
+			if( container instanceof Window || container instanceof JFrame )
+			{
+				((Window)container).dispose();
+			}
 			System.exit(0);
 		}
 	}

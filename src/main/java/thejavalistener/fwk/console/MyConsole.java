@@ -1,5 +1,6 @@
 package thejavalistener.fwk.console;
 
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -59,6 +60,12 @@ public class MyConsole extends MyConsoleBase
 		
 		return false;
     }
+
+	public MyConsole(Container container)
+	{
+		this(false);
+		this.container = container;
+	}
     
 	public MyConsole()
 	{
@@ -79,8 +86,6 @@ public class MyConsole extends MyConsoleBase
 	{
 		if( wait )
 		{
-			MyLog.out("bloqueado!");
-
 			// bloquea
 		    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 		    secondaryLoop = eventQueue.createSecondaryLoop();
@@ -89,7 +94,6 @@ public class MyConsole extends MyConsoleBase
 		else
 		{
 			// desbloquea
-			MyLog.out("desbloqueado!");
 			secondaryLoop.exit();
 		}
 	}
@@ -98,6 +102,7 @@ public class MyConsole extends MyConsoleBase
 	protected String _readString(InputConfigurator iconfig)
 	{
 		init();
+		textPane.requestFocus();
 		
 		escuchaRead.setInputConfig(iconfig);
 	
@@ -231,6 +236,7 @@ public class MyConsole extends MyConsoleBase
 	{
 		try
 		{
+			textPane.requestFocus();
 			textPane.setEditable(true);
 			escuchaPressAnyKey.setRunnnableAndKey(r,k);
 			textPane.addKeyListener(escuchaPressAnyKey);
@@ -437,6 +443,8 @@ public class MyConsole extends MyConsoleBase
 	protected int _menu(int menuRange[][])
 	{
 		init();
+		
+		textPane.requestFocus();
 		
 		try
 		{
