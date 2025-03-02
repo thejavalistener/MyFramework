@@ -179,6 +179,89 @@ public abstract class MyConsoleBase
 		return container!=null?container:(container=new JFrame());
 	}	
 	
+	public MyConsoleBase printFmt(String s)
+	{
+		StringBuffer cmd = new StringBuffer();
+		StringBuffer txt = new StringBuffer();
+		boolean onCmd = false;
+		
+		for(int i=0; i<s.length(); i++)
+		{
+			StringBuffer curr = onCmd?cmd:txt;
+			
+			char c = s.charAt(i);
+			
+			if( c=='[' )
+			{
+				onCmd=true;
+				curr = cmd;
+				curr.append(c);
+			}
+			else
+			{
+				if( c==']' )
+				{
+					onCmd=false;
+					curr.append(c);
+
+					// imprimo el texto
+					print(txt.toString());
+
+					// aplico el comando de estilo
+					_stringToCommand(cmd.toString());
+					
+					
+					cmd.delete(0,cmd.length());
+					txt.delete(0,txt.length());
+				}
+				else
+				{
+					curr.append(c);
+				}
+			}
+		}
+		
+		// imprimo el texto
+		print(txt.toString());
+
+		
+		return this;
+	}
+	
+	private void _stringToCommand(String sCmd)
+	{
+		if( sCmd.equals("[b]") )
+		{
+			b();
+			return;
+		}
+
+		if( sCmd.equals("[i]") )
+		{
+			i();
+			return;
+		}
+		
+		if( sCmd.equals("[x]") )
+		{
+			x();
+			return;
+		}
+		
+		if( sCmd.startsWith("[fg(") )
+		{
+			String sCol = MyString.extract(sCmd,"(",")")[0]; 
+			fg(sCol);
+			return;
+		}
+		
+		if( sCmd.startsWith("[bg(") )
+		{
+			String sCol = MyString.extract(sCmd,"(",")")[0]; 
+			bg(sCol);
+			return;
+		}
+	}
 
 
 	public MyConsoleBase print(Object o)
@@ -378,6 +461,8 @@ public abstract class MyConsoleBase
 		InputConfigurator ic = new InputConfigurator(this);
 		return ic;
 	}
+	
+	
 
 	public String readlnString(String regex)
 	{

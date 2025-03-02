@@ -40,14 +40,7 @@ public class MyConsole extends MyConsoleBase
     	MyAwt.setWindowsLookAndFeel();
     	io = new MyConsole();
     }
-    
-    public MyConsoleBase locomia1()
-    {
-    	println("ABANICO LOCOMIA!");
-    	return this;
-    }
-
-    
+ 
     private boolean _suggestCloseableMode()
     {
 		for(StackTraceElement elm:Thread.currentThread().getStackTrace())

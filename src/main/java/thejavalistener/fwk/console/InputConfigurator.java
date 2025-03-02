@@ -1,10 +1,11 @@
 package thejavalistener.fwk.console;
 
-import java.awt.event.KeyEvent;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import thejavalistener.fwk.util.TriFunction;
+import thejavalistener.fwk.util.string.MyString;
 
 public class InputConfigurator
 {
@@ -62,6 +63,33 @@ public class InputConfigurator
 		String ret = console._readString(this);
 		console.println();
 		return ret;
+	}
+	
+	public String oneOfln(String ...options)
+	{
+		String x = oneOf(options);
+		console.println();
+		return x;
+	}
+	public String oneOf(String ...options)
+	{
+		boolean todoMayus = Stream.of(options).allMatch(s -> s.equals(s.toUpperCase()));
+		if( todoMayus )
+		{
+			return mask(MyConsole.UPPERCASE).valid(s->MyString.oneOf(s,options)).read();
+		}
+		else
+		{
+			boolean todoMinus = Stream.of(options).allMatch(s -> s.equals(s.toUpperCase()));
+			if( todoMinus )
+			{
+				return mask(MyConsole.LOWERCASE).valid(s->MyString.oneOf(s,options)).read();				
+			}
+			else
+			{
+				return valid(s->MyString.oneOf(s,options)).read();								
+			}
+		}
 	}
 
 	public TriFunction<Character,Integer,String,Character> getMask()
