@@ -19,10 +19,11 @@ public class MyTextPaneTest
         tui.addTextField("Texto")
 		   .addTextField("Desde")
 		   .addTextField("Hasta")
-		   .addButton("Rmv",(s)->mtp.removeText(tui.getInt("Texto"),tui.getInt("Desde")))
+		   .addButton("cp",(s)->cp(mtp))
+		   .addButton("Rmv",(s)->{mtp.deleteText(tui.getInt("Desde"),tui.getInt("Hasta"));cp(mtp);})
 		   .addButton("Col",(s)->System.out.println(mtp.getCaretColumnPosition()))
-		   .addButton("Insertar",(s)->mtp.insertText(tui.getString("Texto"),tui.getInt("Desde")))
-		   .addButton("Replace",(s)->mtp.replaceText(tui.getString("Texto"),tui.getInt("Desde"),tui.getInt("Hasta")))
+		   .addButton("Insertar",(s)->{mtp.insertText(tui.getString("Texto"),tui.getInt("Desde"));cp(mtp);})
+		   .addButton("Replace",(s)->{mtp.replaceText(tui.getString("Texto"),tui.getInt("Desde"),tui.getInt("Hasta"));;cp(mtp);})
 		   .addButton("Rojo",(s)->mtp.fg(Color.RED))
 		   .addButton("Verde",(s)->mtp.fg(Color.GREEN))
 		   .addButton("Azul",(s)->mtp.fg(Color.BLUE))
@@ -31,5 +32,10 @@ public class MyTextPaneTest
 		   .addButton("X",(s)->mtp.x(tui.getInt("Desde")))
 		   .addButton("Formated",(s)->mtp.setFormatedText(mtp.getText()))
 		   .run();
+	}
+
+	private static void cp(MyTextPane x)
+	{
+		System.out.println(x.getCaretPosition());
 	}
 }

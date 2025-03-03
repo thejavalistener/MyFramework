@@ -24,7 +24,7 @@ import javax.swing.text.StyledDocument;
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.dialog.MyDialog;
 import thejavalistener.fwk.util.MyColor;
-import thejavalistener.fwk.util.string.MyString;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.string.ParametrizedString;
 import thejavalistener.fwk.util.string.StringCommandIterator;
 
@@ -102,9 +102,8 @@ public class MyTextPane
 		return textPane;
 	}
 
-
 	public int getCaretColumnPosition() {
-	    String txt = getCompatibleText();
+	    String txt = getText();
 	    int i = getCaretPosition() - 1;
 	    int col = 0;
 
@@ -120,11 +119,12 @@ public class MyTextPane
 	    return col;
 	}
 	
-	public void removeText(int from,int to)
+	public void deleteText(int from,int to)
 	{
 		try {
 		    Document doc = textPane.getDocument();
 		    doc.remove(from, to - from);
+		    textPane.setCaretPosition(from);
 		} catch (BadLocationException e) {
 		    e.printStackTrace();
 		}
@@ -136,16 +136,12 @@ public class MyTextPane
 		textPane.setFont(f);
 	}
 
-	/** Retorna el contenido del JTextPane con \r\n en los saltos de línea */
+	/** Retorna el contenido del JTextPane sin \r. Sólo con \n en los saltos de línea */
 	public String getText()
 	{
-		return textPane.getText();
+		return textPane.getText().replace("\r","");
 	}
 
-	/**
-	 * Asigna un contenido al JTextPane. Los saltos de línea se convertirán
-	 * automáticamente a \r\n.
-	 */
 	public void setText(String txt)
 	{
 		textPane.setText(txt);
@@ -195,18 +191,17 @@ public class MyTextPane
 	 * esto, en la cadena: "Hola\r\ncomo estás?", para ubicar el cursor al
 	 * inicio de la c la posición será: 5. [H][o][l][a][\r\n].
 	 */
-	public void setCaretPosition(int pos)
-	{
-		textPane.setCaretPosition(pos);
-	}
+//	public void setCaretPosition(int pos)
+//	{
+//		textPane.setCaretPosition(pos);
+//	}
 
 	public void setCaretPositionAtEndOfText()
 	{
-		setCaretPosition(textPane.getDocument().getLength());
-
-		//		setCaretPosition(getCompatibleLen());
-		// setCaretPosition(getText().length());
+		textPane.setCaretPosition(textPane.getDocument().getLength());
 	}
+	
+	
 
 	/**
 	 * Retorna la ubicación del cursor SIN TENER EN CUENTA los \r. Es decir,
@@ -244,23 +239,16 @@ public class MyTextPane
 		return textPane.isEnabled();
 	}
 
-	/**
-	 * Retorna la longitud del texto que contiene el JTextPane excluyendo los
-	 * \r. Así, si la cadena fuera: "Hola\r\nChau" la longitud será 9:
-	 * [H][o][l][a][\r\n][C][h][a][u].
-	 */
-	public int getCompatibleLen()
+	public int getLen()
 	{
-		String txt=getText();
-		return txt.length()-MyString.charCount(txt,'\r');
+		return getText().length();
 	}
 
-	/** Agrega texto al final del JTextPane */
 	public void appendText(String txt)
 	{
-		insertText(txt,getCompatibleLen());
+		insertText(txt,getLen());
 	}
-
+	
 	public void scrollToFindText(String txt)
 	{
 		try
@@ -295,22 +283,24 @@ public class MyTextPane
 			}
 			else
 			{
-				insertText(sb.toString(),getCompatibleLen());
+				insertText(sb.toString(),getLen());
 			}
 		}
 	}
+	
+	public void setCaretPosition(int pos)
+	{
+		textPane.setCaretPosition(pos);
+	}
 
-	/**
-	 * Inserta el texto en la posición pos, sin considerar los \r. Si la cadena
-	 * fuera [H][o][l][a][\r\n][C][h][a][u] y quisiera insertar "X" a
-	 * continuación de la C, la posición pos será: 6.
-	 */
 	public void insertText(String txt, int pos)
 	{
 		try
 		{
 			StyledDocument doc=textPane.getStyledDocument();
 			doc.insertString(pos,txt,estilos.peek());
+			
+			textPane.setCaretPosition(pos+txt.length());
 		}
 		catch(Exception e)
 		{
@@ -461,29 +451,9 @@ public class MyTextPane
 			textPane.setCharacterAttributes(estilos.pop(),true);
 		return this;
 	}
-
-	/** Reemplaza el texto ubicado entre start y end sin considerar los \r */
-	public void replaceText(String txt, int start, int end)
-	{
-		try
-		{
-			StyledDocument doc=textPane.getStyledDocument();
-			if(txt==null||txt.isEmpty())
-			{
-				doc.remove(start,end-start);
-			}
-			else
-			{
-				doc.remove(start,end-start);
-				doc.insertString(start,txt,estilos.peek());
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-	}
+	
+	
+	
 
 	class EscuchaALTP implements KeyListener
 	{
@@ -522,8 +492,9 @@ public class MyTextPane
 		}
 	}
 
-	public String getCompatibleText()
+	public void replaceText(String txt, int from, int to)
 	{
-		return textPane.getText().replace("\r","");
+		deleteText(from,to);
+		insertText(txt,from);
 	}
 }

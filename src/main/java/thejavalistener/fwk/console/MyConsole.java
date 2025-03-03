@@ -6,18 +6,14 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
 
 import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -104,7 +100,7 @@ public class MyConsole extends MyConsoleBase
 			cs(getDefaultInputStyle());
 			print("[]");
 			
-			textPane.setCaretPosition(textPane.getCompatibleLen()-1);
+			textPane.setCaretPosition(textPane.getLen()-1);
 			inputPosition=textPane.getCaretPosition();
 
 			// comienzo a escuchar
@@ -144,7 +140,7 @@ public class MyConsole extends MyConsoleBase
 		
 		private void _selectInputText()
 		{
-			String txt = textPane.getCompatibleText();
+			String txt = textPane.getText();
 			int p0 = txt.lastIndexOf('[');
 			int p1 = txt.lastIndexOf(']');
 			textPane.setSelectedText(p0+1,p1);
@@ -153,7 +149,7 @@ public class MyConsole extends MyConsoleBase
 		@Override
 		public void keyPressed(KeyEvent e)
 		{
-			String txt = textPane.getCompatibleText();
+			String txt = textPane.getText();
 			int abre = txt.lastIndexOf('[');
 			int cierra = txt.lastIndexOf(']');
 			inputText = txt.substring(abre+1,cierra);
@@ -177,7 +173,7 @@ public class MyConsole extends MyConsoleBase
 					return;
 				}
 				
-				textPane.setCaretPosition(textPane.getCompatibleLen());
+				textPane.setCaretPosition(textPane.getLen());
 				textPane.setEditable(false);
 				
 				setWaiting(false);
@@ -325,7 +321,7 @@ public class MyConsole extends MyConsoleBase
 			cs(getDefaultInputStyle());
 			print("[]");
 			
-			textPane.setCaretPosition(textPane.getCompatibleLen()-1);
+			textPane.setCaretPosition(textPane.getLen()-1);
 			inputPosition=textPane.getCaretPosition();
 
 			// comienzo a escuchar
@@ -355,7 +351,7 @@ public class MyConsole extends MyConsoleBase
 		
 		public void keyPressed(KeyEvent e)
 		{
-			int lastCorch = textPane.getCompatibleText().lastIndexOf('[');
+			int lastCorch = textPane.getText().lastIndexOf('[');
 			int pos=textPane.getCaretPosition()-lastCorch-1;
 		
 			int kc = e.getKeyCode();
@@ -383,7 +379,7 @@ public class MyConsole extends MyConsoleBase
 			if( kc==KeyEvent.VK_ENTER )
 			{
 				e.consume();
-				textPane.setCaretPosition(textPane.getCompatibleLen());
+				textPane.setCaretPosition(textPane.getLen());
 				setWaiting(false);
 				return;
 			}
@@ -398,7 +394,7 @@ public class MyConsole extends MyConsoleBase
 				return;
 			}
 		
-			int lastCorch = textPane.getCompatibleText().lastIndexOf('[');
+			int lastCorch = textPane.getText().lastIndexOf('[');
 			int pos=textPane.getCaretPosition()-lastCorch-1;
 			char c = e.getKeyChar();
 			
@@ -423,7 +419,7 @@ public class MyConsole extends MyConsoleBase
 	
 	private boolean _pisaCorchetes(KeyEvent e)
 	{
-		String txt = textPane.getCompatibleText();
+		String txt = textPane.getText();
 		int cierra = txt.lastIndexOf("]");
 		int abre = txt.lastIndexOf("[");
 		int caret = textPane.getCaretPosition();
@@ -496,8 +492,8 @@ public class MyConsole extends MyConsoleBase
 			{
 				// borro el menu
 				int from = menuRange[0][0]-1;
-				int to = menuRange[menuRange.length-1][1];
-				textPane.removeText(from,to);
+				int to = menuRange[menuRange.length-1][1]+1;
+				textPane.deleteText(from,to+1); // queda un \n --> por eso el +1
 				
 				// escribo la opcion seleccionada
 				

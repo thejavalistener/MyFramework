@@ -20,12 +20,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.StyledDocument;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -272,24 +274,18 @@ public abstract class MyConsoleBase
 
 		open();
 
-		String[] reemAña=_reemplazarOAñadir(textPane.getCompatibleText(),textPane.getCaretPosition(),txt);
+		String[] reemAña=_reemplazarOAñadir(textPane.getText(),textPane.getCaretPosition(),txt);
 		if(reemAña[0].length()>0)
 		{
 			int pos=textPane.getCaretPosition();
 			textPane.replaceText(reemAña[0],pos,pos+reemAña[0].length());
-
-			int mmin=Math.min(textPane.getCompatibleLen(),textPane.getCaretPosition()+reemAña[0].length());
-			textPane.setCaretPosition(mmin);
-			// textPane.setCaretPosition(textPane.getCaretPosition()+reemAña[0].length());
 		}
 
 		if(reemAña[1].length()>0)
 		{
 			textPane.insertText(reemAña[1],textPane.getCaretPosition());
-//			textPane.setCaretPositionAtEndOfText();
 		}
 
-		textPane.setCaretPositionAtEndOfText();
 		return this;
 	}
 	
@@ -452,7 +448,7 @@ public abstract class MyConsoleBase
 
 	public MyConsoleBase skipFwd()
 	{
-		textPane.setCaretPosition(textPane.getCompatibleLen());
+		textPane.setCaretPosition(textPane.getLen());
 		return this;
 	}
 	
@@ -603,7 +599,7 @@ public abstract class MyConsoleBase
 			curr++;
 			double porc=((double)curr/top)*size;
 			if(ant!=(int)porc)
-			{
+			{				
 				print(getStyle().progressFill);
 				ant=(int)porc;
 			}
@@ -644,7 +640,8 @@ public abstract class MyConsoleBase
 
 		skipFwd();
 
-		return System.currentTimeMillis()-initProgressTime;
+		long x = System.currentTimeMillis()-initProgressTime;
+		return x;
 	}
 
 	public int pressAnyKey()
@@ -860,7 +857,8 @@ public abstract class MyConsoleBase
 		
 		int op = _menu(range);
 		
-//		cs(getDefaultInputStyle());
+		// borro el menu
+		cs(getDefaultInputStyle());
 		print("["+options[op]+"]");
 		
 		X();
@@ -912,7 +910,7 @@ public abstract class MyConsoleBase
 			int len = textPane.getText().length();
 			if( len>0 && textPane.getText().charAt(len-1)==']' )
 			{
-				textPane.setCaretPosition(textPane.getCompatibleLen()-1);
+				textPane.setCaretPosition(textPane.getLen()-1);
 			}
 			else
 			{
