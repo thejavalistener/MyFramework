@@ -1,12 +1,16 @@
 package thejavalistener.fwk.console;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.SecondaryLoop;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.MyException;
 import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -64,6 +68,50 @@ public class Test
 
 		JButton b = new JButton("XX");
 		JButton bb = new JButton("BB");
+		bb.addActionListener(e->{
+			
+			c.createProgress(20,100,()->{
+				for(int i=0; i<100; i++)
+				{
+					MyThread.randomSleep(100);
+					c.increaseProgress();
+				}
+				
+			});
+			
+			System.err.println("LLLLLLLLLLLLLLLLLLL");
+//			MyThread.start(()->{
+//				c.beginProgressBar(20,100);
+//				for(int i=0; i<100; i++)
+//				{
+//					MyThread.randomSleep(100);
+//					c.increaseProgress();
+//				}
+//				c.finishProgress();
+//				
+//			});
+
+			System.out.println("--------");
+			
+//			// bloquea
+//	    	c.beginProgressBar(20,100);
+//			MyThread.start(()->
+//		    {
+//				for(int i=0; i<100; i++)
+//				{
+//					MyThread.randomSleep(100);
+//					c.increaseProgress();
+//				}
+//				c.finishProgress();				
+//				c.xx.exit();
+//		    });
+//
+//			c.xx.enter();
+//			c.println("LOCO");
+//			
+
+		});
+
 		bb.addActionListener(l->c.textPane.getCaretCoords());
 		jf.add(bb,BorderLayout.EAST);
 		
@@ -78,17 +126,6 @@ public class Test
 
 			String pwd = c.print("Password:").readlnPassword();
 			c.println("Tu pwd es:["+pwd+"]");			
-
-			c.beginProgressBar(20,100);
-			for(int i=0; i<100; i++)
-			{
-				MyThread.randomSleep(100);
-				c.increaseProgress();
-			}
-			c.finishProgress();
-			c.println();
-			
-			
 			
 			String name = c.print("What's your name? ").readlnString();
 			c.println("Hi, "+name);

@@ -3,7 +3,10 @@ package thejavalistener.fwk.console;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SecondaryLoop;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -15,6 +18,7 @@ import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -25,9 +29,11 @@ import javax.swing.text.StyledDocument;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
+import thejavalistener.fwk.frontend.hql.console.Progress;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
 import thejavalistener.fwk.util.MyLog;
+import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -564,6 +570,12 @@ public abstract class MyConsoleBase
 			container.setVisible(false);
 		}
 	}
+	
+    public long createProgress(int size,int top,Runnable r) 
+	{
+    	Progress progress = new Progress(this);
+    	return progress.start(size,top,r);
+	}
 
 	// PROGRESS
 	public void beginProgressBar(int size, long top)
@@ -591,6 +603,8 @@ public abstract class MyConsoleBase
 		print("00%");
 		skipBkp(3);
 	}
+	
+//	protected abstract void setWaiting(boolean b);
 
 	public void increaseProgress()
 	{
