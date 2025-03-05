@@ -18,21 +18,21 @@ import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.text.StyledDocument;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.frontend.hql.console.Progress;
+import thejavalistener.fwk.frontend.hql.console.ProgressBar;
+import thejavalistener.fwk.frontend.hql.console.ProgressMeter;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
-import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
@@ -79,13 +79,13 @@ public abstract class MyConsoleBase
 	private MyConsoleBase outer = null;
 
 
-	// progress
-	protected boolean progressBar=true;
-	protected long top=0;
-	protected long curr=0;
-	protected int size=0;
-	protected int ant=0;
-	protected long initProgressTime;
+//	// progress
+//	protected boolean progressBar=true;
+//	protected long top=0;
+//	protected long curr=0;
+//	protected int size=0;
+//	protected int ant=0;
+//	protected long initProgressTime;
 	
 	public MyTextPane getTextPane()
 	{
@@ -570,93 +570,153 @@ public abstract class MyConsoleBase
 			container.setVisible(false);
 		}
 	}
+
+	public Progress progressBar(int size,int top)
+	{
+		return new ProgressBar(this,size,top);
+	}
 	
-    public long createProgress(int size,int top,Runnable r) 
+	public Progress progressMeter(int top)
 	{
-    	Progress progress = new Progress(this);
-    	return progress.start(size,top,r);
+		return new ProgressMeter(this,top);
 	}
 
-	// PROGRESS
-	public void beginProgressBar(int size, long top)
-	{
-		this.progressBar=true;
-		this.size=size;
-		this.top=top;
-		this.curr=0;
-		print("[");
-		for(int i=0; i<size; i++)
-			print(" ");
-		print("]");
-		skipBkp(size+1);
-		cs(getStyle().progressStyle);
+	
+//	 public void executeWithProgress(Runnable r) {
+//	        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+//	        SecondaryLoop loop = eventQueue.createSecondaryLoop();
+//	        
+//	        beginProgressBar(20, 100);
+//
+//	        MyThread.start(() -> {
+//	            r.run();
+//	            loop.exit();
+//	            finishProgress();
+//	        });
+//
+//	        loop.enter();
+//	    }
+	
 
-		initProgressTime=System.currentTimeMillis();
-	}
+	
+//	public void beforeProgressOnWindow()
+//	{
+//		eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+//		secondaryLoop = eventQueue.createSecondaryLoop();
+//		progressOnWindow = true;
+//	}
 
-	public void beginProgressMeter(long top)
-	{
-		initProgressTime=System.currentTimeMillis();
-		this.progressBar=false;
-		this.top=top;
-		this.curr=0;
-		print("00%");
-		skipBkp(3);
-	}
+//	// PROGRESS
+//	public void beginProgressBar(int size, long top)
+//	{
+//		this.progressBar=true;
+//		this.size=size;
+//		this.top=top;
+//		this.curr=0;
+//		print("[");
+//		for(int i=0; i<size; i++)
+//			print(" ");
+//		print("]");
+//		skipBkp(size+1);
+//		cs(getStyle().progressStyle);
+//
+//		initProgressTime=System.currentTimeMillis();
+//	}
+
+//	public void beginProgressMeter(long top)
+//	{
+//		initProgressTime=System.currentTimeMillis();
+//		this.progressBar=false;
+//		this.top=top;
+//		this.curr=0;
+//		print("00%");
+//		skipBkp(3);
+//	}
 	
 //	protected abstract void setWaiting(boolean b);
 
-	public void increaseProgress()
-	{
-		if(progressBar)
-		{
-			curr++;
-			double porc=((double)curr/top)*size;
-			if(ant!=(int)porc)
-			{				
-				print(getStyle().progressFill);
-				ant=(int)porc;
-			}
+//	public void increaseProgress()
+//	{
+//		if(progressBar)
+//		{
+//			curr++;
+//			double porc=((double)curr/top)*size;
+//			if(ant!=(int)porc)
+//			{				
+//				print(getStyle().progressFill);
+//				ant=(int)porc;
+//			}
+//
+//			if(ant==size)
+//			{
+//				ant=0;
+//				skipFwd();
+//				
+//				X();
+//			}
+//		}
+//		else
+//		{
+//			curr++;
+//			int porc=(int)Math.floor(((double)curr/top)*100);
+//
+//			if(porc<100)
+//			{
+//				print((porc<10?"0":"")+porc+"%").skipBkp(3);
+//			}
+//			else
+//			{
+//				print("100").print("%");
+//				skipFwd();
+//			}
+//		}
+//	}
 
-			if(ant==size)
-			{
-				ant=0;
-				skipFwd();
-				
-				X();
-			}
-		}
-		else
-		{
-			curr++;
-			int porc=(int)Math.floor(((double)curr/top)*100);
+//	public long finishProgress()
+//	{
+//		while(curr<top)
+//		{
+//			increase();
+//		}
+//		
+//		X();
+//
+//		skipFwd();
+//
+//		long x = System.currentTimeMillis()-initProgressTime;
+//		
+//		if( progressOnWindow )
+//		{
+//			progressOnWindow = false;
+//			secondaryLoop.exit();
+//		}
+//		
+//		return x;
+//	}
+//	
+//	public void afterProgressOnWindow()
+//	{
+//		secondaryLoop.enter();
+//	}
+//	
+//	
+//	
+//	 public void executeWithProgress(Runnable r) {
+//	        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+//	        SecondaryLoop loop = eventQueue.createSecondaryLoop();
+//	        
+//	        beginProgressBar(20, 100);
+//
+//	        MyThread.start(() -> {
+//	            r.run();
+//	            loop.exit();
+//	            finishProgress();
+//	        });
+//
+//	        loop.enter();
+//	    }
+//	
 
-			if(porc<100)
-			{
-				print((porc<10?"0":"")+porc+"%").skipBkp(3);
-			}
-			else
-			{
-				print("100").print("%");
-				skipFwd();
-			}
-		}
-	}
-
-	public long finishProgress()
-	{
-		while(curr<top)
-		{
-			increaseProgress();
-		}
-		
-		X();
-
-		skipFwd();
-
-		long x = System.currentTimeMillis()-initProgressTime;
-		return x;
-	}
 
 	public int pressAnyKey()
 	{

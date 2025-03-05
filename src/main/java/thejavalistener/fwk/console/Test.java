@@ -7,11 +7,11 @@ import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.awt.MyException;
+import thejavalistener.fwk.frontend.hql.console.Progress;
 import thejavalistener.fwk.util.MyThread;
+import thejavalistener.fwk.util.UTime;
 import thejavalistener.fwk.util.string.MyString;
 
 public class Test
@@ -24,15 +24,14 @@ public class Test
 //		MyConsole.io.banner("You are Welcome!");
 //		MyConsole.io.println("Plesae, press any key continue...").pressAnyKey();
 //
-//		c.beginProgressBar(20,100);
-//		for(int i=0; i<100; i++)
-//		{
-//			MyThread.randomSleep(100);
-//			c.increaseProgress();
-//		}
+//		Progress p = c.progressBar(20,100);
+//		p.execute(()->{
+//			for(int i=0; i<100; i++)
+//			{
+//				MyThread.randomSleep(100);
+//				p.increase();
+//			}});
 //		
-//		c.finishProgress();
-//
 //		c.println();
 //		
 //		String pwd = c.print("Password:").readlnPassword();
@@ -58,7 +57,7 @@ public class Test
 //				
 //		c.println("Press any key to finish...").pressAnyKey();
 //		c.closeAndExit();
-
+//
 //		System.out.println("-----------------------------------------------------------");
 //		
 		MyAwt.setWindowsLookAndFeel();
@@ -66,67 +65,28 @@ public class Test
 		JFrame jf = new JFrame();
 		MyConsole c = MyConsole.io;//MyConsole.get(jf);
 
-		JButton b = new JButton("XX");
-		JButton bb = new JButton("BB");
-		bb.addActionListener(e->{
+		JButton b = new JButton("Start Console");
+		b.addActionListener(e->{
 			
-			c.createProgress(20,100,()->{
+			MyConsole.io.banner("You are Welcome!");
+			MyConsole.io.println("Plesae, press any key continue...").pressAnyKey();
+	
+			Progress p = c.progressBar(20,100);
+			p.execute(()->{
 				for(int i=0; i<100; i++)
 				{
 					MyThread.randomSleep(100);
-					c.increaseProgress();
-				}
-				
-			});
+					p.increase();
+				}});
 			
-			System.err.println("LLLLLLLLLLLLLLLLLLL");
-//			MyThread.start(()->{
-//				c.beginProgressBar(20,100);
-//				for(int i=0; i<100; i++)
-//				{
-//					MyThread.randomSleep(100);
-//					c.increaseProgress();
-//				}
-//				c.finishProgress();
-//				
-//			});
-
-			System.out.println("--------");
+			b.setText("OK!!");
 			
-//			// bloquea
-//	    	c.beginProgressBar(20,100);
-//			MyThread.start(()->
-//		    {
-//				for(int i=0; i<100; i++)
-//				{
-//					MyThread.randomSleep(100);
-//					c.increaseProgress();
-//				}
-//				c.finishProgress();				
-//				c.xx.exit();
-//		    });
-//
-//			c.xx.enter();
-//			c.println("LOCO");
-//			
-
-		});
-
-		bb.addActionListener(l->c.textPane.getCaretCoords());
-		jf.add(bb,BorderLayout.EAST);
-		
-		jf.add(b,BorderLayout.WEST);
-		jf.setSize(300,300);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setVisible(true);
-		b.addActionListener(l->
-		{
-			MyConsole.io.banner("You are Welcome!");
-			MyConsole.io.println("Plesae, press any key continue...").pressAnyKey();
-
+			c.println();
+			
 			String pwd = c.print("Password:").readlnPassword();
 			c.println("Tu pwd es:["+pwd+"]");			
-			
+	
+	
 			String name = c.print("What's your name? ").readlnString();
 			c.println("Hi, "+name);
 			
@@ -146,8 +106,13 @@ public class Test
 					
 			c.println("Press any key to finish...").pressAnyKey();
 			c.closeAndExit();
-			
+
 		});
+	
+		jf.add(b,BorderLayout.WEST);
+		jf.setSize(300,300);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setVisible(true);
 	}
 }
 

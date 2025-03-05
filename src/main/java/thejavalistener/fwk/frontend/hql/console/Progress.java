@@ -3,44 +3,70 @@ package thejavalistener.fwk.frontend.hql.console;
 import java.awt.EventQueue;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.List;
 
 import thejavalistener.fwk.console.MyConsoleBase;
+import thejavalistener.fwk.util.MyThread;
 
-public class Progress
+public abstract class Progress
 {
-	private MyConsoleBase console;
+	protected MyConsoleBase console;
 	private EventQueue eventQueue;
-	private SecondaryLoop sl;
+	private SecondaryLoop secondaryLoop;
+	
+	protected int ant;
+	protected int curr;
+	protected int top;
+	
+	protected long initProgressTime;
+	protected long finishProgressTime;
 
-	public Progress(MyConsoleBase c)
+	protected abstract void begin();
+	public abstract void increase();
+
+	protected Progress(MyConsoleBase c)
 	{
 		this.console = c;
 		eventQueue=Toolkit.getDefaultToolkit().getSystemEventQueue();
-		sl=eventQueue.createSecondaryLoop();
+		secondaryLoop=eventQueue.createSecondaryLoop();
 	}
+	
+	 public void execute(Runnable r) 
+	 {
+        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+        SecondaryLoop loop = eventQueue.createSecondaryLoop();
+        
+        begin();
 
-	public long start(int size,int top,Runnable r)
+        MyThread.start(() -> {
+            r.run();
+            loop.exit();
+            finish();
+        });
+
+        loop.enter();
+    }
+
+		
+	protected long finish()
 	{
-		Long ts[] = new Long[1];
+		while(curr<top)
+		{
+			increase();
+		}
 		
-		List<Runnable> tasks = new ArrayList<>();
-		tasks.add(()->console.beginProgressBar(size,top));
-		tasks.add(r);
-		tasks.add(()->{ts[0] = console.finishProgress();});
-		tasks.add(()->sl.exit());
+		console.X();
+
+		console.skipFwd();
+
+		finishProgressTime = System.currentTimeMillis()-initProgressTime;
 		
-		new Thread(()->{
-			for(Runnable t:tasks)
-			{
-				t.run();
-			}
-		}).start();
-		
-		sl.enter();
-		
-		return ts[0];
+		secondaryLoop.exit();
+		return finishProgressTime;
+	}
+	
+	public long elapsedTime()
+	{
+		return finishProgressTime;
 	}
 	
 	

@@ -31,6 +31,19 @@ public class MyThread
 		return t;
 	}
 
+	public static void startAndJoin(Runnable r)
+	{
+		try
+		{
+			start(r).join();			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static void startDelayed(Runnable r, int millis)
 	{
 		Timer t = new Timer();
