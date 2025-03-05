@@ -258,8 +258,9 @@ public abstract class MyConsoleBase
 		
 		if( sCmd.startsWith("[fg(") )
 		{
-			String sCol = MyString.extract(sCmd,"(",")")[0]; 
-			fg(sCol);
+			String sCol = MyString.extract(sCmd,"(",")")[0];
+			
+			fg(sCol.substring(1,sCol.length()-1));
 			return;
 		}
 		
