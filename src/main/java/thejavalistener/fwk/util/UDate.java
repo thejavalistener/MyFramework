@@ -7,6 +7,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -487,6 +488,24 @@ public class UDate
 		setMonth(m);
 		setDay(d);
 		return this;
+	}
+
+	public Date random(int fromYear,int toYear)
+	{
+	    // Generar un año aleatorio en el rango dado
+	    int anio = ThreadLocalRandom.current().nextInt(fromYear, toYear + 1);
+
+	    // Generar un mes aleatorio (1 a 12)
+	    int mes = ThreadLocalRandom.current().nextInt(1, 13);
+
+	    // Obtener el número máximo de días en ese mes y año
+	    int diaMax = LocalDate.of(anio, mes, 1).lengthOfMonth();
+
+	    // Generar un día válido (1 al máximo del mes)
+	    int dia = ThreadLocalRandom.current().nextInt(1, diaMax + 1);
+
+	    LocalDate fecha = LocalDate.of(anio, mes, dia);
+	    return Date.valueOf(fecha);
 	}	
 
 }

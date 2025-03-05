@@ -3,10 +3,7 @@ package thejavalistener.fwk.console;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SecondaryLoop;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,9 +13,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -33,7 +34,6 @@ import thejavalistener.fwk.frontend.hql.console.ProgressBar;
 import thejavalistener.fwk.frontend.hql.console.ProgressMeter;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
-import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -42,7 +42,7 @@ public abstract class MyConsoleBase
 	public static final TriFunction<Character,Integer,String,Character> STRING=(c, kc, s) -> c;
 	public static final TriFunction<Character,Integer,String,Character> HEX=(c, kc, s) -> MyString.isHexDigit(c)||_validKeyCode(kc)?c:null;
 	public static final TriFunction<Character,Integer,String,Character> CHAR=(c, kc, s) -> s.length()<3||_validKeyCode(kc)?c:null;
-	public static final TriFunction<Character,Integer,String,Character> INTEGER=(c, kc, s) -> Character.isDigit(c)|| c=='-'&& s.length()==0 || _validKeyCode(kc)?c:null;
+	public static final TriFunction<Character,Integer,String,Character> INTEGER=(c, kc, s) -> Character.isDigit(c)||c=='-'&&s.length()==0||_validKeyCode(kc)?c:null;
 	public static final TriFunction<Character,Integer,String,Character> DOUBLE=(c, kc, s) -> s.isEmpty()&&c=='-'||Character.isDigit(c)||c=='.'&&s.indexOf('.')<0||_validKeyCode(kc)?c:null;
 	public static final TriFunction<Character,Integer,String,Character> BOOLEAN=(c, kc, s) -> MyString.parseBoolean(s)!=null||_validKeyCode(kc)?c:null;
 	public static final TriFunction<Character,Integer,String,Character> UPPERCASE=(c, kc, s) -> Character.toUpperCase(c);
@@ -53,13 +53,16 @@ public abstract class MyConsoleBase
 	public static final TriFunction<Character,Integer,String,Character> AZ=(c, kc, s) -> c>='A'&&c<='Z'||_validKeyCode(kc)?c:null;
 
 	protected abstract String _readString(InputConfigurator isconfig);
+
 	protected abstract int _pressAnyKey(Integer k, Runnable r);
+
 	protected abstract String _readPassword();
+
 	protected abstract int _menu(int menuRange[][]);
-	
+
 	protected int inputPosition;
 
-	protected boolean closable = false;
+	protected boolean closable=false;
 
 	protected boolean initialized=false;
 
@@ -72,94 +75,99 @@ public abstract class MyConsoleBase
 	private MyConsoleStyle style;
 	private Map<String,String> customStyles=new HashMap<>();
 
-	private SimpleFontBanner defaultFontBanner = new SimpleFontBanner();
-	
+	private SimpleFontBanner defaultFontBanner=new SimpleFontBanner();
+
 	protected boolean reading=false;
-	
-	private MyConsoleBase outer = null;
 
+	private MyConsoleBase outer=null;
 
-//	// progress
-//	protected boolean progressBar=true;
-//	protected long top=0;
-//	protected long curr=0;
-//	protected int size=0;
-//	protected int ant=0;
-//	protected long initProgressTime;
-	
+	// // progress
+	// protected boolean progressBar=true;
+	// protected long top=0;
+	// protected long curr=0;
+	// protected int size=0;
+	// protected int ant=0;
+	// protected long initProgressTime;
+
 	public MyTextPane getTextPane()
 	{
 		return textPane;
 	}
-	
-    public void banner(String title)
-    {
-    	banner(title,defaultFontBanner);
-    }
-    
-    public void banner(String title, AbstractFontBanner font) 
-    {
-        int height = font.getHeight();  // Obtener la altura de los caracteres
 
-        // Crear un array de StringBuffer para construir las líneas del título
-        StringBuffer[] output = new StringBuffer[height];
-        for (int i = 0; i < height; i++) {
-            output[i] = new StringBuffer();
-        }
+	public void banner(String title)
+	{
+		banner(title,defaultFontBanner);
+	}
 
-        // Construir el título línea por línea
-        for (char c : title.toCharArray()) {
-            String[][] charRepresentation = font.getChar(c);
-            for (int i = 0; i < height; i++) {
-                output[i].append(charRepresentation[i][0]);  // Agregar la fila correspondiente de cada carácter
-            }
-        }
+	public void banner(String title, AbstractFontBanner font)
+	{
+		int height=font.getHeight(); // Obtener la altura de los caracteres
 
-//        fg("GREEN");
-        // Imprimir cada línea del título
-        for (StringBuffer line : output) {
-//        	MyThread.randomSleep(250);
-            print(line.toString()).ln();
-        }
-//        x();
-        
-        ln();
-    }
+		// Crear un array de StringBuffer para construir las líneas del título
+		StringBuffer[] output=new StringBuffer[height];
+		for(int i=0; i<height; i++)
+		{
+			output[i]=new StringBuffer();
+		}
+
+		// Construir el título línea por línea
+		for(char c:title.toCharArray())
+		{
+			String[][] charRepresentation=font.getChar(c);
+			for(int i=0; i<height; i++)
+			{
+				output[i].append(charRepresentation[i][0]); // Agregar la fila
+															// correspondiente
+															// de cada carácter
+			}
+		}
+
+		// fg("GREEN");
+		// Imprimir cada línea del título
+		for(StringBuffer line:output)
+		{
+			// MyThread.randomSleep(250);
+			print(line.toString()).ln();
+		}
+		// x();
+
+		ln();
+	}
 
 	protected MyConsoleBase()
 	{
-		this.outer = this;
-		
+		this.outer=this;
+
 		this.style=new MyConsoleStyle();
 		customStyles.put("defaultInputStyle",style.defaultInputStyle);
 		customStyles.put("defaultStyle",style.defaultStyle);
 
 		container=getContainer();
-//		container = new JFrame();
-		
+		// container = new JFrame();
+
 		textPane=new MyTextPane(false,true);
 		textPane.addKeyListener(new EscuchaCTRLCyESC());
 		scrollPane=new JScrollPane(textPane.c());
-		
-		if( container instanceof Window || container instanceof JFrame ) 
+
+		if(container instanceof Window||container instanceof JFrame)
 		{
 			container.add(scrollPane,BorderLayout.CENTER);
 
-			Window wcont = (Window)container;
+			Window wcont=(Window)container;
 			MyAwt.setProportionalSize(.7,wcont,null);
 			MyAwt.center(wcont,null);
-	
+
 			EscuchaWindow escuchaWindow=new EscuchaWindow();
-	
+
 			wcont.addWindowListener(escuchaWindow);
 			wcont.addWindowFocusListener(escuchaWindow);
 		}
-		
+
 		textPane.addMouseListener(new EscuchaMouse());
-		
+
 		init();
 	}
-	
+
 	public JScrollPane getScrollPane()
 	{
 		return scrollPane;
@@ -181,107 +189,149 @@ public abstract class MyConsoleBase
 			scrollPane.setBorder(null);
 		}
 	}
-	
+
 	public Container getContainer()
 	{
 		return container!=null?container:(container=new JFrame());
-	}	
-	
-	public MyConsoleBase printFmt(String s)
-	{
-		StringBuffer cmd = new StringBuffer();
-		StringBuffer txt = new StringBuffer();
-		boolean onCmd = false;
-		
-		for(int i=0; i<s.length(); i++)
-		{
-			StringBuffer curr = onCmd?cmd:txt;
-			
-			char c = s.charAt(i);
-			
-			if( c=='[' )
-			{
-				onCmd=true;
-				curr = cmd;
-				curr.append(c);
-			}
-			else
-			{
-				if( c==']' )
-				{
-					onCmd=false;
-					curr.append(c);
-
-					// imprimo el texto
-					print(txt.toString());
-
-					// aplico el comando de estilo
-					_stringToCommand(cmd.toString());
-					
-					
-					cmd.delete(0,cmd.length());
-					txt.delete(0,txt.length());
-				}
-				else
-				{
-					curr.append(c);
-				}
-			}
-		}
-		
-		// imprimo el texto
-		print(txt.toString());
-
-		
-		return this;
 	}
-	
+
 	private void _stringToCommand(String sCmd)
 	{
-		if( sCmd.equals("[b]") )
+		if(sCmd.equals("[b]"))
 		{
 			b();
 			return;
 		}
 
-		if( sCmd.equals("[i]") )
+		if(sCmd.equals("[i]"))
 		{
 			i();
 			return;
 		}
-		
-		if( sCmd.equals("[x]") )
+
+		if(sCmd.equals("[x]"))
 		{
 			x();
 			return;
 		}
-		
-		if( sCmd.startsWith("[fg(") )
+
+		if(sCmd.startsWith("[fg("))
 		{
-			String sCol = MyString.extract(sCmd,"(",")")[0];
-			
+			String sCol=MyString.extract(sCmd,"(",")")[0];
 			fg(sCol.substring(1,sCol.length()-1));
 			return;
 		}
-		
-		if( sCmd.startsWith("[bg(") )
+
+		if(sCmd.startsWith("[bg("))
 		{
-			String sCol = MyString.extract(sCmd,"(",")")[0]; 
-			bg(sCol);
+			String sCol=MyString.extract(sCmd,"(",")")[0];
+			bg(sCol.substring(1,sCol.length()-1));
 			return;
 		}
 	}
 
+	// public MyConsoleBase printFmt(String s)
+	// {
+	// StringBuffer cmd=new StringBuffer();
+	// StringBuffer txt=new StringBuffer();
+	// boolean onCmd=false;
+	//
+	// for(int i=0; i<s.length(); i++)
+	// {
+	// StringBuffer curr=onCmd?cmd:txt;
+	//
+	// char c=s.charAt(i);
+	//
+	// if(c=='[')
+	// {
+	// onCmd=true;
+	// curr=cmd;
+	// curr.append(c);
+	// }
+	// else
+	// {
+	// if(c==']')
+	// {
+	// onCmd=false;
+	// curr.append(c);
+	//
+	// // imprimo el texto
+	// print(txt.toString());
+	//
+	// // aplico el comando de estilo
+	// _stringToCommand(cmd.toString());
+	//
+	// cmd.delete(0,cmd.length());
+	// txt.delete(0,txt.length());
+	// }
+	// else
+	// {
+	// curr.append(c);
+	// }
+	// }
+	// }
+	//
+	// // imprimo el texto
+	// print(txt.toString());
+	//
+	// return this;
+	// }
+
+	// public MyConsoleBase print(Object o)
+	// {
+	// init();
+	//
+	// String txt=o!=null?o.toString():"null";
+	//
+	// open();
+	//
+	// String[]
+	// reemAña=_reemplazarOAñadir(textPane.getText(),textPane.getCaretPosition(),txt);
+	// if(reemAña[0].length()>0)
+	// {
+	// int pos=textPane.getCaretPosition();
+	// textPane.replaceText(reemAña[0],pos,pos+reemAña[0].length());
+	// }
+	//
+	// if(reemAña[1].length()>0)
+	// {
+	// textPane.insertText(reemAña[1],textPane.getCaretPosition());
+	// }
+	//
+	// return this;
+	// }
 
 	public MyConsoleBase print(Object o)
 	{
 		init();
-
-		String txt=o!=null?o.toString():"null";
-
 		open();
 
-		String[] reemAña=_reemplazarOAñadir(textPane.getText(),textPane.getCaretPosition(),txt);
+		String s=o==null?"null":o.toString();
+		String[][] toPrint=_extractFormattedText(s);
+
+		for(int i=0; i<toPrint.length; i++)
+		{
+			String txt=toPrint[i][0];
+			String style=toPrint[i][1];
+
+			if(!style.isEmpty())
+			{
+				cs(style);
+				_print(txt);
+				x();
+			}
+			else
+			{
+				_print(txt);
+			}
+		}
+
+		return this;
+	}
+
+	private MyConsoleBase _print(String s)
+	{
+		String[] reemAña=_reemplazarOAñadir(textPane.getText(),textPane.getCaretPosition(),s);
 		if(reemAña[0].length()>0)
 		{
 			int pos=textPane.getCaretPosition();
@@ -295,26 +345,125 @@ public abstract class MyConsoleBase
 
 		return this;
 	}
-	
-	public MyConsoleBase backspace() 
+
+	public boolean _isFormatedText(String s)
+	{
+		Stack<String> stack=new Stack<>();
+		Pattern pattern=Pattern.compile("\\[(b|i|fg\\([^\\]]+\\)|bg\\([^\\]]+\\)|x)\\]");
+		Matcher matcher=pattern.matcher(s);
+
+		boolean hasValidContent=false;
+		int lastEnd=0; // Para verificar contenido entre tags
+
+		while(matcher.find())
+		{
+			String tag=matcher.group(1);
+
+			// Verificar si hay contenido entre los tags
+			if(matcher.start()>lastEnd)
+			{
+				hasValidContent=true;
+			}
+			lastEnd=matcher.end();
+
+			if(tag.equals("x"))
+			{
+				if(stack.isEmpty()) return false; // No hay nada que cerrar
+				stack.pop(); // Cerramos el último formato abierto
+			}
+			else
+			{
+				stack.push(tag); // Apilamos el formato abierto
+			}
+		}
+
+		// Asegurar que la pila está vacía y que hubo contenido válido
+		return stack.isEmpty()&&hasValidContent;
+	}
+
+	public String[][] _extractFormattedText(String s)
+	{
+		if(!_isFormatedText(s))
+		{
+			return new String[][] {{s, ""}};
+		}
+
+		List<String[]> result=new ArrayList<>();
+		StringBuilder cmd=new StringBuilder();
+		StringBuilder txt=new StringBuilder();
+		List<String> activeStyles=new ArrayList<>();
+		boolean onCmd=false;
+
+		for(int i=0; i<s.length(); i++)
+		{
+			char c=s.charAt(i);
+
+			if(c=='[')
+			{
+				onCmd=true;
+				if(txt.length()>0)
+				{
+					result.add(new String[] {txt.toString(), String.join("",activeStyles)});
+					txt.setLength(0);
+				}
+				cmd.setLength(0);
+			}
+			else if(c==']')
+			{
+				onCmd=false;
+				String command=cmd.toString();
+				if(command.equals("x"))
+				{
+					if(!activeStyles.isEmpty())
+					{
+						activeStyles.remove(activeStyles.size()-1);
+					}
+				}
+				else
+				{
+					activeStyles.add("["+command+"]");
+				}
+			}
+			else
+			{
+				if(onCmd)
+				{
+					cmd.append(c);
+				}
+				else
+				{
+					txt.append(c);
+				}
+			}
+		}
+
+		if(txt.length()>0)
+		{
+			result.add(new String[] {txt.toString(), String.join("",activeStyles)});
+		}
+
+		return result.toArray(new String[0][2]);
+	}
+
+	public MyConsoleBase backspace()
 	{
 		try
 		{
-	        int pos = textPane.getCaretPosition();
-	        if (pos > 0) {
-	        	StyledDocument doc = textPane.c().getStyledDocument();
-	            doc.remove(pos - 1, 1);
-	        }
-	        
-	        return this;
+			int pos=textPane.getCaretPosition();
+			if(pos>0)
+			{
+				StyledDocument doc=textPane.c().getStyledDocument();
+				doc.remove(pos-1,1);
+			}
+
+			return this;
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-    }
-
+	}
 
 	private static String[] _reemplazarOAñadir(String original, int posicion, String reemplazo)
 	{
@@ -458,18 +607,16 @@ public abstract class MyConsoleBase
 		textPane.setCaretPosition(textPane.getLen());
 		return this;
 	}
-	
+
 	public InputConfigurator input()
 	{
-		InputConfigurator ic = new InputConfigurator(this);
+		InputConfigurator ic=new InputConfigurator(this);
 		return ic;
 	}
-	
-	
 
 	public String readlnString(String regex)
 	{
-		String x = readString(regex);
+		String x=readString(regex);
 		println();
 		return x;
 	}
@@ -478,15 +625,15 @@ public abstract class MyConsoleBase
 	{
 		return input().regex(regex).read();
 	}
-	
+
 	public String readPassword()
 	{
 		return _readPassword();
 	}
-	
+
 	public String readlnPassword()
 	{
-		String x = _readPassword();
+		String x=_readPassword();
 		println();
 		return x;
 	}
@@ -505,8 +652,8 @@ public abstract class MyConsoleBase
 
 	public Integer readInteger()
 	{
-		String rg = "^-?(214748364[0-7]|21474836[0-3][0-9]|2147483[0-5][0-9]{2}|214748[0-2][0-9]{3}|21474[0-7][0-9]{4}|2147[0-3][0-9]{5}|214[0-6][0-9]{6}|21[0-3][0-9]{7}|2[01][0-9]{8}|1[0-9]{9}|[1-9][0-9]{0,8}|0)$";
-		String s = input().mask(INTEGER).regex(rg).read();
+		String rg="^-?(214748364[0-7]|21474836[0-3][0-9]|2147483[0-5][0-9]{2}|214748[0-2][0-9]{3}|21474[0-7][0-9]{4}|2147[0-3][0-9]{5}|214[0-6][0-9]{6}|21[0-3][0-9]{7}|2[01][0-9]{8}|1[0-9]{9}|[1-9][0-9]{0,8}|0)$";
+		String s=input().mask(INTEGER).regex(rg).read();
 		return s!=null?Integer.parseInt(s):null;
 	}
 
@@ -543,7 +690,7 @@ public abstract class MyConsoleBase
 
 	public Double readDouble()
 	{
-		String s = input().mask(DOUBLE).valid(x->MyString.isDouble(x)).read();
+		String s=input().mask(DOUBLE).valid(x -> MyString.isDouble(x)).read();
 		return s!=null?Double.parseDouble(s):null;
 	}
 
@@ -553,11 +700,11 @@ public abstract class MyConsoleBase
 		println();
 		return d;
 	}
-	
+
 	public void open()
 	{
 		init();
-		
+
 		if(!container.isVisible())
 		{
 			container.setVisible(true);
@@ -572,156 +719,155 @@ public abstract class MyConsoleBase
 		}
 	}
 
-	public Progress progressBar(int size,int top)
+	public Progress progressBar(int size, int top)
 	{
 		return new ProgressBar(this,size,top);
 	}
-	
+
 	public Progress progressMeter(int top)
 	{
 		return new ProgressMeter(this,top);
 	}
 
-	
-//	 public void executeWithProgress(Runnable r) {
-//	        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-//	        SecondaryLoop loop = eventQueue.createSecondaryLoop();
-//	        
-//	        beginProgressBar(20, 100);
-//
-//	        MyThread.start(() -> {
-//	            r.run();
-//	            loop.exit();
-//	            finishProgress();
-//	        });
-//
-//	        loop.enter();
-//	    }
-	
+	// public void executeWithProgress(Runnable r) {
+	// EventQueue eventQueue =
+	// Toolkit.getDefaultToolkit().getSystemEventQueue();
+	// SecondaryLoop loop = eventQueue.createSecondaryLoop();
+	//
+	// beginProgressBar(20, 100);
+	//
+	// MyThread.start(() -> {
+	// r.run();
+	// loop.exit();
+	// finishProgress();
+	// });
+	//
+	// loop.enter();
+	// }
 
-	
-//	public void beforeProgressOnWindow()
-//	{
-//		eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-//		secondaryLoop = eventQueue.createSecondaryLoop();
-//		progressOnWindow = true;
-//	}
+	// public void beforeProgressOnWindow()
+	// {
+	// eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+	// secondaryLoop = eventQueue.createSecondaryLoop();
+	// progressOnWindow = true;
+	// }
 
-//	// PROGRESS
-//	public void beginProgressBar(int size, long top)
-//	{
-//		this.progressBar=true;
-//		this.size=size;
-//		this.top=top;
-//		this.curr=0;
-//		print("[");
-//		for(int i=0; i<size; i++)
-//			print(" ");
-//		print("]");
-//		skipBkp(size+1);
-//		cs(getStyle().progressStyle);
-//
-//		initProgressTime=System.currentTimeMillis();
-//	}
+	// // PROGRESS
+	// public void beginProgressBar(int size, long top)
+	// {
+	// this.progressBar=true;
+	// this.size=size;
+	// this.top=top;
+	// this.curr=0;
+	// print("[");
+	// for(int i=0; i<size; i++)
+	// print(" ");
+	// print("]");
+	// skipBkp(size+1);
+	// cs(getStyle().progressStyle);
+	//
+	// initProgressTime=System.currentTimeMillis();
+	// }
 
-//	public void beginProgressMeter(long top)
-//	{
-//		initProgressTime=System.currentTimeMillis();
-//		this.progressBar=false;
-//		this.top=top;
-//		this.curr=0;
-//		print("00%");
-//		skipBkp(3);
-//	}
-	
-//	protected abstract void setWaiting(boolean b);
+	// public void beginProgressMeter(long top)
+	// {
+	// initProgressTime=System.currentTimeMillis();
+	// this.progressBar=false;
+	// this.top=top;
+	// this.curr=0;
+	// print("00%");
+	// skipBkp(3);
+	// }
 
-//	public void increaseProgress()
-//	{
-//		if(progressBar)
-//		{
-//			curr++;
-//			double porc=((double)curr/top)*size;
-//			if(ant!=(int)porc)
-//			{				
-//				print(getStyle().progressFill);
-//				ant=(int)porc;
-//			}
-//
-//			if(ant==size)
-//			{
-//				ant=0;
-//				skipFwd();
-//				
-//				X();
-//			}
-//		}
-//		else
-//		{
-//			curr++;
-//			int porc=(int)Math.floor(((double)curr/top)*100);
-//
-//			if(porc<100)
-//			{
-//				print((porc<10?"0":"")+porc+"%").skipBkp(3);
-//			}
-//			else
-//			{
-//				print("100").print("%");
-//				skipFwd();
-//			}
-//		}
-//	}
+	// protected abstract void setWaiting(boolean b);
 
-//	public long finishProgress()
-//	{
-//		while(curr<top)
-//		{
-//			increase();
-//		}
-//		
-//		X();
-//
-//		skipFwd();
-//
-//		long x = System.currentTimeMillis()-initProgressTime;
-//		
-//		if( progressOnWindow )
-//		{
-//			progressOnWindow = false;
-//			secondaryLoop.exit();
-//		}
-//		
-//		return x;
-//	}
-//	
-//	public void afterProgressOnWindow()
-//	{
-//		secondaryLoop.enter();
-//	}
-//	
-//	
-//	
-//	 public void executeWithProgress(Runnable r) {
-//	        EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-//	        SecondaryLoop loop = eventQueue.createSecondaryLoop();
-//	        
-//	        beginProgressBar(20, 100);
-//
-//	        MyThread.start(() -> {
-//	            r.run();
-//	            loop.exit();
-//	            finishProgress();
-//	        });
-//
-//	        loop.enter();
-//	    }
-//	
+	// public void increaseProgress()
+	// {
+	// if(progressBar)
+	// {
+	// curr++;
+	// double porc=((double)curr/top)*size;
+	// if(ant!=(int)porc)
+	// {
+	// print(getStyle().progressFill);
+	// ant=(int)porc;
+	// }
+	//
+	// if(ant==size)
+	// {
+	// ant=0;
+	// skipFwd();
+	//
+	// X();
+	// }
+	// }
+	// else
+	// {
+	// curr++;
+	// int porc=(int)Math.floor(((double)curr/top)*100);
+	//
+	// if(porc<100)
+	// {
+	// print((porc<10?"0":"")+porc+"%").skipBkp(3);
+	// }
+	// else
+	// {
+	// print("100").print("%");
+	// skipFwd();
+	// }
+	// }
+	// }
 
+	// public long finishProgress()
+	// {
+	// while(curr<top)
+	// {
+	// increase();
+	// }
+	//
+	// X();
+	//
+	// skipFwd();
+	//
+	// long x = System.currentTimeMillis()-initProgressTime;
+	//
+	// if( progressOnWindow )
+	// {
+	// progressOnWindow = false;
+	// secondaryLoop.exit();
+	// }
+	//
+	// return x;
+	// }
+	//
+	// public void afterProgressOnWindow()
+	// {
+	// secondaryLoop.enter();
+	// }
+	//
+	//
+	//
+	// public void executeWithProgress(Runnable r) {
+	// EventQueue eventQueue =
+	// Toolkit.getDefaultToolkit().getSystemEventQueue();
+	// SecondaryLoop loop = eventQueue.createSecondaryLoop();
+	//
+	// beginProgressBar(20, 100);
+	//
+	// MyThread.start(() -> {
+	// r.run();
+	// loop.exit();
+	// finishProgress();
+	// });
+	//
+	// loop.enter();
+	// }
+	//
 
 	public int pressAnyKey()
 	{
-		return pressAnyKey(null,()->{});
+		return pressAnyKey(null,() -> {
+		});
 	}
 
 	public int pressAnyKey(Runnable r)
@@ -731,19 +877,20 @@ public abstract class MyConsoleBase
 
 	public int pressAnyKey(int k)
 	{
-		return pressAnyKey(k,()->{});
+		return pressAnyKey(k,() -> {
+		});
 	}
-	
-	public int pressAnyKey(Integer k,Runnable r)
+
+	public int pressAnyKey(Integer k, Runnable r)
 	{
 		return _pressAnyKey(k,r);
 	}
-	
+
 	protected void setReading(boolean r)
 	{
-		this.reading = r;
+		this.reading=r;
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -770,8 +917,6 @@ public abstract class MyConsoleBase
 			return null;
 		}
 	}
-
-
 
 	public void setDefaultInputStyle(String inputStyle)
 	{
@@ -807,12 +952,12 @@ public abstract class MyConsoleBase
 	{
 		return customStyles.get(customStyleName);
 	}
-	
+
 	public void setClosable(boolean b)
 	{
-		this.closable = b;
+		this.closable=b;
 	}
-	
+
 	public boolean isClosable()
 	{
 		return closable;
@@ -879,97 +1024,96 @@ public abstract class MyConsoleBase
 
 		return this;
 	}
-	
+
 	public int menuln(String[] options)
 	{
-		int op = menu(options);
+		int op=menu(options);
 		println();
 		return op;
 	}
 
 	public int menu(String[] options)
 	{
-		int[][] range = new int[options.length][2];
+		int[][] range=new int[options.length][2];
 
 		// normalizo opciones
-		String[] optionsOk = _normalizarItemsMenu(options);
+		String[] optionsOk=_normalizarItemsMenu(options);
 
-		int col = textPane.getCaretColumnPosition()+1; // por el "["
-		
+		int col=textPane.getCaretColumnPosition()+1; // por el "["
+
 		cs(getDefaultInputStyle());
-		
+
 		// imprimo el menu
 		for(int i=0; i<optionsOk.length; i++)
 		{
-			
-			int cp = textPane.getCaretPosition();
-			
-			if( i==0 )
+
+			int cp=textPane.getCaretPosition();
+
+			if(i==0)
 			{
-				range[i][0] = cp+1;
-				range[i][1] = cp+1+optionsOk[i].length();
+				range[i][0]=cp+1;
+				range[i][1]=cp+1+optionsOk[i].length();
 				print("[");
 				println(optionsOk[0]);
 			}
 			else
 			{
-				if( i==optionsOk.length-1)
+				if(i==optionsOk.length-1)
 				{
-					range[i][0] = col+cp;
-					range[i][1] = col+cp+optionsOk[i].length();
-					String espacios = MyString.replicate(' ',col);
+					range[i][0]=col+cp;
+					range[i][1]=col+cp+optionsOk[i].length();
+					String espacios=MyString.replicate(' ',col);
 					println(espacios+optionsOk[i]+"]");
 				}
 				else
 				{
-					range[i][0] = col+cp;
-					range[i][1] = col+cp+optionsOk[i].length();
-					String espacios = MyString.replicate(' ',col);
+					range[i][0]=col+cp;
+					range[i][1]=col+cp+optionsOk[i].length();
+					String espacios=MyString.replicate(' ',col);
 					println(espacios+optionsOk[i]);
 				}
- 			}
+			}
 		}
-		
-		int op = _menu(range);
-		
+
+		int op=_menu(range);
+
 		// borro el menu
 		cs(getDefaultInputStyle());
 		print("["+options[op]+"]");
-		
+
 		X();
 
 		return op;
 	}
-		
+
 	private String[] _normalizarItemsMenu(String[] options)
 	{
 		// dejo todas las opciones con el mismo len
-		int maxLen = MyCollection.reduce(options,0,(s,len)->Math.max(s.length(),len));
+		int maxLen=MyCollection.reduce(options,0,(s, len) -> Math.max(s.length(),len));
 
-		String[] optionsOk = new String[options.length];
+		String[] optionsOk=new String[options.length];
 		for(int i=0; i<options.length; i++)
 		{
 			optionsOk[i]=MyString.rpad(options[i],' ',maxLen);
 		}
-		
+
 		return optionsOk;
 	}
 
-	
 	private static boolean _validKeyCode(int kc)
 	{
 		return kc==KeyEvent.VK_LEFT||kc==KeyEvent.VK_RIGHT||kc==KeyEvent.VK_BACK_SPACE||kc==KeyEvent.VK_ENTER;
 	}
-	
+
 	public void closeAndExit()
 	{
-		Container c = getContainer();
+		Container c=getContainer();
 		int r=JOptionPane.showConfirmDialog(c,"¿Esta acción finalizará el programa?","Confirmación",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
 		if(r==JOptionPane.YES_OPTION)
 		{
 			// container.setVisible(false);
 			close();
-			if( container instanceof Window || container instanceof JFrame )
+			if(container instanceof Window||container instanceof JFrame)
 			{
 				((Window)container).dispose();
 			}
@@ -982,14 +1126,14 @@ public abstract class MyConsoleBase
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
-			int len = textPane.getText().length();
-			if( len>0 && textPane.getText().charAt(len-1)==']' )
+			int len=textPane.getText().length();
+			if(len>0&&textPane.getText().charAt(len-1)==']')
 			{
 				textPane.setCaretPosition(textPane.getLen()-1);
 			}
 			else
 			{
-				textPane.setCaretPositionAtEndOfText();				
+				textPane.setCaretPositionAtEndOfText();
 			}
 		}
 	}
@@ -1012,7 +1156,7 @@ public abstract class MyConsoleBase
 			super.windowLostFocus(e);
 		}
 	}
-	
+
 	public class EscuchaCTRLCyESC extends KeyAdapter
 	{
 		@Override
@@ -1031,5 +1175,5 @@ public abstract class MyConsoleBase
 				}
 			}
 		}
-	}	
+	}
 }

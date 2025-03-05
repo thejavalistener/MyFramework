@@ -40,6 +40,7 @@ public class ProgressBar extends Progress
 	{
 		curr++;
 		double porc=((double)curr/top)*size;
+
 		if(ant!=(int)porc)
 		{				
 			console.print(console.getStyle().progressFill);
@@ -50,7 +51,6 @@ public class ProgressBar extends Progress
 		{
 			ant=0;
 			console.skipFwd();
-			
 			console.X();
 		}
 	}
