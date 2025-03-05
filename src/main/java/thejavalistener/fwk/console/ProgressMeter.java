@@ -1,6 +1,4 @@
-package thejavalistener.fwk.frontend.hql.console;
-
-import thejavalistener.fwk.console.MyConsoleBase;
+package thejavalistener.fwk.console;
 
 public class ProgressMeter extends Progress
 {

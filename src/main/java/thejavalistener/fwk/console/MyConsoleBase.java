@@ -29,9 +29,6 @@ import javax.swing.text.StyledDocument;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
-import thejavalistener.fwk.frontend.hql.console.Progress;
-import thejavalistener.fwk.frontend.hql.console.ProgressBar;
-import thejavalistener.fwk.frontend.hql.console.ProgressMeter;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
 import thejavalistener.fwk.util.TriFunction;

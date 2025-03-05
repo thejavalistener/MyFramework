@@ -1,10 +1,9 @@
-package thejavalistener.fwk.frontend.hql.console;
+package thejavalistener.fwk.console;
 
 import java.awt.EventQueue;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
 
-import thejavalistener.fwk.console.MyConsoleBase;
 import thejavalistener.fwk.util.MyThread;
 
 public abstract class Progress

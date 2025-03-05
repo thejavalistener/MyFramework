@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.frontend.hql.console.Progress;
 import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.UTime;
 import thejavalistener.fwk.util.string.MyString;

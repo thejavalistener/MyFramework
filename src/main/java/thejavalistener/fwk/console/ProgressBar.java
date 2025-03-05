@@ -1,12 +1,10 @@
-package thejavalistener.fwk.frontend.hql.console;
+package thejavalistener.fwk.console;
 
 import java.awt.EventQueue;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
-
-import thejavalistener.fwk.console.MyConsoleBase;
 
 public class ProgressBar extends Progress
 {
