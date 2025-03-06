@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -73,8 +74,12 @@ public class MyConsole extends MyConsoleBase
 	
 	protected void setWaiting(boolean wait)
 	{
+		// notifico a los listeners
+		MyCollection.invoke(getListeners(),(lst)->lst.waitingForUserInput(wait));
+		
+		
 		if( wait )
-		{
+		{			
 			// bloquea
 		    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 		    secondaryLoop = eventQueue.createSecondaryLoop();
@@ -180,18 +185,6 @@ public class MyConsole extends MyConsoleBase
 				return;
 			}
 
-			// verifico que no pise los corchetes
-//			int caret = textPane.getCaretPosition();
-//			if((kc==KeyEvent.VK_UP)||(kc==KeyEvent.VK_DOWN)
-//			 ||(kc==KeyEvent.VK_LEFT&&caret<=abre+1)
-//			 ||(kc==KeyEvent.VK_BACK_SPACE&&caret<=abre+1)
-//			 ||(kc==KeyEvent.VK_RIGHT&&caret>=cierra)
-//			 ||(kc==KeyEvent.VK_PAGE_DOWN||kc==KeyEvent.VK_PAGE_UP))
-//			{
-//				e.consume();
-//				return;
-//			}		
-
 			if( _pisaCorchetes(e) )
 			{
 				e.consume();
@@ -255,7 +248,7 @@ public class MyConsole extends MyConsoleBase
 		public int getPressedKey()
 		{
 			descartarKeyEvent=1;
-			return keyPressed;
+			return keyPressed!=null?keyPressed:-1;
 		}
 
 		public void setRunnnableAndKey(Runnable r,Integer k)
@@ -326,7 +319,7 @@ public class MyConsole extends MyConsoleBase
 
 			textPane.setEditable(true);
 			X();
-
+			
 			setWaiting(true);
 			
 			// dejo de escuchar
@@ -377,7 +370,9 @@ public class MyConsole extends MyConsoleBase
 			{
 				e.consume();
 				textPane.setCaretPosition(textPane.getLen());
+
 				setWaiting(false);
+
 				return;
 			}
 		}

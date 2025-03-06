@@ -67,6 +67,8 @@ public abstract class MyConsoleBase
 	protected JScrollPane scrollPane;
 	protected Container container;
 	protected Window parent;
+	
+	private List<MyConsoleListener> listeners = new ArrayList<>();
 
 	// STYLE
 	private MyConsoleStyle style;
@@ -139,14 +141,13 @@ public abstract class MyConsoleBase
 		customStyles.put("defaultInputStyle",style.defaultInputStyle);
 		customStyles.put("defaultStyle",style.defaultStyle);
 
-		container=getContainer();
-		// container = new JFrame();
+		container = getContainer();
 
 		textPane=new MyTextPane(false,true);
 		textPane.addKeyListener(new EscuchaCTRLCyESC());
 		scrollPane=new JScrollPane(textPane.c());
 
-		if(container instanceof Window||container instanceof JFrame)
+		if(container instanceof Window || container instanceof JFrame)
 		{
 			container.add(scrollPane,BorderLayout.CENTER);
 
@@ -227,76 +228,6 @@ public abstract class MyConsoleBase
 		}
 	}
 
-	// public MyConsoleBase printFmt(String s)
-	// {
-	// StringBuffer cmd=new StringBuffer();
-	// StringBuffer txt=new StringBuffer();
-	// boolean onCmd=false;
-	//
-	// for(int i=0; i<s.length(); i++)
-	// {
-	// StringBuffer curr=onCmd?cmd:txt;
-	//
-	// char c=s.charAt(i);
-	//
-	// if(c=='[')
-	// {
-	// onCmd=true;
-	// curr=cmd;
-	// curr.append(c);
-	// }
-	// else
-	// {
-	// if(c==']')
-	// {
-	// onCmd=false;
-	// curr.append(c);
-	//
-	// // imprimo el texto
-	// print(txt.toString());
-	//
-	// // aplico el comando de estilo
-	// _stringToCommand(cmd.toString());
-	//
-	// cmd.delete(0,cmd.length());
-	// txt.delete(0,txt.length());
-	// }
-	// else
-	// {
-	// curr.append(c);
-	// }
-	// }
-	// }
-	//
-	// // imprimo el texto
-	// print(txt.toString());
-	//
-	// return this;
-	// }
-
-	// public MyConsoleBase print(Object o)
-	// {
-	// init();
-	//
-	// String txt=o!=null?o.toString():"null";
-	//
-	// open();
-	//
-	// String[]
-	// reemAña=_reemplazarOAñadir(textPane.getText(),textPane.getCaretPosition(),txt);
-	// if(reemAña[0].length()>0)
-	// {
-	// int pos=textPane.getCaretPosition();
-	// textPane.replaceText(reemAña[0],pos,pos+reemAña[0].length());
-	// }
-	//
-	// if(reemAña[1].length()>0)
-	// {
-	// textPane.insertText(reemAña[1],textPane.getCaretPosition());
-	// }
-	//
-	// return this;
-	// }
 
 	public MyConsoleBase print(Object o)
 	{
@@ -726,141 +657,16 @@ public abstract class MyConsoleBase
 		return new ProgressMeter(this,top);
 	}
 
-	// public void executeWithProgress(Runnable r) {
-	// EventQueue eventQueue =
-	// Toolkit.getDefaultToolkit().getSystemEventQueue();
-	// SecondaryLoop loop = eventQueue.createSecondaryLoop();
-	//
-	// beginProgressBar(20, 100);
-	//
-	// MyThread.start(() -> {
-	// r.run();
-	// loop.exit();
-	// finishProgress();
-	// });
-	//
-	// loop.enter();
-	// }
-
-	// public void beforeProgressOnWindow()
-	// {
-	// eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-	// secondaryLoop = eventQueue.createSecondaryLoop();
-	// progressOnWindow = true;
-	// }
-
-	// // PROGRESS
-	// public void beginProgressBar(int size, long top)
-	// {
-	// this.progressBar=true;
-	// this.size=size;
-	// this.top=top;
-	// this.curr=0;
-	// print("[");
-	// for(int i=0; i<size; i++)
-	// print(" ");
-	// print("]");
-	// skipBkp(size+1);
-	// cs(getStyle().progressStyle);
-	//
-	// initProgressTime=System.currentTimeMillis();
-	// }
-
-	// public void beginProgressMeter(long top)
-	// {
-	// initProgressTime=System.currentTimeMillis();
-	// this.progressBar=false;
-	// this.top=top;
-	// this.curr=0;
-	// print("00%");
-	// skipBkp(3);
-	// }
-
-	// protected abstract void setWaiting(boolean b);
-
-	// public void increaseProgress()
-	// {
-	// if(progressBar)
-	// {
-	// curr++;
-	// double porc=((double)curr/top)*size;
-	// if(ant!=(int)porc)
-	// {
-	// print(getStyle().progressFill);
-	// ant=(int)porc;
-	// }
-	//
-	// if(ant==size)
-	// {
-	// ant=0;
-	// skipFwd();
-	//
-	// X();
-	// }
-	// }
-	// else
-	// {
-	// curr++;
-	// int porc=(int)Math.floor(((double)curr/top)*100);
-	//
-	// if(porc<100)
-	// {
-	// print((porc<10?"0":"")+porc+"%").skipBkp(3);
-	// }
-	// else
-	// {
-	// print("100").print("%");
-	// skipFwd();
-	// }
-	// }
-	// }
-
-	// public long finishProgress()
-	// {
-	// while(curr<top)
-	// {
-	// increase();
-	// }
-	//
-	// X();
-	//
-	// skipFwd();
-	//
-	// long x = System.currentTimeMillis()-initProgressTime;
-	//
-	// if( progressOnWindow )
-	// {
-	// progressOnWindow = false;
-	// secondaryLoop.exit();
-	// }
-	//
-	// return x;
-	// }
-	//
-	// public void afterProgressOnWindow()
-	// {
-	// secondaryLoop.enter();
-	// }
-	//
-	//
-	//
-	// public void executeWithProgress(Runnable r) {
-	// EventQueue eventQueue =
-	// Toolkit.getDefaultToolkit().getSystemEventQueue();
-	// SecondaryLoop loop = eventQueue.createSecondaryLoop();
-	//
-	// beginProgressBar(20, 100);
-	//
-	// MyThread.start(() -> {
-	// r.run();
-	// loop.exit();
-	// finishProgress();
-	// });
-	//
-	// loop.enter();
-	// }
-	//
-
+	public void addListener(MyConsoleListener lst)
+	{
+		listeners.add(lst);
+	}
+	
+	public List<MyConsoleListener> getListeners()
+	{
+		return listeners;
+	}
+	
 	public int pressAnyKey()
 	{
 		return pressAnyKey(null,() -> {

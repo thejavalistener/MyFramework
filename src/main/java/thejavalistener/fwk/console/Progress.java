@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
 
+import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyThread;
 
 public abstract class Progress
@@ -35,11 +36,15 @@ public abstract class Progress
         SecondaryLoop loop = eventQueue.createSecondaryLoop();
         
         begin();
+        
+		MyCollection.invoke(console.getListeners(),t->t.waitingForUserInput(true));
 
         MyThread.start(() -> {
+        	
             r.run();
             loop.exit();
             finish();
+    		MyCollection.invoke(console.getListeners(),t->t.waitingForUserInput(false));
         });
 
         loop.enter();

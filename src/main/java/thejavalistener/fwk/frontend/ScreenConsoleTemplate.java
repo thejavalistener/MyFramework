@@ -10,6 +10,7 @@ import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.panel.MyPanel;
 import thejavalistener.fwk.console.MyConsole;
 import thejavalistener.fwk.console.MyConsoleBase;
+import thejavalistener.fwk.console.MyConsoleListener;
 
 @Component
 public abstract class ScreenConsoleTemplate extends MyAbstractScreen
@@ -23,6 +24,7 @@ public abstract class ScreenConsoleTemplate extends MyAbstractScreen
 
 		// instancio el form y la consola
 		console = new MyConsole(this);
+		console.addListener(new EscuchaConsola());
 
 		form = new MyForm();
 		
@@ -55,5 +57,15 @@ public abstract class ScreenConsoleTemplate extends MyAbstractScreen
 	protected MyForm getForm()
 	{
 		return form;
+	}
+	
+	class EscuchaConsola implements MyConsoleListener
+	{
+		@Override
+		public void waitingForUserInput(boolean b)
+		{
+			// si la consola esta en espera => no admito cambio de apps
+			allowAppSwitch(!b);
+		}
 	}
 }
