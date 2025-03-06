@@ -39,7 +39,10 @@ public class MyLink
 			
 	private ActionListener listener = null;
 
-
+	private int currConfiguration;
+	private int prevConfiguration;
+	
+	
 	private HashMap<String,Object> relatedObjects = null;
 	
 	private MyLink outer;
@@ -95,6 +98,18 @@ public class MyLink
 		applyStyle();
 	}
 	
+	public void setEnabled(boolean b)
+	{				
+		if( !b )
+		{
+			prevConfiguration = currConfiguration;
+			configureAs(LABEL);			
+		}
+		else
+		{
+			configureAs(prevConfiguration);						
+		}
+	}
 	
 	public MyLinkStyle getStyle()
 	{
@@ -176,6 +191,7 @@ public class MyLink
 	
 	public void configureAs(int linkType)
 	{
+		currConfiguration = linkType;
 		switch(linkType)
 		{
 			case LABEL:

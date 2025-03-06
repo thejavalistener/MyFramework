@@ -135,6 +135,11 @@ public class MyForm
 			formPanel.add(rowPanel);
 		}
 	}
+	
+	public void setEnabled(boolean b)
+	{
+		MyAwt.setEnabled(contentPane,b);
+	}
 
 	public JPanel c()
 	{

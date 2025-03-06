@@ -83,6 +83,16 @@ public class MyLinkedPane
 		return addTab(lnk,c,selected);
 	}
 	
+	public void setEnabled(boolean b)
+	{
+		linkGroup.setEnabled(b);
+	}
+	
+	public void setOthersEnabled(boolean b)
+	{
+		linkGroup.setOthersEnabled(b);
+	}
+	
 	private MyLink addTab(MyLink lnk,Component c,boolean selected)
 	{
 		boolean prev = setListenerWorking(false);

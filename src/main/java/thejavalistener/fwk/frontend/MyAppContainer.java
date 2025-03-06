@@ -72,6 +72,11 @@ public class MyAppContainer
 		init(null);
 	}
 	
+	public void allowSwitch(boolean b)
+	{
+		applications.setOthersEnabled(b);
+	}
+	
 	public void init(Double porc)
 	{
 		applications.setSelectedTab(0);
@@ -127,7 +132,7 @@ public class MyAppContainer
 		{
 			MyLink lnk = (MyLink) e.getSource();
 			MyApp selectedApp = (MyApp)lnk.getRelatedObject("app");
-			
+						
 			if( selectedApp!=currApp )
 			{
 				prevApp = currApp;

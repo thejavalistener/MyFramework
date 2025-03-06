@@ -29,7 +29,7 @@ public abstract class Progress
 		secondaryLoop=eventQueue.createSecondaryLoop();
 	}
 	
-	 public void execute(Runnable r) 
+	 public MyConsoleBase execute(Runnable r) 
 	 {
         EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         SecondaryLoop loop = eventQueue.createSecondaryLoop();
@@ -43,6 +43,7 @@ public abstract class Progress
         });
 
         loop.enter();
+        return console;
     }
 
 		

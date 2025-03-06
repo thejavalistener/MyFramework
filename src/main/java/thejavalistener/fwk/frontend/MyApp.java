@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.dialog.MyDialog;
 import thejavalistener.fwk.awt.link.MyLinkedPane;
 import thejavalistener.fwk.awt.link.MyLinkedPaneStyle;
@@ -25,15 +26,17 @@ public class MyApp
 	
 	private int state;
 	
-	private MyLinkedPane screens = null;
 	
 	private String appName = null;
 	private MyAppContainer appContainer = null;
 	
 	private MyLinkedPaneStyle style = new MyLinkedPaneStyle();
 	
+	private MyLinkedPane screens = null;
 	private MyAbstractScreen currentScreen = null;
 	
+	private boolean allowSwitch = true;
+
 	public MyApp(String appName)
 	{
 		screens = new MyLinkedPane(MyLinkedPane.HORIZONTAL);
@@ -42,8 +45,23 @@ public class MyApp
 		this.appName = appName;
 	}
 	
+	public void allowSwitch(boolean b)
+	{
+		getMyAppContainer().allowSwitch(b);
+	}
+	
+	public boolean isSiwtchAllowed()
+	{
+		return allowSwitch;
+	}
+	
 	public void pushScreen(Class<? extends MyAbstractScreen> screenClass,Object ...args)
 	{
+		if(!allowSwitch )
+		{
+			return;
+		}
+		
 		// instancio la pantalla principal
 		MyAbstractScreen screen = ctx.getBean(screenClass);
 		screen.setParameters(args);
@@ -74,6 +92,11 @@ public class MyApp
 		
 	public void popScreen()
 	{
+		if( !allowSwitch )
+		{
+			return;
+		}
+		
 		// ciclo de vida
 		currentScreen.stop();
 		currentScreen.destroy();

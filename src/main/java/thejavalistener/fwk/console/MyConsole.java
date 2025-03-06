@@ -284,9 +284,6 @@ public class MyConsole extends MyConsoleBase
 				runnable.run();
 
 				setWaiting(false);
-//				// desbloqueo
-//				
-//				secondaryLoop.exit();
 				
 		        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() 
 		        {

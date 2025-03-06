@@ -30,6 +30,22 @@ public class MyAwt
 		Toolkit.getDefaultToolkit().beep();
 	}
 	
+    public static void setEnabled(Container c, boolean b) {
+        
+        // Establecer el estado para el contenedor mismo
+        c.setEnabled(b);
+        
+        // Obtener todos los componentes dentro del contenedor
+        Component[] components = c.getComponents();
+        for (Component comp : components) {
+            comp.setEnabled(b);
+            
+            // Si el componente es un contenedor, llamar recursivamente
+            if (comp instanceof Container) {
+                setEnabled((Container) comp, b);
+            }
+        }
+    }
 	public static <T> T getParent(Component component,Class<T> parentType)
 	{
 		Container parent=component.getParent();

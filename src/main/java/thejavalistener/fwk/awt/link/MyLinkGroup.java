@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.util.MyCollection;
+import thejavalistener.fwk.util.MyLog;
 
 public class MyLinkGroup
 {
@@ -22,6 +24,29 @@ public class MyLinkGroup
 	{
 		links = new ArrayList<>();
 		escuchaLinks = new EscuchaLinks();
+	}
+	
+	public void setEnabled(boolean b)
+	{
+		for(MyLink lnk:links)
+		{
+			lnk.c().setEnabled(b);
+		}
+	}
+	
+	public void setOthersEnabled(boolean b)
+	{
+		for(MyLink lnk:links)
+		{
+			if( !lnk.isSelected() )
+			{
+				lnk.setEnabled(b);				
+			}
+			else
+			{
+				MyLog.out("ABANICO LOCOMIA");
+			}
+		}
 	}
 	
 	public void setActionListener(ActionListener listener)

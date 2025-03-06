@@ -44,6 +44,11 @@ public abstract class MyAbstractScreen extends MyAbstractScreenBase
 	{
 	}
 	
+	public void allowAppSwitch(boolean b)
+	{
+		getMyApp().allowSwitch(b);
+	}
+	
 //	public Object getReturnValue()
 //	{
 //		return returnValue;
