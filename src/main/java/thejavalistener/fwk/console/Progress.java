@@ -21,6 +21,7 @@ public abstract class Progress
 	protected long finishProgressTime;
 
 	protected abstract void begin();
+	
 	public abstract void increase();
 	public abstract void increase(String mssg);
 
@@ -51,8 +52,7 @@ public abstract class Progress
         loop.enter();
         return console;
     }
-
-		
+	 
 	protected long finish()
 	{
 		while(curr<top)

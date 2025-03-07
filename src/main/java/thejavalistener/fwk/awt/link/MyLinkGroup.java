@@ -42,10 +42,6 @@ public class MyLinkGroup
 			{
 				lnk.setEnabled(b);				
 			}
-			else
-			{
-				MyLog.out("ABANICO LOCOMIA");
-			}
 		}
 	}
 	

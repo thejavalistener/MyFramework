@@ -28,7 +28,22 @@ public class ProgressMeter extends Progress
 
 	public void increase(String mssg)
 	{
-		
+		curr++;
+		int porc=(int)Math.floor(((double)curr/top)*100);
+
+		if(porc<100)
+		{
+			console.print((porc<10?"0":"")+porc+"%");
+			int pos = console.getCaretPosition();
+			console.print(" "+mssg);
+			console.setCaretPosition(pos);
+			console.skipBkp(3);
+		}
+		else
+		{
+			console.print("100% ");//.print("%");
+			console.skipFwd();
+		}		
 	}
 
 	public void increase()

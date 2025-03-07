@@ -1,11 +1,5 @@
 package thejavalistener.fwk.console;
 
-import java.awt.EventQueue;
-import java.awt.SecondaryLoop;
-import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProgressBar extends Progress
 {
 	private int size;
@@ -45,10 +39,12 @@ public class ProgressBar extends Progress
 
 		if(ant!=(int)porc)
 		{				
+			console.cs(console.getStyle().progressStyle);
 			console.print(console.getStyle().progressFill);
+			console.X();
 			int x = console.getCaretPosition();
 			console.setCaretPosition(lastCorch);
-			console.print(mssg);
+			console.print(" "+mssg);
 			console.setCaretPosition(x);
 			
 			ant=(int)porc;
@@ -64,21 +60,7 @@ public class ProgressBar extends Progress
 	
 	public void increase()
 	{
-		curr++;
-		double porc=((double)curr/top)*size;
-
-		if(ant!=(int)porc)
-		{				
-			console.print(console.getStyle().progressFill);
-			ant=(int)porc;
-		}
-
-		if(ant==size)
-		{
-			ant=0;
-			console.skipFwd();
-			console.X();
-		}
+		increase("");
 	}
 }
 
