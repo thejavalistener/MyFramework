@@ -5,14 +5,13 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import thejavalistener.fwk.awt.GridLayout2;
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.awt.dialog.MyDialog;
-import thejavalistener.fwk.awt.dialog.Returnable;
 import thejavalistener.fwk.util.MyCollection;
 
 public class MyForm 
@@ -139,6 +138,19 @@ public class MyForm
 	public void setEnabled(boolean b)
 	{
 		MyAwt.setEnabled(contentPane,b);
+	}
+		
+	private Map<?,?> currState = null;
+	public void setDiabledTemporally(boolean disable)
+	{
+		if( disable )
+		{
+			currState = MyAwt.disableTemporally(c());
+		}
+		else
+		{
+			MyAwt.restoreDisabled(currState);			
+		}
 	}
 
 	public JPanel c()

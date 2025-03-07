@@ -3,6 +3,7 @@ package thejavalistener.fwk.frontend;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -213,6 +214,20 @@ public class MyApp
 			popScreen();
 		}
 	}
+	
+	private Map<?,?> currState = null;
+	public void setDisabledTemporally(boolean disable)
+	{
+		if( disable )
+		{
+			currState = MyAwt.disableTemporally(c());
+		}
+		else
+		{
+			MyAwt.restoreDisabled(currState);			
+		}
+	}
+
 	
 	class EscuchaScreens implements ActionListener
 	{

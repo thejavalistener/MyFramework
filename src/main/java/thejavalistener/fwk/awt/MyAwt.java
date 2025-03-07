@@ -24,11 +24,82 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class MyAwt
-{ //pp
+{ 
 	public static void beep()
 	{
 		Toolkit.getDefaultToolkit().beep();
 	}
+	
+	// Método para deshabilitar temporalmente los componentes y guardar su estado
+	public static Map<Component, Boolean> disableTemporally(Container c) {
+	    Map<Component, Boolean> stateMap = new HashMap<>();
+	    _disableRecursively(c, stateMap);
+	    return stateMap; // Se retorna como Map<?, ?> para mayor flexibilidad
+	}
+
+	private static void _disableRecursively(Container c, Map<Component, Boolean> stateMap) {
+	    if (!stateMap.containsKey(c)) {
+	        stateMap.put(c, c.isEnabled()); // Guardar estado del contenedor
+	    }
+	    c.setEnabled(false); // Deshabilitar el contenedor
+
+	    for (Component comp : c.getComponents()) {
+	        if (!stateMap.containsKey(comp)) {
+	            stateMap.put(comp, comp.isEnabled()); // Guardar estado del componente
+	        }
+	        comp.setEnabled(false); // Deshabilitar el componente
+
+	        if (comp instanceof Container) {
+	            _disableRecursively((Container) comp, stateMap); // Recursión para subcontenedores
+	        }
+	    }
+	}
+
+	// Método para restaurar los estados originales de los componentes
+	public static void restoreDisabled(Map<?, ?> stateMap) {
+	    if (stateMap == null) return; // Evitar NullPointerException
+
+	    for (Map.Entry<?, ?> entry : stateMap.entrySet()) {
+	        Component comp = (Component) entry.getKey();
+	        if (comp != null) {
+	            Boolean enabled = (Boolean) entry.getValue();
+	            comp.setEnabled(enabled);
+	        }
+	    }
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
     public static void setEnabled(Container c, boolean b) {
         

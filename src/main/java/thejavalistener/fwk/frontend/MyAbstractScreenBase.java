@@ -1,6 +1,7 @@
 package thejavalistener.fwk.frontend;
 
 import java.awt.Window;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -172,6 +173,20 @@ public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 		
 		return msb;
 	}
+	
+	private Map<?,?> currState = null;
+	public void setDisabledTemporally(boolean disable)
+	{
+		if( disable )
+		{
+			currState = MyAwt.disableTemporally(this);
+		}
+		else
+		{
+			MyAwt.restoreDisabled(currState);			
+		}
+	}
+
 
 //	public String toJson(Object o)
 //	{

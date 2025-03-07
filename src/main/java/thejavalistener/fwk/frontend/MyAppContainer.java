@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -165,6 +166,20 @@ public class MyAppContainer
 	{
 		return jFrame;
 	}
+	
+	private Map<?,?> currState = null;
+	public void setDisabledTemporally(boolean disable)
+	{
+		if( disable )
+		{
+			currState = MyAwt.disableTemporally(c());
+		}
+		else
+		{
+			MyAwt.restoreDisabled(currState);			
+		}
+	}
+
 	
 	// -----------------------------------------------------------
 	// --- cuando cierra la ventana también cierra la conexion ---
