@@ -979,4 +979,15 @@ public abstract class MyConsoleBase
 			}
 		}
 	}
+
+	public int getCaretPosition()
+	{
+		return textPane.getCaretPosition();
+	}
+	
+	public void setCaretPosition(int pos)
+	{
+		textPane.setCaretPosition(pos);
+	}
+	
 }

@@ -10,6 +10,8 @@ public class ProgressBar extends Progress
 {
 	private int size;
 	private int top;
+	
+	private int lastCorch;
 
 	public ProgressBar(MyConsoleBase c,int size,int top)
 	{
@@ -28,12 +30,38 @@ public class ProgressBar extends Progress
 		}
 		
 		console.print("]");
+		lastCorch = console.getCaretPosition();
+		
 		console.skipBkp(size+1);
 		console.cs(console.getStyle().progressStyle);
 
 		initProgressTime=System.currentTimeMillis();
 	}
 
+	public void increase(String mssg)
+	{
+		curr++;
+		double porc=((double)curr/top)*size;
+
+		if(ant!=(int)porc)
+		{				
+			console.print(console.getStyle().progressFill);
+			int x = console.getCaretPosition();
+			console.setCaretPosition(lastCorch);
+			console.print(mssg);
+			console.setCaretPosition(x);
+			
+			ant=(int)porc;
+		}
+
+		if(ant==size)
+		{
+			ant=0;
+			console.skipFwd();
+			console.X();
+		}		
+	}
+	
 	public void increase()
 	{
 		curr++;

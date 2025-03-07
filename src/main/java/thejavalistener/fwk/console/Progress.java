@@ -22,6 +22,7 @@ public abstract class Progress
 
 	protected abstract void begin();
 	public abstract void increase();
+	public abstract void increase(String mssg);
 
 	protected Progress(MyConsoleBase c)
 	{
