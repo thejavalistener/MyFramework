@@ -12,6 +12,17 @@ public class Pair
 	{
 		return a;
 	}
+	
+	public String getStringA()
+	{
+		return a!=null?a.toString():"null";
+	}
+	
+	public String getStringB()
+	{
+		return b!=null?b.toString():"null";
+	}
+	
 	public void setA(Object a)
 	{
 		this.a=a;

@@ -6,17 +6,22 @@ import java.util.List;
 import javax.persistence.Embeddable;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import thejavalistener.fwk.backend.DaoSupport;
+import thejavalistener.fwk.util.MyAssert;
 import thejavalistener.fwk.util.MyJson;
 import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.Pair;
 import thejavalistener.fwk.util.string.MyString;
 
 @Component
-public class MyProperties extends DaoSupport 
+public class MyProperties 
 {
+	@Autowired
+	private DaoSupport daoSupport;
+	
 	@Transactional
 	public void putString(Class<?> domainClass,String name,String value)
 	{
@@ -38,9 +43,11 @@ public class MyProperties extends DaoSupport
 	@Transactional
 	public void put(String name,Object value)
 	{
+		MyAssert.test(name.indexOf('$')<0,"La propiedad no puede tener $ en el nombre ni el dominio puede ser una inner class");
+		
 		String pkg = getClass().getPackageName();
 		String sql = "FROM "+pkg+".MyFrameworkProperty p WHERE p.name='"+name+"'";
-		MyFrameworkProperty p = querySingleRow(sql);
+		MyFrameworkProperty p = daoSupport.querySingleRow(sql);
 
 		String jsonString = MyJson.toJson(value);
 		
@@ -53,7 +60,7 @@ public class MyProperties extends DaoSupport
 			p = new MyFrameworkProperty();
 			p.setName(name);
 			p.setValue(jsonString);
-			insert(p);
+			daoSupport.insert(p);
 		}
 	}
 	
@@ -89,7 +96,7 @@ public class MyProperties extends DaoSupport
 		
 		String pkg = getClass().getPackageName();
 		String sql = "FROM "+pkg+".MyFrameworkProperty p WHERE p.name LIKE '"+dom+"%' ";
-		List<MyFrameworkProperty> lst = queryMultipleRows(sql);
+		List<MyFrameworkProperty> lst = daoSupport.queryMultipleRows(sql);
 		
 		List<Pair> ret = new ArrayList<>();
 		for(MyFrameworkProperty p:lst)
@@ -126,7 +133,7 @@ public class MyProperties extends DaoSupport
 		MyLog.out(sql);
 		
 //		String jsonString = querySingleRow(sql,"name");
-		String jsonString = querySingleRow(sql);
+		String jsonString = daoSupport.querySingleRow(sql);
 		
 		if( jsonString==null )
 		{
@@ -156,7 +163,7 @@ public class MyProperties extends DaoSupport
 		{
 			String pkg = getClass().getPackageName();
 			String sql = "DELETE "+pkg+".MyFrameworkProperty p WHERE p.name=:name";
-			update(sql,"name",name);
+			daoSupport.update(sql,"name",name);
 		}
 		
 		return s;
@@ -167,7 +174,7 @@ public class MyProperties extends DaoSupport
 	{
 		String pkg = getClass().getPackageName();
 		String sql = "DELETE "+pkg+".MyFrameworkProperty p ";
-		return update(sql);
+		return daoSupport.update(sql);
 	}
 
 }

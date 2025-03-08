@@ -158,12 +158,6 @@ public class MyString
 		return -1;
 	}
 
-	public static boolean matches(String s, String regex)
-	{
-		Pattern p=Pattern.compile(regex);
-		return p.matcher(s).matches();
-	}
-
 	public static boolean matches(String s, Function<Character,Boolean> func)
 	{
 		for(int i=0; i<s.length(); i++)
