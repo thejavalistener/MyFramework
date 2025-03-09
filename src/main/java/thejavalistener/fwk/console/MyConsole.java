@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.util.MyCollection;
+import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -99,11 +100,16 @@ public class MyConsole extends MyConsoleBase
 		textPane.requestFocus();
 		
 		escuchaRead.setInputConfig(iconfig);
-	
+		
+		Object defValue = iconfig.getDefaultValue();
+		
 		try
 		{
 			cs(getDefaultInputStyle());
-			print("[]");
+			
+			print("["+defValue+"]");
+			
+			MyThread.startDelayed(()->_selectInputText(),50);
 			
 			textPane.setCaretPosition(textPane.getLen()-1);
 			inputPosition=textPane.getCaretPosition();
@@ -119,6 +125,8 @@ public class MyConsole extends MyConsoleBase
 			// dejo de escuchar
 			textPane.removeKeyListener(escuchaRead);
 			textPane.setEditable(false);
+			
+
 			return escuchaRead.getReadedString();				
 		}
 		catch(Exception e)
@@ -127,6 +135,15 @@ public class MyConsole extends MyConsoleBase
 			throw new RuntimeException(e);
 		}
 	}	
+	
+	private void _selectInputText()
+	{
+		String txt = textPane.getText();
+		int p0 = txt.lastIndexOf('[');
+		int p1 = txt.lastIndexOf(']');
+		textPane.setSelectedText(p0+1,p1);
+	}
+
 	
 	public class EscuchaRead extends KeyAdapter
 	{
@@ -142,15 +159,6 @@ public class MyConsole extends MyConsoleBase
 		{
 			return inputText;
 		}
-		
-		private void _selectInputText()
-		{
-			String txt = textPane.getText();
-			int p0 = txt.lastIndexOf('[');
-			int p1 = txt.lastIndexOf(']');
-			textPane.setSelectedText(p0+1,p1);
-		}
-		
 		@Override
 		public void keyPressed(KeyEvent e)
 		{

@@ -17,11 +17,20 @@ public class InputConfigurator
 	private String regex = ".*";
 	private Pattern pattern = Pattern.compile(regex);
 	private boolean allowMouseEvents = true;
+	private Object defaultValue = "";
 	
 	public InputConfigurator(MyConsoleBase c)
 	{
 		this.console = c;
 	}
+	
+	public InputConfigurator defval(Object dv)
+	{
+		this.defaultValue = dv;
+		return this;
+	}
+	
+	
 	
 	public InputConfigurator mask(TriFunction<Character,Integer,String,Character> mask)
 	{
@@ -106,4 +115,9 @@ public class InputConfigurator
 	{
 		return pattern;
 	}	
+	
+	public Object getDefaultValue()
+	{
+		return defaultValue;
+	}
 }
