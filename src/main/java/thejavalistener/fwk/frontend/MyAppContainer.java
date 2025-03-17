@@ -1,20 +1,20 @@
 package thejavalistener.fwk.frontend;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import javax.sql.DataSource;
 import javax.swing.JFrame;
+import javax.swing.JTextPane;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,6 @@ import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.link.MyLink;
 import thejavalistener.fwk.awt.link.MyLinkedPane;
 import thejavalistener.fwk.properties.MyProperties;
-import thejavalistener.fwk.util.MyLog;
 
 @Component
 public class MyAppContainer
@@ -67,6 +66,23 @@ public class MyAppContainer
 	{
 		return (MyApp)applications.getLinks().get(idx).getRelatedObject("app");
 	}
+	
+    public static JTextPane TRUCHOOfindTextPane(java.awt.Component component) {
+        if (component instanceof JTextPane) {
+            return (JTextPane) component; // Encontrado, lo retornamos
+        }
+
+        if (component instanceof Container) {
+            for (java.awt.Component child : ((Container) component).getComponents()) {
+                JTextPane found = TRUCHOOfindTextPane(child); // Llamada recursiva
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+
+        return null; // No encontrado
+    }
 	
 	public void init()
 	{

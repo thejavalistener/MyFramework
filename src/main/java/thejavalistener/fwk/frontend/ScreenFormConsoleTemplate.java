@@ -12,7 +12,7 @@ import thejavalistener.fwk.console.MyConsoleListener;
 @Component
 public abstract class ScreenFormConsoleTemplate extends ScreenConsoleTemplate
 {
-	private MyForm form = null;
+	protected MyForm form = null;
 				
 	public ScreenFormConsoleTemplate()
 	{

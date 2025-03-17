@@ -277,7 +277,7 @@ public class HQLScreen extends MyAbstractScreen
 		@Override
 		public void onMessageEvent(MyScreenMessageEvent e)
 		{
-			MyLog.out("OJO ACAAA--> Se creo una nueva fila...");
+			MyLog.println("OJO ACAAA--> Se creo una nueva fila...");
 		}
 	}
 	

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Window;
+//import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -22,15 +23,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.text.StyledDocument;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
+import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -65,8 +67,12 @@ public abstract class MyConsoleBase
 
 	protected MyTextPane textPane;
 	protected JScrollPane scrollPane;
-	protected Container container;
-	protected Window parent;
+	
+	
+	protected JPanel contentPane;
+	
+	
+	public Window mainWindow;
 	
 	private List<MyConsoleListener> listeners = new ArrayList<>();
 
@@ -79,14 +85,6 @@ public abstract class MyConsoleBase
 	protected boolean reading=false;
 
 	private MyConsoleBase outer=null;
-
-	// // progress
-	// protected boolean progressBar=true;
-	// protected long top=0;
-	// protected long curr=0;
-	// protected int size=0;
-	// protected int ant=0;
-	// protected long initProgressTime;
 
 	public MyTextPane getTextPane()
 	{
@@ -141,34 +139,30 @@ public abstract class MyConsoleBase
 		customStyles.put("defaultInputStyle",style.defaultInputStyle);
 		customStyles.put("defaultStyle",style.defaultStyle);
 
-		container = getContainer();
+		contentPane = new MyBorderLayout();
 
 		textPane=new MyTextPane(false,true);
 		textPane.addKeyListener(new EscuchaCTRLCyESC());
 		scrollPane=new JScrollPane(textPane.c());
-
-		if(container instanceof Window || container instanceof JFrame)
-		{
-			container.add(scrollPane,BorderLayout.CENTER);
-
-			Window wcont=(Window)container;
-			MyAwt.setProportionalSize(.7,wcont,null);
-			MyAwt.center(wcont,null);
-
-			EscuchaWindow escuchaWindow=new EscuchaWindow();
-
-			wcont.addWindowListener(escuchaWindow);
-			wcont.addWindowFocusListener(escuchaWindow);
-		}
-
+		contentPane.add(scrollPane,BorderLayout.CENTER);
+						
+//		if(contentPane instanceof Window || contentPane instanceof JFrame)
+//		{
+//			contentPane.add(scrollPane,BorderLayout.CENTER);
+//
+//			Window wcont=(Window)contentPane;
+//			MyAwt.setProportionalSize(.7,wcont,null);
+//			MyAwt.center(wcont,null);
+//
+//			EscuchaWindow escuchaWindow=new EscuchaWindow();
+//
+//			wcont.addWindowListener(escuchaWindow);
+//			wcont.addWindowFocusListener(escuchaWindow);
+//		}
+		
 		textPane.addMouseListener(new EscuchaMouse());
 
 		init();
-	}
-
-	public JScrollPane getScrollPane()
-	{
-		return scrollPane;
 	}
 
 	protected void init()
@@ -184,13 +178,13 @@ public abstract class MyConsoleBase
 			textPane.setCaretColor(style.caretColor);
 			textPane.setEditable(false);
 			cs(getDefaultStyle());
-			scrollPane.setBorder(null);
+			scrollPane.setBorder(null);			
 		}
 	}
 
-	public Container getContainer()
+	public JPanel c()
 	{
-		return container!=null?container:(container=new JFrame());
+		return contentPane;
 	}
 
 	private void _stringToCommand(String sCmd)
@@ -633,17 +627,17 @@ public abstract class MyConsoleBase
 	{
 		init();
 
-		if(!container.isVisible())
+		if(!contentPane.isVisible())
 		{
-			container.setVisible(true);
+			contentPane.setVisible(true);
 		}
 	}
 
 	public void close()
 	{
-		if(container.isVisible())
+		if(contentPane.isVisible())
 		{
-			container.setVisible(false);
+			contentPane.setVisible(false);
 		}
 	}
 
@@ -708,7 +702,7 @@ public abstract class MyConsoleBase
 	public String fileExplorer(String dir)
 	{
 		JFileChooser jfc=new JFileChooser(dir);
-		int rtdo=jfc.showOpenDialog(container);
+		int rtdo=jfc.showOpenDialog(contentPane);
 
 		if(rtdo==JFileChooser.APPROVE_OPTION)
 		{
@@ -908,21 +902,21 @@ public abstract class MyConsoleBase
 		return kc==KeyEvent.VK_LEFT||kc==KeyEvent.VK_RIGHT||kc==KeyEvent.VK_BACK_SPACE||kc==KeyEvent.VK_ENTER;
 	}
 
-	public void closeAndExit()
-	{
-		Container c=getContainer();
-		int r=JOptionPane.showConfirmDialog(c,"¿Esta acción finalizará el programa?","Confirmación",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-		if(r==JOptionPane.YES_OPTION)
-		{
-			// container.setVisible(false);
-			close();
-			if(container instanceof Window||container instanceof JFrame)
-			{
-				((Window)container).dispose();
-			}
-			System.exit(0);
-		}
-	}
+//	public void closeAndExit()
+//	{
+//		Container c=getContainer();
+//		int r=JOptionPane.showConfirmDialog(c,"¿Esta acción finalizará el programa?","Confirmación",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+//		if(r==JOptionPane.YES_OPTION)
+//		{
+//			// container.setVisible(false);
+//			close();
+//			if(contentPane instanceof Window||contentPane instanceof JFrame)
+//			{
+//				((Window)contentPane).dispose();
+//			}
+//			System.exit(0);
+//		}
+//	}
 
 	class EscuchaMouse extends MouseAdapter
 	{
@@ -970,7 +964,7 @@ public abstract class MyConsoleBase
 				e.consume();
 				if(!outer.isClosable())
 				{
-					outer.closeAndExit();
+//					outer.closeAndExit();
 				}
 				else
 				{

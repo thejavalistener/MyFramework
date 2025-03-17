@@ -50,7 +50,7 @@ public class MySingleTable extends MyAbstractTextTable
 	public MySingleTable loadData(DataLoader dl)
 	{
 		// cargo los datos
-		MyLog.out("OJO ACA...");
+		MyLog.println("OJO ACA...");
 		if( columns.size()==0)
 			headers(dl.headers());
 		

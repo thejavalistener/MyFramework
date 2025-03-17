@@ -28,10 +28,12 @@ public abstract class MyAbstractScreen extends MyAbstractScreenBase
 	protected void onDataUpdated() {}
 	protected void createUI() {}
 
-	void preInit()
+	protected void preInit()
 	{
 		if(!instancias.contains(this))
 			instancias.add(this);
+		
+		
 	}
 	
 	protected final void dataUpdated()
@@ -84,7 +86,6 @@ public abstract class MyAbstractScreen extends MyAbstractScreenBase
 //		setReturnValue(returnValue);
 //		getMyApp().popScreen();
 //	}
-	
 	
 	public <T> MySearchBox<T> createSearchBox(Class<T> clazz,MySearchBoxController<T> controller)
 	{

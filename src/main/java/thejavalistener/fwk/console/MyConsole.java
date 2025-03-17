@@ -15,7 +15,6 @@ import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.util.MyCollection;
-import thejavalistener.fwk.util.MyThread;
 import thejavalistener.fwk.util.string.MyString;
 
 //@Component
@@ -52,12 +51,6 @@ public class MyConsole extends MyConsoleBase
 		return false;
     }
 
-	public MyConsole(Container container)
-	{
-		this(false);
-		this.container = container;
-	}
-    
 	public MyConsole()
 	{
 		this(false);
@@ -73,7 +66,12 @@ public class MyConsole extends MyConsoleBase
 		escuchaMenu = new EscuchaMenu();
 	}
 	
-	protected void setWaiting(boolean wait)
+	public MyConsole(Container parent)
+	{
+		this(false);
+	}
+	
+	public void setWaiting(boolean wait)
 	{
 		// notifico a los listeners
 		MyCollection.invoke(getListeners(),(lst)->lst.waitingForUserInput(wait));
@@ -84,7 +82,7 @@ public class MyConsole extends MyConsoleBase
 			// bloquea
 		    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 		    secondaryLoop = eventQueue.createSecondaryLoop();
-			secondaryLoop.enter();
+			secondaryLoop.enter();		
 		}
 		else
 		{
@@ -109,7 +107,7 @@ public class MyConsole extends MyConsoleBase
 			
 			print("["+defValue+"]");
 			
-			MyThread.startDelayed(()->_selectInputText(),50);
+			SwingUtilities.invokeLater(()->_selectInputText());
 			
 			textPane.setCaretPosition(textPane.getLen()-1);
 			inputPosition=textPane.getCaretPosition();

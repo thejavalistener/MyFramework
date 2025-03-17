@@ -69,4 +69,8 @@ public class MyColor
 		return toHexColor(r,g,b);
 	}
 
+	public static Color random()
+	{
+		return fromString(randomHexColorString());
+	}
 }
