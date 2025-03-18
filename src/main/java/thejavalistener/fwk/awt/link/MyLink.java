@@ -455,4 +455,9 @@ public class MyLink
 	{
 		return contentPane.equals(obj);
 	}
+
+	public void setOpaque(boolean b)
+	{
+		jLabel.setOpaque(b);
+	}
 }
