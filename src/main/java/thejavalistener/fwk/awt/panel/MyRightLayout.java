@@ -5,7 +5,12 @@ import java.awt.FlowLayout;
 
 public class MyRightLayout extends MyPanel 
 {
-    public MyRightLayout(Component c)
+    public MyRightLayout()
+    {
+    	this(null,0,0,0,0);
+    }
+
+	public MyRightLayout(Component c)
     {
     	this(c,0,0,0,0);
     }
