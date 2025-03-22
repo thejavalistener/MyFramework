@@ -11,8 +11,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import thejavalistener.fwk.awt.GridLayout2;
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.panel.GridLayout2;
 import thejavalistener.fwk.awt.panel.MyInsets;
 
 public abstract class MyOptionPane //extends JDialog

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
-import thejavalistener.fwk.awt.GridLayout2;
+import thejavalistener.fwk.awt.panel.GridLayout2;
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.panel.MyLeftLayout;
 

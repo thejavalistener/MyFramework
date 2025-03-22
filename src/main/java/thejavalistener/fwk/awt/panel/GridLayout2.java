@@ -4,7 +4,7 @@
  * @author <a href="mailto:mschwage@gmail.com">Mike Schwager</a>
  * @version 1.0 December 21, 2008
  */
-package thejavalistener.fwk.awt;
+package thejavalistener.fwk.awt.panel;
 
 import java.awt.Component;
 import java.awt.Container;

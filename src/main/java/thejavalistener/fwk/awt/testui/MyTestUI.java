@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import thejavalistener.fwk.awt.GridLayout2;
 import thejavalistener.fwk.awt.link.MyLink;
+import thejavalistener.fwk.awt.panel.GridLayout2;
 import thejavalistener.fwk.awt.panel.MyCenterLayout;
 import thejavalistener.fwk.awt.textarea.MyTextField;
 

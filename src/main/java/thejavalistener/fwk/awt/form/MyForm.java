@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import thejavalistener.fwk.awt.GridLayout2;
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.panel.GridLayout2;
 import thejavalistener.fwk.util.MyCollection;
 
 public class MyForm 

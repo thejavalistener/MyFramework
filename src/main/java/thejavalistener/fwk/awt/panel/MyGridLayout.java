@@ -2,8 +2,6 @@ package thejavalistener.fwk.awt.panel;
 
 import java.awt.Insets;
 
-import thejavalistener.fwk.awt.GridLayout2;
-
 public class MyGridLayout extends MyPanel 
 {
 	private GridLayout2 gridLayout;
