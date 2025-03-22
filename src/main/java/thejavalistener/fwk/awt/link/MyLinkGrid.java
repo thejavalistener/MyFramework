@@ -17,6 +17,7 @@ public class MyLinkGrid
 	private JPanel gridPane;
 	private JPanel currRow;
 	private MyLink justAddedLink;
+	private Color backgroundColor;
 	
 	private Consumer<MyLink> defaultTreatment = (lnk)->{};
 	
@@ -35,7 +36,7 @@ public class MyLinkGrid
 	public MyLinkGrid addNewRow()
 	{
 		currRow = new MyLeftLayout();
-		currRow.setBackground(gridPane.getBackground());
+		currRow.setBackground(backgroundColor);
 		gridPane.add(currRow);
 		return this;
 	}
@@ -60,8 +61,9 @@ public class MyLinkGrid
 	
 	public void setBackground(Color bg)
 	{
-		contentPane.setBackground(bg);
-		gridPane.setBackground(bg);
+		backgroundColor = bg;
+ 		contentPane.setBackground(bg);
+ 		gridPane.setBackground(bg);
 	}
 	
 	public Component c()

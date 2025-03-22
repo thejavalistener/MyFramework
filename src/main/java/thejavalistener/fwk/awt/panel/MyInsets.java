@@ -2,6 +2,7 @@ package thejavalistener.fwk.awt.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Insets;
 
 public class MyInsets extends MyPanel 
 {

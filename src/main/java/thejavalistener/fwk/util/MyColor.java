@@ -4,6 +4,7 @@ import java.awt.Color;
 
 public class MyColor
 {
+	/** "BLACK", "RED",... o */
 	public static Color fromString(String s)
 	{
 		switch(s.toUpperCase())

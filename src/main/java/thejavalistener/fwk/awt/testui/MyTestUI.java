@@ -56,6 +56,12 @@ public class MyTestUI implements MyTestUIInterface
 		frame.setSize(w,h);
 		return this;
 	}
+	
+	public MyTestUI pack()
+	{
+		frame.pack();
+		return this;
+	}
 
 	public MyTestUI addButton(String label, ActionUIListener mt)
 	{
