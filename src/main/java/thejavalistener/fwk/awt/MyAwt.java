@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -397,4 +398,10 @@ public class MyAwt
 		child.setSize(newWidth,newHeight);
 	}
 
+	public static void maximize(JFrame frame)
+	{
+		Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setSize(screenSize.width,screenSize.height);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+	}
 }

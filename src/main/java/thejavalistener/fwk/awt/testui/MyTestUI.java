@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.link.MyLink;
 import thejavalistener.fwk.awt.panel.GridLayout2;
 import thejavalistener.fwk.awt.panel.MyCenterLayout;
@@ -136,5 +137,11 @@ public class MyTestUI implements MyTestUIInterface
 	public void show(String mssg)
 	{
 		JOptionPane.showMessageDialog(frame,mssg);
+	}
+
+	public MyTestUI maximize()
+	{
+		MyAwt.maximize(frame);
+		return this;
 	}
 }
