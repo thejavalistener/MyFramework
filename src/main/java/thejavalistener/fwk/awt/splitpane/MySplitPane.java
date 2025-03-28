@@ -2,14 +2,12 @@ package thejavalistener.fwk.awt.splitpane;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Robot;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
-
-import thejavalistener.fwk.awt.MyAwt;
 
 public class MySplitPane 
 {
@@ -17,8 +15,6 @@ public class MySplitPane
 	public static final int VERTICAL = JSplitPane.HORIZONTAL_SPLIT;
 	
 	private JSplitPane splitPane;
-	
-	private Robot robot;
 	
 	public MySplitPane(int orientation,Component c1,Component c2)
 	{
@@ -31,10 +27,14 @@ public class MySplitPane
 		divisorx.setForeground(c1.getBackground());
 		divisorx.setBorder(null);		
 		divisorx.setDividerSize(1);
-//		divisorx.addMouseListener(new EscuchaMouse());
-		splitPane.setBorder(null);
-		
-		robot = MyAwt.createRobot();
+		splitPane.setBorder(null);		
+	}
+	
+	public void setDividerColor(Color c)
+	{
+		BasicSplitPaneDivider divisorx = (BasicSplitPaneDivider) splitPane.getComponent(2);
+		divisorx.setBackground(c);
+		divisorx.setForeground(c);
 	}
 	
 	public void setDividerLocation(int d)
