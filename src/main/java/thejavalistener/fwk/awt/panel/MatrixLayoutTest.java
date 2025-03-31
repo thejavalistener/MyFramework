@@ -12,7 +12,7 @@ public class MatrixLayoutTest
 {
 	public static void main(String[] args)
 	{
-		JPanel panel = new JPanel(new MatrixLayout(3,10,10));
+		JPanel panel = new JPanel(new MatrixLayout(3,10,10,MatrixLayout.CENTER_ALIGN));
 		MyScrollPane scroll = new MyScrollPane(panel);
 		
 		MyTestUI.test(new MyScrollPane(scroll)).addButton("Add",e->{panel.add(_createRandom());scroll.validate();})
