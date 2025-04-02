@@ -24,6 +24,8 @@ public class MyLinkedPaneTest
 		.addButton("RmvLast",x->lp.removeLast())
 		.addButton("Set selected 1 ",x->lp.setSelectedTab(1))
 		.addButton("Add",x->lp.addTab(MyString.generateRandom(),new MyRandomColorPanel()))
+		.addButton("Hide",x->lp.showLinks(false))
+		.addButton("Show",x->lp.showLinks(true))
 		.run();
 	}
 }

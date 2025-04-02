@@ -40,44 +40,44 @@ public abstract class ScreenConsoleTemplate extends MyAbstractScreen
 		mssg+="sacar este startDelayed y ponerlo como corresponde si es que sirve para algo.";
 		MyLog.println(mssg);
 		
-		MyThread.startDelayed(()->{
-			
-		console.mainWindow = getMyApp().getMyAppContainer().c();
-		console.mainWindow.addWindowFocusListener(new WindowFocusListener()
-		{
-			@Override
-			public void windowLostFocus(WindowEvent e)
-			{
-				try
-				{					
-					MyLog.println("CHAUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
-					JOptionPane.showMessageDialog(console.mainWindow,"En espera");
-				}
-				catch(Exception e2)
-				{
-					e2.printStackTrace();
-					throw new RuntimeException(e2);
-				}
-			}
-			
-			@Override
-			public void windowGainedFocus(WindowEvent e)
-			{
-				try
-				{					
-					MyLog.println("OOOOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");	
-				}
-				catch(Exception e2)
-				{
-					e2.printStackTrace();
-					throw new RuntimeException(e2);
-				}
-			}
-		});
-		
-		
-		},5000);
-		super.preInit();
+//		MyThread.startDelayed(()->{
+//			
+//		console.mainWindow = getMyApp().getMyAppContainer().c();
+//		console.mainWindow.addWindowFocusListener(new WindowFocusListener()
+//		{
+//			@Override
+//			public void windowLostFocus(WindowEvent e)
+//			{
+//				try
+//				{					
+//					MyLog.println("CHAUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+//					JOptionPane.showMessageDialog(console.mainWindow,"En espera");
+//				}
+//				catch(Exception e2)
+//				{
+//					e2.printStackTrace();
+//					throw new RuntimeException(e2);
+//				}
+//			}
+//			
+//			@Override
+//			public void windowGainedFocus(WindowEvent e)
+//			{
+//				try
+//				{					
+//					MyLog.println("OOOOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");	
+//				}
+//				catch(Exception e2)
+//				{
+//					e2.printStackTrace();
+//					throw new RuntimeException(e2);
+//				}
+//			}
+//		});
+//		
+//		
+//		},5000);
+//		super.preInit();
 	}
 	
 	protected MyConsole getConsole()

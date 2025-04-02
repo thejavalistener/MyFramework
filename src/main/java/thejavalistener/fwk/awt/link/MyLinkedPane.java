@@ -285,6 +285,11 @@ public class MyLinkedPane
 			if( listener!=null) listener.actionPerformed(e);
 		}
 	}
+	
+	public void showLinks(boolean b)
+	{
+		splitPane.showComponent(0,b);
+	}
 
 	public void setSeparatorBeforeLinks(char sep)
 	{

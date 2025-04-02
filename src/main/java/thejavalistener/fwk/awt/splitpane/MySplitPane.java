@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JSplitPane;
-import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 public class MySplitPane 
@@ -99,4 +100,38 @@ public class MySplitPane
             if( listener!=null ) listener.dividerMoved(newDividerLocation);
         }
 	}
+
+//	int currDividerPosition;
+//	public void setVisibleComponent(int i, boolean b)
+//	{
+//		Component c = splitPane.getComponent(i);
+//		if( !b )
+//		{
+//			currDividerPosition = splitPane.getDividerLocation();
+//		}
+//		else
+//		{
+//			splitPane.setDividerLocation(currDividerPosition);
+//		}
+//		
+//		c.setVisible(b);
+//	}
+
+
+    private Map<Integer, Integer> dividerPositions = new HashMap<>();
+
+    public void showComponent(int i, boolean b) {
+        Component c = splitPane.getComponent(i);
+        if (!b) {
+            // Guardamos la posición actual del divider asociada al componente
+            dividerPositions.put(i, splitPane.getDividerLocation());
+        } else if (dividerPositions.containsKey(i)) {
+            // Restauramos la posición del divider previamente guardada
+            splitPane.setDividerLocation(dividerPositions.get(i));
+        }
+
+        // Ocultamos o mostramos el componente
+        c.setVisible(b);
+    }
+
 }

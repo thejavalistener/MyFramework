@@ -84,6 +84,11 @@ public class MyAppContainer
         return null; // No encontrado
     }
 	
+    public void showApps(boolean b)
+    {
+    	applications.showLinks(b);
+    }
+    
 	public void init()
 	{
 		init(null);

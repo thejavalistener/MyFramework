@@ -46,6 +46,11 @@ public class MyApp
 		this.appName = appName;
 	}
 	
+	public void showScreens(boolean b)
+	{
+		screens.showLinks(b);
+	}
+	
 	public void allowSwitch(boolean b)
 	{
 		getMyAppContainer().allowSwitch(b);
