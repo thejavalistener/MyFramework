@@ -20,6 +20,7 @@ import thejavalistener.fwk.util.MyLog;
 
 public class MyLink
 {
+	public static final int NO_BORDER=0;
 	public static final int TOP_BORDER = MyPanel.TOP_BORDER;
 	public static final int LEFT_BORDER = MyPanel.LEFT_BORDER;
 	public static final int BOTTOM_BORDER = MyPanel.BOTTOM_BORDER;
@@ -437,16 +438,19 @@ public class MyLink
 				jLabel.setForeground(style.linkForegroundRolloverSelected);
 				backgroundPane.setBackground(style.linkBackgroundRolloverSelected);			
 			}
+			contentPane.drawLine(style.borderSelected,style.borderWidth,style.borderColor);
 		}
 		else
 		{
 			if( !rollover )
 			{
+				contentPane.drawLine(0,style.borderWidth,style.borderColor);
 				jLabel.setForeground(style.linkForegroundUnselected);
 				backgroundPane.setBackground(style.linkBackgroundUnselected);
 			}
 			else
 			{
+				contentPane.drawLine(style.borderRollover,style.borderWidth,style.borderColor);
 				jLabel.setForeground(style.linkForegroundRolloverUnselected);
 				backgroundPane.setBackground(style.linkBackgroundRolloverUnselected);			
 			}			

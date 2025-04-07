@@ -18,14 +18,21 @@ public class MyLinkStyle
 	public Color linkBackgroundSelected = null; //new Color(243,246,246); // gris claro
 	public Color linkForegroundRolloverSelected = linkForegroundSelected; // sin cambio
 	public Color linkBackgroundRolloverSelected = linkBackgroundSelected; // sin cambio
-
+	
 	// unselected
 	public Color linkForegroundUnselected = new Color(21,28,85);// gris oscuro
 	public Color linkBackgroundUnselected = null; //background; // nada
 	public Color linkForegroundRolloverUnselected = linkForegroundUnselected; // sin cambio
 	public Color linkBackgroundRolloverUnselected = new Color(243,246,246);//backgroundSelected; // gris claro	
 
-	
+	// border
+	public Color borderColor = Color.GREEN;
+	public int borderWidth = 2;
+
+	public int borderUnselected = 0;
+	public int borderRollover = 0;
+	public int borderSelected = 0;
+
 	public MyLinkStyle setBackground(Color background)
 	{
 		this.background=background;
@@ -91,8 +98,5 @@ public class MyLinkStyle
 		this.linkBackgroundRolloverUnselected=linkBackgroundRolloverUnselected;
 		return this;
 	}
-
-	
-	
 	
 }
