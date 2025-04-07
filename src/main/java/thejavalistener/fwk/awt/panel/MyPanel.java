@@ -1,11 +1,14 @@
 package thejavalistener.fwk.awt.panel;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Insets;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.testui.MyTestUI;
 import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -52,27 +55,38 @@ public class MyPanel extends JPanel {
         repaint();    // Redibuja el componente
     }
 
-//	public void setDebugName(String debugName)
-//	{
-//		setDebugName(debugName,null);
-//	}
-//	public void setDebugName(String debugName,Object owner)
-//	{
-//		String sOwner = owner!=null?owner.getClass().getSimpleName()+".":"";
-//    	String toolTip = sOwner+debugName+" ("+localDebugId+")";
-//    	setToolTipText(toolTip);
-//	}
-	
-//	public void setDebugName(String debugName)
-//	{
-//		StackTraceElement ste = MyLog.currStackTrace();
-//		String sClazz = MyString.substringAfterLast(ste.getClass().getSimpleName(),".");
-//		String sMetho = ste.getMethodName();
-//		int iLine = ste.getLineNumber();
-//    	String toolTip = sOwner+debugName+" ("+localDebugId+")";
-//    	setToolTipText(toolTip);
-//	}
-
-
+    public final static int NO_BORDER = 0;
+    public final static int TOP_BORDER = 1;
+    public final static int LEFT_BORDER = 2;
+    public final static int BOTTOM_BORDER = 4;
+    public final static int RIGHT_BORDER = 8;
     
+    public void drawLine(int border, int px, Color c) {
+        Graphics g = getGraphics();
+        if (g == null) return; // Aseguramos que el objeto Graphics no sea nulo
+
+        // Si border es 0, limpiamos el componente y salimos
+        if (border == 0) {
+            repaint(); // Redibuja el componente, eliminando cualquier dibujo previo
+            return;
+        }
+        
+        g.setColor(c); // Establecemos el color de la línea
+
+        int width = getWidth();
+        int height = getHeight();
+
+        if ((border & 1) == 1) { // Borde superior
+            g.fillRect(0, 0, width, px);
+        }
+        if ((border & 2) == 2) { // Borde izquierdo
+            g.fillRect(0, 0, px, height);
+        }
+        if ((border & 4) == 4) { // Borde inferior
+            g.fillRect(0, height - px, width, px);
+        }
+        if ((border & 8) == 8) { // Borde derecho
+            g.fillRect(width - px, 0, px, height);
+        }
+    }    
 }

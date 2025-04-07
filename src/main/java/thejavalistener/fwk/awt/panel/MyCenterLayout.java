@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 
 public class MyCenterLayout extends MyPanel 
 {
-	
     public MyCenterLayout()
     {
     	this(0,0,0,0);

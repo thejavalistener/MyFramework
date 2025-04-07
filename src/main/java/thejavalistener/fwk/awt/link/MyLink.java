@@ -20,6 +20,11 @@ import thejavalistener.fwk.util.MyLog;
 
 public class MyLink
 {
+	public static final int TOP_BORDER = MyPanel.TOP_BORDER;
+	public static final int LEFT_BORDER = MyPanel.LEFT_BORDER;
+	public static final int BOTTOM_BORDER = MyPanel.BOTTOM_BORDER;
+	public static final int RIGHT_BORDER = MyPanel.RIGHT_BORDER;
+	
 	public static final int LABEL = 1;
 	public static final int LINK = 2;
 	public static final int TOGGLE_ON = 3;
@@ -109,6 +114,11 @@ public class MyLink
 		{
 			configureAs(prevConfiguration);						
 		}
+	}
+	
+	public void setBorder(int border,int px,Color c)
+	{
+		contentPane.drawLine(border,px,c);
 	}
 	
 	public MyLinkStyle getStyle()
