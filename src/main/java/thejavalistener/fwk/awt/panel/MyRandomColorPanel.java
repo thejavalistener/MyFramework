@@ -10,5 +10,6 @@ public class MyRandomColorPanel extends MyPanel
 	{
 		super(0,0,0,0);
 		setBackground(MyAwt.randomColor());
+		setBorder(null);
 	}
 }

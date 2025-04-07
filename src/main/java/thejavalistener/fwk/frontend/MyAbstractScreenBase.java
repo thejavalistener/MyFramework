@@ -185,16 +185,6 @@ public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 		{
 			MyAwt.restoreDisabled(currState);			
 		}
+
 	}
-
-
-//	public String toJson(Object o)
-//	{
-//		return MyJson.toJson(o);
-//	}
-//	
-//	public <T> T fromJson(String json,Class<T> clazz)
-//	{
-//		return MyJson.fromJson(json,clazz);
-//	}
 }

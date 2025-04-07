@@ -140,9 +140,15 @@ public class MyAppContainer
 	{
 		// creo la aplicacion y la agrego al linkedPane de aplicaciones
 		MyApp app = ctx.getBean(MyApp.class,appName);
-		app.pushScreen(mainScreenClass);
-		
+
+		// ESTA LINEA ESTABA.....
 		app.setMyAppContainer(this);
+		
+		app.pushScreen(mainScreenClass);
+
+		// ACAAAA............
+		
+		
 		applications.addTab(appName,app.c()).addRelatedObject("app",app);
 		applyStyle();
 	}

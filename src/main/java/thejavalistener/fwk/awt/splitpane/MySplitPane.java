@@ -69,28 +69,6 @@ public class MySplitPane
 		splitPane.setDividerSize(dividerSize);
 	}
 	
-//	class EscuchaMouse extends MouseAdapter
-//	{
-//		@Override
-//		public void mouseEntered(MouseEvent e)
-//		{
-//			Point locationOnScreen = e.getComponent().getLocationOnScreen();
-//	        int absoluteX = locationOnScreen.x + e.getX();
-//	        int absoluteY = locationOnScreen.y + e.getY();
-//
-//	        // Mover el cursor a la posición absoluta
-//	        Runnable r = ()->{robot.mouseMove(absoluteX, absoluteY);};
-//	        
-//	        MyThread.startDelayed(r,50);
-//	        
-//		}
-//		
-//		@Override
-//		public void mouseExited(MouseEvent e)
-//		{
-//		}
-//	}
-	
 	class EscuchaDivider implements PropertyChangeListener
 	{
         @Override
@@ -100,23 +78,6 @@ public class MySplitPane
             if( listener!=null ) listener.dividerMoved(newDividerLocation);
         }
 	}
-
-//	int currDividerPosition;
-//	public void setVisibleComponent(int i, boolean b)
-//	{
-//		Component c = splitPane.getComponent(i);
-//		if( !b )
-//		{
-//			currDividerPosition = splitPane.getDividerLocation();
-//		}
-//		else
-//		{
-//			splitPane.setDividerLocation(currDividerPosition);
-//		}
-//		
-//		c.setVisible(b);
-//	}
-
 
     private Map<Integer, Integer> dividerPositions = new HashMap<>();
 

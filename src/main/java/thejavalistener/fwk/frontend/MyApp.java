@@ -56,7 +56,7 @@ public class MyApp
 		getMyAppContainer().allowSwitch(b);
 	}
 	
-	public boolean isSiwtchAllowed()
+	public boolean isSwitchAllowed()
 	{
 		return allowSwitch;
 	}
