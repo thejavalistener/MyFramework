@@ -3,6 +3,7 @@ package thejavalistener.fwk.properties;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 
@@ -14,7 +15,7 @@ public class MyFrameworkProperty
 	@Column
 	private String name;
 	
-	@Column 
+	@Column (length=10000)
 	private String value;
 	
 	public String getName()

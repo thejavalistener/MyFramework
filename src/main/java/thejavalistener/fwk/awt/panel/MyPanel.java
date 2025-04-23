@@ -88,5 +88,7 @@ public class MyPanel extends JPanel {
         if ((border & 8) == 8) { // Borde derecho
             g.fillRect(width - px, 0, px, height);
         }
-    }    
+        revalidate();
+    }   
+    
 }

@@ -149,7 +149,7 @@ public class MyProperties
 		return domainClass.getName()+"."+name;
 	}
 
-	@Transactional
+	@Transactional 
 	public <T> T remove(Class<?> domainClass,String name)
 	{
 		return remove(_fullName(domainClass,name));

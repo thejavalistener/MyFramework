@@ -315,4 +315,19 @@ public class MyCollection
 		
 		return null;
 	}
+
+	public static <T> String toString(List<T> lst,String sep)
+	{
+		StringBuffer sb = new StringBuffer();
+		for(int i=0; i<lst.size(); i++)
+		{
+			sb.append(lst.get(i));
+			if( i<lst.size()-1 )
+			{
+				sb.append(sep);
+			}
+		}
+		
+		return sb.toString();
+	}
 }

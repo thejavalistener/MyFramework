@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -19,6 +18,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import thejavalistener.fwk.awt.MyAwt;
@@ -54,7 +54,7 @@ public class MyAppContainer
 		// linkedPane de aplicaciones
 		applications = new MyLinkedPane(MyLinkedPane.VERTICAL);
 		applications.setActionListener(new EscuchaApplications());
-		jFrame.add(applications.c(),BorderLayout.CENTER);
+		jFrame.add(applications.c(),BorderLayout.CENTER);		
 	}
 	
 	public int getMyAppCount()
@@ -230,16 +230,30 @@ public class MyAppContainer
 			
 			try
 			{
+				// grabo la posición de la ventana
 				properties.put(MyAppContainer.class,"bounds",jFrame.getBounds());
 				
-				
+				// cierro la database
 				Connection con = ds.getConnection();
 				pstm = con.prepareStatement("shutdown");
 				pstm.execute();
+				
+				// cierro la ventana
 				jFrame.setVisible(false);
 				jFrame.dispose();
 				
+				// cierro el contexto
+				if( ctx!=null )
+				{
+					ClassPathXmlApplicationContext x = (ClassPathXmlApplicationContext)ctx;
+					if( x.isActive() )
+					{
+						x.close();
+					}
+				}
+
 				Thread.sleep(100);
+				System.exit(0);
 			}
 			catch(Exception e2)
 			{
