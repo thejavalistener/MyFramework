@@ -18,7 +18,7 @@ import javax.swing.JSeparator;
 
 import thejavalistener.fwk.awt.MyAwt;
 
-public class MyMenu
+public class MyMenuBKP
 {
 	private static final String SEPARATOR="<SEPARATOR>";
 
@@ -100,13 +100,8 @@ public class MyMenu
 			}
 		}
 	}
-	
-	public void show(Component parent, int align)
-	{
-		show(parent, align, 0, 0);
-	}
 
-	public void show(Component parent, int align, int hgap, int vgap)
+	public void show(Component parent, int align)
 	{
 		if(parent==null) return;
 
@@ -131,18 +126,16 @@ public class MyMenu
 			x=size.width-menuSize.width;
 		}
 
-		x += hgap;
-		int y=size.height + vgap; // Justo debajo del parent más vgap
+		int y=size.height; // Justo debajo del parent
 		popupMenu.show(parent,x,y);
 	}
-
 
 	public static void main(String[] args)
 	{
 		MyAwt.setWindowsLookAndFeel();
 
-		JButton button=new JButton("Mostrar Menú re copado, capoo");
-		MyMenu menu=new MyMenu();
+		JButton button=new JButton("Mostrar Menú");
+		MyMenuBKP menu=new MyMenuBKP();
 		menu.setActionListener(e->System.out.println(e.getActionCommand()));
 		
 		menu.addItem("/Item1");
@@ -154,7 +147,7 @@ public class MyMenu
 		menu.addItem("/Item2/Item23");
 		menu.addItem("/Item2/Item22/Locomia");
 
-		button.addActionListener(e -> menu.show(button,1,10,0)); // 1: derecha
+		button.addActionListener(e -> menu.show(button,1)); // 1: derecha
 
 		JFrame frame=new JFrame("Custom Menu Example");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
