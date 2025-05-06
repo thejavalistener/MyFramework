@@ -1,14 +1,12 @@
 package thejavalistener.fwk.awt.link;
 
-// X
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.util.MyCollection;
-import thejavalistener.fwk.util.MyLog;
 
 public class MyLinkGroup
 {
@@ -132,6 +130,11 @@ public class MyLinkGroup
 	public MyLink getSelected()
 	{
 		return selected;
+	}
+
+	public void removeAll()
+	{
+		links.clear();
 	}
 
 }

@@ -880,6 +880,24 @@ public class MyString
 
 		return null;
 	}
+	
+	public static Integer parseInteger(String text,Integer defValue)
+	{
+		if( text==null || text.isEmpty() )
+		{
+			return defValue;
+		}
+		
+		try
+		{
+			return Integer.parseInt(text);
+		}
+		catch(Exception e)
+		{
+			return defValue;
+		}
+	}
+
 
 	public static Date parseSqlDate(String s)
 	{
