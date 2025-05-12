@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.panel.MyLeftLayout;
@@ -44,9 +45,11 @@ public class MyLink
 	private boolean unselectable = false;
 			
 	private ActionListener listener = null;
+	private ActionListener rightButtonListener = null;
 
 	private int currConfiguration;
 	private int prevConfiguration;
+	
 	
 	
 	private HashMap<String,Object> relatedObjects = null;
@@ -195,6 +198,11 @@ public class MyLink
 		this.selectable = b;
 	}
 
+	public void setRightButtonListener(ActionListener listener)
+	{
+		this.rightButtonListener = listener;
+	}
+	
 	public void setActionListener(ActionListener listener)
 	{
 		this.listener = listener;
@@ -347,6 +355,16 @@ public class MyLink
 						}
 					}
 				}			
+			}
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e)
+		{
+			if( rightButtonListener!=null && SwingUtilities.isRightMouseButton(e) )
+			{
+				ActionEvent ae = new ActionEvent(this,1,getText());
+				rightButtonListener.actionPerformed(ae);
 			}
 		}
 		

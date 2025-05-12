@@ -4,7 +4,11 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.DateTimeException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,6 +57,17 @@ public class UDate
 	public int cmp(Date d)
 	{
 		return cmp(d.getTime(),false);
+	}
+	
+	public String asISO8601()
+	{
+		int y = getYear();
+		int m = getMonth();
+		int d = getDay();
+		
+        LocalDateTime localDateTime = LocalDateTime.of(y, m, d, 0, 0);
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return DateTimeFormatter.ISO_INSTANT.format(instant);
 	}
 
 
@@ -122,15 +137,6 @@ public class UDate
 		System.out.println(new UDate(calendar.getTimeInMillis()));
 	}
 	
-	public static void main(String[] args)
-	{
-		UDate d = new UDate();
-		String s = d.toString("Hoy es ${dd} de ${mm} de ${yy}, ${h}:${m}");
-		
-		System.out.println(s);
-	}
-
-	
 	public static boolean validate(int y,int m,int d)
 	{
 		try
@@ -191,21 +197,43 @@ public class UDate
 			return validate(i3,i2,i1);
 		}
 	}
-	
+
 	public UDate(String sDate)
 	{
-		String x = sDate.toLowerCase().trim();
-		switch(x)
-		{
-			case "today","today()":
-			case "sysdate","sysdate()":
-			case "now","now()":
-				calendar = Calendar.getInstance();
-				break;
-			default:
-				setDate(sDate);
-		}
+		this(sDate,false);
+	}
 
+	public UDate(String sDate,boolean iso8601)
+	{
+		if( !iso8601 )
+		{
+			String x = sDate.toLowerCase().trim();
+			switch(x)
+			{
+				case "today","today()":
+				case "sysdate","sysdate()":
+				case "now","now()":
+					calendar = Calendar.getInstance();
+					break;
+				default:
+					setDate(sDate);
+			}
+		}
+		else
+		{
+			calendar = Calendar.getInstance();
+
+	        // 🔹 Convertir a `Instant`
+	        Instant instant = Instant.parse(sDate);
+
+	        // 🔹 Convertir a `LocalDate` en la zona horaria deseada (ejemplo: Argentina)
+	        LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+	        int dia = localDate.getDayOfMonth();
+	        int mes = localDate.getMonthValue(); 
+	        int anio = localDate.getYear();
+	        setDate(anio,mes,dia);
+		}
 	}
 
 	private static int[] _splitDate(String sDate)

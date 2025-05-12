@@ -1,6 +1,7 @@
 package thejavalistener.fwk.awt.form;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class MyForm
 	
 	public MyForm()
 	{
-
 		// ancho por defecto
 		this(215);
 	}
@@ -176,5 +176,6 @@ public class MyForm
 	private boolean _aceptaFocus(Component cmp)
 	{
 		return cmp.isEnabled() && (cmp.getClass().isAssignableFrom(JLabel.class) || cmp.getClass().isAssignableFrom(JPanel.class));
-	}	
+	}
+
 }

@@ -309,6 +309,12 @@ public class MyJList<T> implements MyList<T>
 	{
 		jList.requestFocus();
 	}
+	
+    @Override
+    public void setMouseListener(MouseListener lst)
+    {
+    	jList.addMouseListener(lst);
+    }
 
 	@Override
 	public void setListSelectionListener(ListSelectionListener lst)
@@ -413,30 +419,30 @@ public class MyJList<T> implements MyList<T>
 	class EscuchaList extends MouseAdapter 
 	{
 		@Override
-		public void mouseClicked(MouseEvent e)
-		{
-			if( listenerIsWorking )
-			{
-				MyListEvent<T> x = null;
-				T item = getSelectedItem();
-				int nClick = e.getClickCount();
-				int eventType;
-				switch(nClick)				
-				{
-					case 1:
-						if( prevItemSelected==item) return;
-						eventType = isUnselected()?MyListEvent.ITEM_UNSELECTED:MyListEvent.ITEM_SELECTED;
-						x = new MyListEvent<T>(eventType,outer,item,prevItemSelected,1);
-						break;
-					case 2:
-						eventType = MyListEvent.ITEM_DOUBLECLICKED;
-						x = new MyListEvent<T>(eventType,outer,item,prevItemSelected,2);
-						break;
-				}
-				listener.valueChanged(x);
-				prevItemSelected = item;
-			}	
+		public void mouseClicked(MouseEvent e) {
+		    if (listenerIsWorking && listener != null) {
+		        MyListEvent<T> x = null;
+		        T item = getSelectedItem();
+		        int nClick = e.getClickCount();
+		        int eventType;
+		        switch (nClick) {
+		            case 1:
+		                if (prevItemSelected == item) return;
+		                eventType = isUnselected() ? MyListEvent.ITEM_UNSELECTED : MyListEvent.ITEM_SELECTED;
+		                x = new MyListEvent<>(eventType, outer, item, prevItemSelected, 1);
+		                break;
+		            case 2:
+		                eventType = MyListEvent.ITEM_DOUBLECLICKED;
+		                x = new MyListEvent<>(eventType, outer, item, prevItemSelected, 2);
+		                break;
+		        }
+		        if (x != null) {
+		            listener.valueChanged(x);
+		            prevItemSelected = item;
+		        }
+		    }
 		}
+
 	}
 	
 //	public static void main(String[] args)
