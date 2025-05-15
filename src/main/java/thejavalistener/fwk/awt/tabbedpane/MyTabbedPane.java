@@ -116,4 +116,9 @@ public class MyTabbedPane
 		}
 		
 	}
+
+	public void setSelectedTab(int i)
+	{
+		tabbedPane.setSelectedIndex(i);
+	}
 }

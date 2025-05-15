@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities;
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.panel.MyLeftLayout;
 import thejavalistener.fwk.awt.panel.MyPanel;
-import thejavalistener.fwk.util.MyLog;
 
 public class MyLink
 {
@@ -49,8 +48,6 @@ public class MyLink
 
 	private int currConfiguration;
 	private int prevConfiguration;
-	
-	
 	
 	private HashMap<String,Object> relatedObjects = null;
 	
@@ -86,9 +83,11 @@ public class MyLink
 	{
 		jLabel = new JLabel(text);
 		backgroundPane = new MyLeftLayout();
+		backgroundPane.setAllowChangeBackground(false);
 		backgroundPane.add(jLabel);
 		
 		contentPane = new MyBorderLayout(backgroundPane,BorderLayout.CENTER);
+		contentPane.setAllowChangeBackground(false);
 		
 		defaultCursor = Cursor.getDefaultCursor();
 		clickCursor = new Cursor(Cursor.HAND_CURSOR);
@@ -235,33 +234,6 @@ public class MyLink
 				break;
 		}
 	}
-	
-//	private void _applyFontStyle(String modo)
-//	{
-//		switch(modo)  //unselectedRolloverBackground
-//		{
-//			case "normal": // normal
-//				jLabel.setForeground(unselectedForeground);
-//				background.setBackground(unselectedBackground);
-//				break;
-//			case "rolloverOnSelected": // rollover
-//				jLabel.setForeground(selectedRolloverForeground);
-//				background.setBackground(selectedRolloverBackground);				
-//				break;
-//			case "rolloverOnUnselected": // rollover
-//				jLabel.setForeground(unselectedRolloverForeground);
-//				background.setBackground(unselectedRolloverBackground);				
-//				break;
-//			case "selected": // selected
-//				jLabel.setForeground(selectedForeground);
-//				background.setBackground(selectedBackground);	
-//				MyAwt.setBackground(background,selectedBackground);
-//				break;
-//			default:
-//				throw new RuntimeException("modo debe ser \"normal\", \"rolloverOnSelected\", \"rolloverOnUnselected\" o \"selected\"");
-//		}
-//	}
-
 	
 	public void addRelatedObject(String key, Object related)
 	{

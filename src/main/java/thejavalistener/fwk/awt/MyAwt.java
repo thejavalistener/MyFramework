@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import thejavalistener.fwk.awt.panel.MyPanel;
 import thejavalistener.fwk.util.MyCollection;
 
 public class MyAwt
@@ -343,22 +344,6 @@ public class MyAwt
 		}
 	}
 
-//	public static void setBackground(Container panel, Color color)
-//	{
-//		// Cambiar el color de fondo del panel actual
-//		panel.setBackground(color);
-//
-//		// Recorrer todos los componentes del panel actual
-//		for(Component component:panel.getComponents())
-//		{
-//			// Si el componente es un JPanel, llamar a la función recursivamente
-//			if(component instanceof Container)
-//			{
-//				setBackground((Container)component,color);
-//			}
-//		}
-//	}
-	
 	public static void setBackground(Container panel, Color color)
 	{
 		// Cambiar el color de fondo del panel actual
@@ -367,7 +352,18 @@ public class MyAwt
 		// Recorrer todos los componentes del panel actual
 		for(Component component:panel.getComponents())
 		{
-			setBackground((Container)component,color);
+			if( component.getClass().isAssignableFrom(MyPanel.class) )
+			{
+				MyPanel myPanel = (MyPanel)component;
+				if( myPanel.allowChangeBackground() )
+				{
+					setBackground((Container)component,color);
+				}
+			}
+			else
+			{
+				setBackground((Container)component,color);
+			}
 		}
 	}
 

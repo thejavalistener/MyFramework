@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.JSplitPane;
 
+import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.panel.MyCardLayout;
 import thejavalistener.fwk.awt.splitpane.MySplitPane;
 import thejavalistener.fwk.frontend.MyAbstractScreen;
@@ -150,7 +151,7 @@ public class MyLinkedPane
 	
 	public void applyStyle()
 	{
-		linkPanel.setBackground(style.linkPanelBackground);
+//		linkPanel.setBackground(style.linkPanelBackground);
 		linkPanel.setInsets(style.linkPanelInsets);
 		splitPane.setBackground(style.linkPanelBackground);
 		splitPane.setDividerSize(style.dividerSize);
@@ -177,6 +178,10 @@ public class MyLinkedPane
 		return splitPane.c();
 	}
 	
+	public void setBackground(Color bg)
+	{
+		MyAwt.setBackground(linkPanel.c(),bg);
+	}
 	
 	public void removeAll()
 	{

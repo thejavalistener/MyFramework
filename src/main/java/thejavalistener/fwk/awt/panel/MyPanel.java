@@ -20,8 +20,9 @@ public class MyPanel extends JPanel {
     private int rightMargin;
     
     private static int globalDebugId = 1;
-    private int localDebugId;
     public static boolean DEBUG_MODE=false;
+    
+    private boolean allowChangeBackground = true;
 
     public MyPanel(int top, int left, int bottom, int right) 
     {
@@ -43,7 +44,26 @@ public class MyPanel extends JPanel {
         	String toolTip = getClass().getSimpleName()+" ("+globalDebugId+"). In: "+sOwner+"#"+line;
         	setToolTipText(toolTip);
         }
-    }   
+    }
+    
+    public void setAllowChangeBackground(boolean b)
+    {
+    	allowChangeBackground = b;
+    }
+    
+    public void requestChangeBackground(Color bg)
+    {
+    	if( allowChangeBackground )
+    	{
+    		setBackground(bg);
+    	}
+    }
+    
+    public boolean allowChangeBackground() 
+    {
+    	return allowChangeBackground;
+    }
+
     
     public void setInsets(Insets insets) {
         this.topMargin = insets.top;

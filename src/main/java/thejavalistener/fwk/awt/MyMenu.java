@@ -260,6 +260,8 @@ public class MyMenu
             }
         }
     }
+    
+    
 
     public void show(Component parent, int align)
     {
@@ -295,6 +297,19 @@ public class MyMenu
         int y = size.height + vgap; // Justo debajo del parent más vgap
         popupMenu.show(parent, x, y);
     }
+    
+    public void show(Component parent, Point location)
+    {
+        if (parent == null || location == null) return;
+
+        popupMenu.removeAll(); // limpiar antes de construir
+
+        buildMenu(popupMenu, menuTree);
+
+        // Mostrar el popup en la posición exacta indicada por el Point
+        popupMenu.show(parent, location.x, location.y);
+    }
+
 
     public static void main(String[] args)
     {

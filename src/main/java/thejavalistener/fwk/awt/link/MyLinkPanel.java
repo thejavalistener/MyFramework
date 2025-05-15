@@ -175,8 +175,6 @@ public class MyLinkPanel
 		linkPanel.revalidate();
 		linkPanel.repaint();
 		contentPane.validate();
-		
-		
 	}
 			
 	public JPanel c()
@@ -226,20 +224,15 @@ public class MyLinkPanel
 	{
 		return background;
 	}
-
-	public void setBackground(Color background,boolean labelsToo)
-	{
-		MyAwt.setBackground(contentPane,background);
-	}
 	
-	public void setBackground(Color background)
-	{
-		this.background=background;
-		linkPanel.setBackground(background);
-		contentPane.setBackground(background);
-		contentPANE.setBackground(background);
-		if( verticalPanel!=null ) verticalPanel.setBackground(background);
-	}
+//	public void setBackground(Color background)
+//	{
+//		this.background=background;
+//		linkPanel.setBackground(background);
+//		contentPane.setBackground(background);
+//		contentPANE.setBackground(background);
+//		if( verticalPanel!=null ) verticalPanel.setBackground(background);
+//	}
 	
 	public List<MyLink> getLinks()
 	{
