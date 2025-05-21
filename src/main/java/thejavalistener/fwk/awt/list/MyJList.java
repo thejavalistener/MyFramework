@@ -1,5 +1,6 @@
 package thejavalistener.fwk.awt.list;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
@@ -17,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -27,96 +29,95 @@ import thejavalistener.fwk.util.string.MyString;
 public class MyJList<T> implements MyList<T>
 {
 	private ArrayList<T> data;
-	private Function<T,String> tToString = null;
+	private Function<T,String> tToString=null;
 
 	private JList<String> jList;
 	private DefaultListModel<String> model;
-	
-	private ListSelectionListener listener = null;
-	private MouseListener mouseListener = null;
-	private boolean listenerIsWorking = true;
+
+	private ListSelectionListener listener=null;
+	private MouseListener mouseListener=null;
+	private boolean listenerIsWorking=true;
 	private EscuchaList escuchaList;
-	
-	private T prevItemSelected = null;
-	
-	private MyList<T> outer = null;
-	
+
+	private T prevItemSelected=null;
+
+	private MyList<T> outer=null;
+
 	public MyJList()
 	{
-		data = new ArrayList<>();
-		model = new DefaultListModel<>();
-		
-		jList = new JList<>();
+		data=new ArrayList<>();
+		model=new DefaultListModel<>();
+
+		jList=new JList<>();
 		jList.setModel(model);
 		jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
-		escuchaList = new EscuchaList();
-//		jList.addListSelectionListener(escuchaList);
+
+		escuchaList=new EscuchaList();
+		// jList.addListSelectionListener(escuchaList);
 		jList.addMouseListener(escuchaList);
 
-		this.outer = this;
+		this.outer=this;
 	}
-	
-	
+
 	@Override
 	public void setVisibleRowCount(int n)
 	{
 		jList.setVisibleRowCount(n);
 	}
-	
+
 	@Override
 	public void sort(BiFunction<T,T,Integer> cmp)
 	{
-		T currSelected = getSelectedItem();
-		
-		ArrayList<T> data2 = new ArrayList<>(data);
-		for(int i=0;i<data2.size();i++)
+		T currSelected=getSelectedItem();
+
+		ArrayList<T> data2=new ArrayList<>(data);
+		for(int i=0; i<data2.size(); i++)
 		{
-			for(int j=0;j<data2.size()-1;j++)
+			for(int j=0; j<data2.size()-1; j++)
 			{
-				if( cmp.apply(data2.get(j),data2.get(j+1))>0 )
+				if(cmp.apply(data2.get(j),data2.get(j+1))>0)
 				{
-					T aux = data2.get(j);
+					T aux=data2.get(j);
 					data2.set(j,data2.get(j+1));
 					data2.set(j+1,aux);
 				}
 			}
 		}
-		
+
 		setItems(data2);
-		
-		if( currSelected!=null )
+
+		if(currSelected!=null)
 		{
 			int i=0;
-			while(i<data2.size() && cmp.apply(currSelected,data2.get(i))!=0)
+			while(i<data2.size()&&cmp.apply(currSelected,data2.get(i))!=0)
 			{
 				i++;
 			}
 			setSelectedItem(i);
 		}
 	}
-	
+
 	@Override
 	public void addItem(T t)
 	{
 		addItem(t,false);
 	}
-	
+
 	@Override
-	public void addItem(T t,boolean selected)
+	public void addItem(T t, boolean selected)
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		data.add(t);
-		String item = tToString!=null?tToString.apply(t):t.toString();
-		
-		int pos = model.size();
+		String item=tToString!=null?tToString.apply(t):t.toString();
+
+		int pos=model.size();
 		model.addElement(item);
-		
-		if(selected) 
+
+		if(selected)
 		{
 			setSelectedItem(pos);
 		}
-		
+
 		setItemListenerWorking(prev);
 
 	}
@@ -124,7 +125,7 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public T getSelectedItem()
 	{
-		int idx = getSelectedIndex();
+		int idx=getSelectedIndex();
 		return idx>=0?data.get(idx):null;
 	}
 
@@ -137,14 +138,14 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public T getItemAt(int i)
 	{
-		return data.get(getSelectedIndex());
+		return data.get(i);
 	}
 
 	@Override
 	public T removeItemAt(int i)
 	{
-		boolean prev = isItemListenerWorking();
-		T t = data.remove(i);
+		boolean prev=isItemListenerWorking();
+		T t=data.remove(i);
 		model.remove(i);
 		setItemListenerWorking(prev);
 		return t;
@@ -153,12 +154,12 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public T removeSelectedItem()
 	{
-		boolean prev = isItemListenerWorking();
-		int currIdx = getSelectedIndex();
-		T t = null;
-		if( currIdx>=0 )
+		boolean prev=isItemListenerWorking();
+		int currIdx=getSelectedIndex();
+		T t=null;
+		if(currIdx>=0)
 		{
-			t = removeItemAt(getSelectedIndex());
+			t=removeItemAt(getSelectedIndex());
 		}
 		setItemListenerWorking(prev);
 		return t;
@@ -167,7 +168,7 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void removeAllItems()
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		while(data.size()>0)
 		{
 			data.remove(0);
@@ -179,7 +180,7 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void setItems(List<T> items)
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		removeAllItems();
 		for(T t:items)
 		{
@@ -191,13 +192,13 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void setTToString(Function<T,String> f)
 	{
-		this.tToString = f;
+		this.tToString=f;
 	}
 
 	@Override
 	public void setUnselected()
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		jList.clearSelection();
 		setItemListenerWorking(prev);
 	}
@@ -205,9 +206,9 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void addItem(T t, int i)
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		data.add(i,t);
-		String s = tToString!=null?tToString.apply(t):t.toString();
+		String s=tToString!=null?tToString.apply(t):t.toString();
 		model.add(i,s);
 		setItemListenerWorking(prev);
 	}
@@ -215,16 +216,16 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void setSelectedItem(int i)
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		jList.setSelectedIndex(i);
 		setItemListenerWorking(prev);
 	}
-	
+
 	@Override
 	public void ensureSelectedIsVisible()
 	{
-		int i = getSelectedIndex();
-		if( i>=0 )
+		int i=getSelectedIndex();
+		if(i>=0)
 		{
 			jList.ensureIndexIsVisible(i);
 		}
@@ -233,14 +234,14 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void setSelectedItem(Function<T,Boolean> tEqT)
 	{
-		boolean prev = isItemListenerWorking();
+		boolean prev=isItemListenerWorking();
 		int i=0;
-		while( i<data.size() && !tEqT.apply(data.get(i)) )
+		while(i<data.size()&&!tEqT.apply(data.get(i)))
 		{
 			i++;
 		}
-		
-		if( i<data.size() )
+
+		if(i<data.size())
 		{
 			setSelectedItem(i);
 		}
@@ -250,7 +251,7 @@ public class MyJList<T> implements MyList<T>
 		}
 		setItemListenerWorking(prev);
 	}
-	
+
 	@Override
 	public void setSpecialItem(String item)
 	{
@@ -273,19 +274,19 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public boolean removeItem(Function<T,Boolean> tEqT)
 	{
-		boolean prev = isItemListenerWorking();
-		boolean ret = false;
-		int i=0; 
-		while( i<data.size() && !tEqT.apply(data.get(i)) )
+		boolean prev=isItemListenerWorking();
+		boolean ret=false;
+		int i=0;
+		while(i<data.size()&&!tEqT.apply(data.get(i)))
 		{
 			i++;
 		}
-		
-		if( i<data.size() )
+
+		if(i<data.size())
 		{
 			model.remove(i);
 			data.remove(i);
-			ret = true;
+			ret=true;
 		}
 
 		setItemListenerWorking(prev);
@@ -309,12 +310,12 @@ public class MyJList<T> implements MyList<T>
 	{
 		jList.requestFocus();
 	}
-	
-    @Override
-    public void setMouseListener(MouseListener lst)
-    {
-    	jList.addMouseListener(lst);
-    }
+
+	@Override
+	public void setMouseListener(MouseListener lst)
+	{
+		jList.addMouseListener(lst);
+	}
 
 	@Override
 	public void setListSelectionListener(ListSelectionListener lst)
@@ -325,22 +326,22 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void setListSelectionListener(ListSelectionListener lst, boolean itemListenerWorking)
 	{
-		this.listener = lst;
-		this.listenerIsWorking = itemListenerWorking;
+		this.listener=lst;
+		this.listenerIsWorking=itemListenerWorking;
 	}
 
 	@Override
 	public void removeListSelectionListener()
 	{
 		this.listener=null;
-		this.mouseListener = null;
+		this.mouseListener=null;
 	}
 
 	@Override
 	public boolean setItemListenerWorking(boolean b)
 	{
 		boolean prev=this.listenerIsWorking;
-		this.listenerIsWorking = b;
+		this.listenerIsWorking=b;
 		return prev;
 	}
 
@@ -353,11 +354,12 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void validateNotUnselected(String mssgError, String title) throws MyException
 	{
-		if( isUnselected() )
+		if(isUnselected())
 		{
 			throw new MyException(mssgError,title,JOptionPane.ERROR_MESSAGE);
 		}
 	}
+
 	@Override
 	public void forceItemEvent()
 	{
@@ -367,9 +369,9 @@ public class MyJList<T> implements MyList<T>
 	@Override
 	public void forceListSelectionEvent()
 	{
-		if( listener!=null && listenerIsWorking )
+		if(listener!=null&&listenerIsWorking)
 		{
-			ListSelectionEvent e = new ListSelectionEvent(jList,getSelectedIndex(),getSelectedIndex(),false);
+			ListSelectionEvent e=new ListSelectionEvent(jList,getSelectedIndex(),getSelectedIndex(),false);
 			listener.valueChanged(e);
 		}
 	}
@@ -397,7 +399,7 @@ public class MyJList<T> implements MyList<T>
 	{
 		setUnselected();
 	}
-	
+
 	@Override
 	public void setItemListener(ItemListener lst)
 	{
@@ -415,90 +417,85 @@ public class MyJList<T> implements MyList<T>
 	{
 		MyBean.unsoportedMethod();
 	}
+	
+	public int size()
+	{
+		return model.size();
+	}
 
-	class EscuchaList extends MouseAdapter 
+//	public void scrollTo(T t)
+//	{
+//		for(int i=0; i<size(); i++)
+//		{
+//			T item = getItemAt(i);
+//			if( item.equals(t) )
+//			{
+//				setSelectedItem(i);
+//				int x = i;
+//				
+//				SwingUtilities.invokeLater(()->{
+//				Rectangle rect = jList.getCellBounds(x, x);
+//				if (rect != null) {
+//				    jList.scrollRectToVisible(rect);
+//				}
+//				});
+//				
+////				SwingUtilities.invokeLater(() -> jList.ensureIndexIsVisible(x));
+////				jList.ensureIndexIsVisible(i);
+//				break;
+//			}
+//		}
+//	}
+
+	class EscuchaList extends MouseAdapter
 	{
 		@Override
-		public void mouseClicked(MouseEvent e) {
-		    if (listenerIsWorking && listener != null) {
-		        MyListEvent<T> x = null;
-		        T item = getSelectedItem();
-		        int nClick = e.getClickCount();
-		        int eventType;
-		        switch (nClick) {
-		            case 1:
-		                if (prevItemSelected == item) return;
-		                eventType = isUnselected() ? MyListEvent.ITEM_UNSELECTED : MyListEvent.ITEM_SELECTED;
-		                x = new MyListEvent<>(eventType, outer, item, prevItemSelected, 1);
-		                break;
-		            case 2:
-		                eventType = MyListEvent.ITEM_DOUBLECLICKED;
-		                x = new MyListEvent<>(eventType, outer, item, prevItemSelected, 2);
-		                break;
-		        }
-		        if (x != null) {
-		            listener.valueChanged(x);
-		            prevItemSelected = item;
-		        }
-		    }
+		public void mouseClicked(MouseEvent e)
+		{
+			if(listenerIsWorking&&listener!=null)
+			{
+				MyListEvent<T> x=null;
+				T item=getSelectedItem();
+				int nClick=e.getClickCount();
+				int eventType;
+				switch(nClick)
+				{
+					case 1:
+						if(prevItemSelected==item) return;
+						eventType=isUnselected()?MyListEvent.ITEM_UNSELECTED:MyListEvent.ITEM_SELECTED;
+						x=new MyListEvent<>(eventType,outer,item,prevItemSelected,1);
+						break;
+					case 2:
+						eventType=MyListEvent.ITEM_DOUBLECLICKED;
+						x=new MyListEvent<>(eventType,outer,item,prevItemSelected,2);
+						break;
+				}
+				if(x!=null)
+				{
+					listener.valueChanged(x);
+					prevItemSelected=item;
+				}
+			}
 		}
 
 	}
-	
-//	public static void main(String[] args)
-//	{
-//		MyList<String> lst = new MyJList<>();
-//		lst.setListSelectionListener(new EscuchaItem());
-//		JFrame frame = new JFrame();
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		
-//		MyJForm f = new MyJForm();
-//		MyAwt.setPreferredWidth(350,f);
-//		MyAwt.setPreferredHeiht(500,f);
-//		
-//		JTextField tf = new JTextField();
-//		frame.add(tf,BorderLayout.NORTH);
-//
-//		
-//		f.addRow(new JLabel("La concha tuya"));
-//		f.addRow(new JScrollPane(lst.c()));
-//		f.makeForm();
-//		frame.getContentPane().add(f,BorderLayout.WEST);
-//		
-//		JPanel p = new JPanel();
-//		JButton b;
-//		p.add( b = new JButton("Add") );
-//		b.addActionListener(new EscuchaAdd(lst,tf));
-//		p.add( b = new JButton("Remove") );
-//		b.addActionListener(l->lst.removeSelectedItem());
-//		p.add( b = new JButton("RemoveAll") );
-//		b.addActionListener(l->lst.removeAllItems());
-//		p.add( b = new JButton("SetItems") );
-//		b.addActionListener(l->lst.setItems(List.of("Uno","Dos","Tres","Cuatro")));
-////		p.add( b=new JButton("Sort"));
-////		b.addActionListener(l->lst.sort((x,y)->x.compareTo(y)));
-//		
-//		frame.getContentPane().add(p,BorderLayout.SOUTH);
-//		frame.setSize(450,300);
-//		frame.setVisible(true);
-//	}
-	
+
 	static class EscuchaAdd implements ActionListener
 	{
 		JTextField tf;
 		MyList<String> lst;
-		
+
 		public EscuchaAdd(MyList<String> l,JTextField t)
 		{
 			lst=l;
 			tf=t;
 		}
-		
-		public void actionPerformed(ActionEvent e) 
+
+		public void actionPerformed(ActionEvent e)
 		{
-			if( !tf.getText().isEmpty() )
+			if(!tf.getText().isEmpty())
 			{
-				JList xx =(JList)lst.c();
+				JList xx=(JList)lst.c();
 			}
 			else
 			{
@@ -506,13 +503,13 @@ public class MyJList<T> implements MyList<T>
 			}
 		}
 	}
-	
+
 	static class EscuchaItem implements ListSelectionListener
 	{
 		@Override
 		public void valueChanged(ListSelectionEvent e)
 		{
-			MyListEvent<?> ee = (MyListEvent)e;
+			MyListEvent<?> ee=(MyListEvent)e;
 			System.out.println(ee);
 		}
 	}
