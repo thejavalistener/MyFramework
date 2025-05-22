@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -122,6 +123,11 @@ public class MyJList<T> implements MyList<T>
 
 	}
 
+	public void setListDataListener(ListDataListener listDataListener)
+	{
+		jList.getModel().addListDataListener(listDataListener);
+	}
+	
 	@Override
 	public T getSelectedItem()
 	{

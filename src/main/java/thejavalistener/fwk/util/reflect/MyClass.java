@@ -2,6 +2,8 @@ package thejavalistener.fwk.util.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -243,6 +245,32 @@ public class MyClass
 			throw new RuntimeException();
 		}		
 	}
+	
+	public static Class<?> getGeneric(Class<?> clazz, String attname)
+	{
+		try
+		{
+			Field field=clazz.getDeclaredField(attname);
+			Type genericType=field.getGenericType();
+
+			if(genericType instanceof ParameterizedType)
+			{
+				Type[] typeArguments=((ParameterizedType)genericType).getActualTypeArguments();
+				if(typeArguments.length>0&&typeArguments[0] instanceof Class<?>)
+				{
+					return (Class<?>)typeArguments[0];
+				}
+			}
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		return null;
+	}
+
 
 	private static boolean _concuerdanParametros(Class<?> paramTypes[],Class<?> argTypes[])
 	{

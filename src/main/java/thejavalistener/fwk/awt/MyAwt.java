@@ -26,7 +26,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import thejavalistener.fwk.awt.panel.MyPanel;
-import thejavalistener.fwk.util.MyCollection;
 
 public class MyAwt
 {
@@ -236,7 +235,8 @@ public class MyAwt
 
 	public static String inputText(String mssg, String title, Container parent)
 	{
-		return JOptionPane.showInputDialog(parent,"Ingresa tu texto:",title);
+//		return JOptionPane.showInputDialog(parent,mssg,title);
+		return (String)JOptionPane.showInputDialog(parent, mssg, title, JOptionPane.PLAIN_MESSAGE, null, null, null);
 	}
 
 	public static int showConfirmDialog(String mssg, String title, String[] options, int def, Container owner)
