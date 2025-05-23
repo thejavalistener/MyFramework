@@ -219,6 +219,22 @@ public class MyAwt
 		String options[]= {"Si", "No"};
 		return showConfirmDialog(mssg,title,options,0,owner);
 	}
+	
+	public static void showErrorMessage(String mssg, String title, Container owner) 
+	{
+        JOptionPane.showMessageDialog(owner, mssg, title, JOptionPane.ERROR_MESSAGE);
+    }
+	
+	public static void showWarningMessage(String mssg, String title, Container owner) 
+	{
+        JOptionPane.showMessageDialog(owner, mssg, title, JOptionPane.WARNING_MESSAGE);
+    }
+
+	public static void showInformationMessage(String mssg, String title, Container owner) 
+	{
+        JOptionPane.showMessageDialog(owner, mssg, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 	/** Retorna: 0=>no, 1=> si */
 	public static int showConfirmNO_YES(String mssg, String title, Container owner)
