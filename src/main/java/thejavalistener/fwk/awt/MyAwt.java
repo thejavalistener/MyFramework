@@ -36,17 +36,17 @@ public class MyAwt
 
 	public static Window getMainWindow(Container c)
 	{
-		return SwingUtilities.getWindowAncestor(c);
+//		return SwingUtilities.getWindowAncestor(c);
 	
-//		if(c==null)
-//		{
-//			return null; // Evita NullPointerException si el contenedor es nulo
-//		}
-//		if(c instanceof Window)
-//		{
-//			return (Window)c; // Si ya es un Window, lo retornamos
-//		}
-//		return getMainWindow(c.getParent()); // Llamada recursiva
+		if(c==null)
+		{
+			return null; // Evita NullPointerException si el contenedor es nulo
+		}
+		if(c instanceof Window)
+		{
+			return (Window)c; // Si ya es un Window, lo retornamos
+		}
+		return getMainWindow(c.getParent()); // Llamada recursiva
 	}
 
 	// Método para deshabilitar temporalmente los componentes y guardar su

@@ -28,7 +28,6 @@ import thejavalistener.fwk.awt.MyComponent;
 import thejavalistener.fwk.awt.form.MyForm;
 import thejavalistener.fwk.awt.link.MyLink;
 import thejavalistener.fwk.awt.list.MyComboBox;
-import thejavalistener.fwk.awt.list.MyJComboBox;
 import thejavalistener.fwk.awt.textarea.MyTextField;
 import thejavalistener.fwk.frontend.MyAbstractScreen;
 import thejavalistener.fwk.frontend.messages.MyScreenMessageEvent;
@@ -76,7 +75,7 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 	public void init()
 	{
 		// entities
-		cbEntities = new MyJComboBox<>();
+		cbEntities = new MyComboBox<>();
 		cbEntities.c().setPreferredSize(new Dimension(300,cbEntities.c().getPreferredSize().height));
 		cbEntities.setItemListener(new EscuchaEntities());
 		cbEntities.setTToString(clazz->clazz.getSimpleName());
@@ -152,7 +151,7 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 			else // foraneo: comboBox
 			{
 				List<Object> items = facade.queryMultipleRows("From "+typeClass.getName());
-				MyComboBox<Object> comboBox = new MyJComboBox<>();
+				MyComboBox<Object> comboBox = new MyComboBox<>();
 				comboBox.setSpecialItem(" ");
 				comboBox.setItems(items);
 				myComponent = comboBox;

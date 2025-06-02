@@ -36,7 +36,7 @@ public class MyInstantForm
 	
 	private boolean cancelado = false;
 	
-	private Map<String,String> returnValue = null;
+	private Map<String,String> returnValue = new HashMap<>();
 	
 	public MyInstantForm(String title,JFrame parent)
 	{
