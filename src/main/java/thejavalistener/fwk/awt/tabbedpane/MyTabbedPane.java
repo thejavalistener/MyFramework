@@ -19,15 +19,37 @@ public class MyTabbedPane
 {
 	private JTabbedPane tabbedPane;
 	private List<JComponent> pestanias;
+	private ChangeListener listener;
 
 	public MyTabbedPane()
 	{
-		tabbedPane=new JTabbedPane();
+		tabbedPane=new JTabbedPane();	
 		tabbedPane.setBorder(null);
 		tabbedPane.setFocusable(false);
 		pestanias = new ArrayList<>();
 		
 		tabbedPane.addChangeListener(new EscuchaSelect());
+	}
+	
+	public void setChangeListener(ChangeListener lst,boolean working)
+	{
+		this.listener =lst;
+		setListenerWorking(working);
+	}
+	
+	public void setListenerWorking(boolean b)
+	{
+		if( listener!=null )
+		{
+			if( !b )
+			{
+				tabbedPane.removeChangeListener(listener);			
+			}
+			else
+			{
+				tabbedPane.addChangeListener(listener);						
+			}
+		}
 	}
 
 	public void addTab(String title, Component component,boolean closeable)
@@ -113,8 +135,7 @@ public class MyTabbedPane
 				MyAwt.setBackground(cmp,Color.WHITE);				
 			}
 			
-		}
-		
+		}		
 	}
 
 	public void setSelectedTab(int i)

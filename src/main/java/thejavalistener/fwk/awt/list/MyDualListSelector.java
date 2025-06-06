@@ -217,7 +217,6 @@ public class MyDualListSelector<T>
 		
 		if( (allows&ALLOW_UDT)!=0 )
 		{
-			btnUdt.setEnabled(false);
 			btnUdt = new JButton("#");
 			btnUdt.setEnabled(false);
 			btnUdt.addActionListener(e -> 
@@ -225,18 +224,21 @@ public class MyDualListSelector<T>
 				if(listener!=null )
 				{
 					T curr = lstLeft.getSelectedItem();
-					T modif = listener.updateItemRequested(curr);
-					if( modif!=null )
+					if( curr!=null )
 					{
-						lstLeft.removeSelectedItem();
-						lstLeft.addItem(modif);
-						
-						Function<T,Boolean> f = t->t.equals(modif);
-						lstLeft.setSelectedItem(f);
-						
-						listener.afterItemChangeHook(lstLeft);
-						lstLeft.ensureSelectedIsVisible();
-						
+						T modif = listener.updateItemRequested(curr);
+						if( modif!=null )
+						{
+							lstLeft.removeSelectedItem();
+							lstLeft.addItem(modif);
+							
+							Function<T,Boolean> f = t->t.equals(modif);
+							lstLeft.setSelectedItem(f);
+							
+							listener.afterItemChangeHook(lstLeft);
+							lstLeft.ensureSelectedIsVisible();
+							
+						}
 					}
 				}
 			});
@@ -252,7 +254,7 @@ public class MyDualListSelector<T>
 				{
 					T curr = lstLeft.getSelectedItem();
 	
-					if( listener.removeItemRequested(curr) )
+					if( curr!=null && listener.removeItemRequested(curr) )
 					{
 						lstLeft.removeSelectedItem();
 						listener.afterItemChangeHook(lstLeft);

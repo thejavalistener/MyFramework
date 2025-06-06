@@ -314,7 +314,7 @@ public class MyAwt
 	}
 
 	public static void center(Window child, Window parent)
-	{
+	{		
 		if(parent==null)
 		{
 			Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
