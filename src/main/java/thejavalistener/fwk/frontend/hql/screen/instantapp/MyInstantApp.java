@@ -46,6 +46,8 @@ public class MyInstantApp
 	public MyInstantApp()
 	{
 		dialog = new JDialog();
+		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		
 		screens = new ArrayList<>();
 		
 		tabbedPane = new MyTabbedPane();
@@ -53,11 +55,20 @@ public class MyInstantApp
 		
 		MyRightLayout r = new MyRightLayout(5,5,8,5);
 		r.add(bAccept = new JButton("Accept"));
-		bAccept.addActionListener(l->screens.get(currScreen).onAccept());
+		bAccept.addActionListener(l->
+		{
+			MyConfirm err = screens.get(currScreen).onAccept();	
+			if( err!=null )
+			{
+				err.show(parent);
+			}	
+		});
+		
 		r.add(bCancel = new JButton("Cancel"));
 		bCancel.addActionListener(l->
 		{
-			if( screens.get(currScreen).onClose() )
+			MyConfirm err = screens.get(currScreen).onClose(); 
+			if( err==null || err.show(parent) )
 			{
 				close();
 			}	
@@ -69,7 +80,8 @@ public class MyInstantApp
 		{
 			public void windowClosing(WindowEvent e) 
 			{
-				if( screens.get(currScreen).onClose() )
+				MyConfirm err = screens.get(currScreen).onClose();
+				if( err==null || err.show(parent) )
 				{
 					close();
 				}	
@@ -153,6 +165,8 @@ public class MyInstantApp
 	public void show()
 	{
 		if( !inited ) throw new RuntimeException("Primero debe invocar al método init()");
+		dialog.setLocationRelativeTo(parent);
+		dialog.setModal(true);
 		dialog.setVisible(true);
 	}
 	

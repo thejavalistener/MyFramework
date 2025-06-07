@@ -234,6 +234,12 @@ public class MyAwt
 	{
         JOptionPane.showMessageDialog(owner, mssg, title, JOptionPane.INFORMATION_MESSAGE);
     }
+	
+	public static void showMessage(String mssg, String title, int mssgType,Container owner) 
+	{
+        JOptionPane.showMessageDialog(owner, mssg, title, mssgType);
+    }
+
 
 
 	/** Retorna: 0=>no, 1=> si */

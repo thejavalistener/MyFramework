@@ -266,11 +266,11 @@ public class MyDualListSelector<T>
 		
 		if( allows==0 )
 		{
-			return new MyPanel(0,0,0,0);
+			return new MyPanel(3,0,3,0);
 		}
 		else
 		{
-			MyPanel panel=new MyCenterLayout(0,0,0,0);
+			MyPanel panel=new MyCenterLayout(3,0,3,0);
 	
 			if( btnAdd!=null )
 				panel.add(btnAdd,BorderLayout.WEST);
