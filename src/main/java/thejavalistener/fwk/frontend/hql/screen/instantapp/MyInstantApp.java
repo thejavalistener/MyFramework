@@ -57,18 +57,14 @@ public class MyInstantApp
 		r.add(bAccept = new JButton("Accept"));
 		bAccept.addActionListener(l->
 		{
-			MyConfirm err = screens.get(currScreen).onAccept();	
-			if( err!=null )
-			{
-				err.show(parent);
-			}	
+			screens.get(currScreen).onAccept();	
 		});
 		
 		r.add(bCancel = new JButton("Cancel"));
 		bCancel.addActionListener(l->
 		{
-			MyConfirm err = screens.get(currScreen).onClose(); 
-			if( err==null || err.show(parent) )
+			boolean ok = screens.get(currScreen).onClose(); 
+			if( ok )
 			{
 				close();
 			}	
@@ -80,8 +76,8 @@ public class MyInstantApp
 		{
 			public void windowClosing(WindowEvent e) 
 			{
-				MyConfirm err = screens.get(currScreen).onClose();
-				if( err==null || err.show(parent) )
+				boolean ok = screens.get(currScreen).onClose();
+				if( ok )
 				{
 					close();
 				}	

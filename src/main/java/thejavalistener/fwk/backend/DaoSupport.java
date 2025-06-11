@@ -19,6 +19,12 @@ public class DaoSupport
 	@PersistenceContext
 	protected EntityManager em;
 
+	
+	public long count(Class<?> entityClass)
+	{
+		return querySingleRow("SELECT COUNT(*) FROM "+entityClass.getName());
+	}
+	
 	public <T> T querySingleRow(String hql,Object ...params)
 	{
 		List<T> lst = queryMultipleRows(hql,params);

@@ -75,7 +75,7 @@ public class HQLScreen extends MyAbstractScreen
 		tpResultados = new MyTabbedPane();
 		
 		// CENTER
-		splitPane = new MySplitPane(MySplitPane.HORIZONTAL,scrollSQL,tpResultados.c());
+		splitPane = new MySplitPane(MySplitPane.VERTICAL,scrollSQL,tpResultados.c());
 		
 		String pkg = getClass().getName();
 		Integer dividerLocation = getProperties().discover(pkg+".dividerLocation",200);

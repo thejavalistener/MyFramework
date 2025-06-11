@@ -159,15 +159,18 @@ public class MyList<T>
 		return t;
 	}
 
-	public void removeAllItems()
+	public List<T> removeAllItems()
 	{
+		List<T> ret = new ArrayList<>();
 		boolean prev=isItemListenerWorking();
 		while(data.size()>0)
 		{
-			data.remove(0);
+			ret.add(data.remove(0));
 			model.remove(0);
 		}
 		setItemListenerWorking(prev);
+		
+		return ret;
 	}
 
 	public void setItems(List<T> items)
@@ -385,6 +388,17 @@ public class MyList<T>
 	{
 		return model.size();
 	}
+	
+	public void addItems(List<T> items)
+	{
+		boolean prev = setItemListenerWorking(false);
+		for(T t:items)
+		{
+			addItem(t);
+		}
+		setItemListenerWorking(prev);
+	}
+
 
 	class EscuchaList extends MouseAdapter
 	{
@@ -452,4 +466,5 @@ public class MyList<T>
 			System.out.println(ee);
 		}
 	}
+
 }

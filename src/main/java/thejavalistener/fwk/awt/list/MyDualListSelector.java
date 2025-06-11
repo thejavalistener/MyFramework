@@ -27,6 +27,8 @@ public class MyDualListSelector<T>
 	public static final int ALLOW_ADD=1;
 	public static final int ALLOW_UDT=2;
 	public static final int ALLOW_RMV=4;
+	public static final int ALLOW_SALL=8;
+	public static final int ALLOW_RALL=16;
 
 	private int allows=0;
 
@@ -39,6 +41,8 @@ public class MyDualListSelector<T>
 	private JButton btnAdd = null;
 	private JButton btnUdt = null;
 	private JButton btnRmv = null;
+	private JButton btnSAll = null;
+	private JButton btnRAll = null;
 	
 	public MyDualListSelector(int allows)
 	{
@@ -55,8 +59,12 @@ public class MyDualListSelector<T>
 		// Panel izquierdo con lista y botones
 		panelIzquierdo=new MyBorderLayout();
 		panelIzquierdo.add(new MyScrollPane(lstLeft.c()),BorderLayout.CENTER);
-		panelIzquierdo.add(crearPanelBotones(),BorderLayout.SOUTH);
-
+		
+		if( allows!=0 )
+		{
+			panelIzquierdo.add(crearPanelBotones(),BorderLayout.SOUTH);
+		}
+		
 		// Panel derecho sólo con lista
 		MyPanel panelDerecho=new MyBorderLayout();
 		panelDerecho.add(new MyScrollPane(lstRight.c()),BorderLayout.CENTER);
@@ -70,11 +78,13 @@ public class MyDualListSelector<T>
 					T item=lstLeft.getSelectedItem();
 					if(item!=null)
 					{
-						T t=lstLeft.removeSelectedItem();
+						T t=lstLeft.removeSelectedItem();						
 						lstRight.addItem(t);
 						lstRight.setSelectedItem(x->x.equals(t));
 						lstRight.ensureSelectedIsVisible();
-						_enableDisableButtons(false);
+						_enableDisableButtons(false);						
+						_enableDisableAllButtons();
+
 					}
 				}
 			}
@@ -94,6 +104,7 @@ public class MyDualListSelector<T>
 						lstLeft.setSelectedItem(x->x.equals(item));
 						lstLeft.ensureSelectedIsVisible();
 						_enableDisableButtons(true);
+						_enableDisableAllButtons();
 					}
 				}
 			}
@@ -101,6 +112,14 @@ public class MyDualListSelector<T>
 
 		contentPane.add(panelIzquierdo);
 		contentPane.add(panelDerecho);
+	}
+	
+	private void _enableDisableAllButtons()
+	{
+		if(btnSAll!=null)
+			btnSAll.setEnabled(lstLeft.size()>0);
+		if(btnRAll!=null)
+			btnRAll.setEnabled(lstRight.size()>0);
 	}
 	
 	public T getLeftSelectedItem()
@@ -184,6 +203,8 @@ public class MyDualListSelector<T>
 				lstLeft.addItem(t);
 			}
 		}
+		
+		_enableDisableAllButtons();
 	}
 
 	private MyPanel crearPanelBotones()
@@ -191,6 +212,8 @@ public class MyDualListSelector<T>
 		btnAdd = null;
 		btnUdt = null;
 		btnRmv = null;
+		btnSAll = null;
+		btnRAll = null;
 		
 		if( (allows&ALLOW_ADD)!=0 )
 		{
@@ -260,27 +283,55 @@ public class MyDualListSelector<T>
 						listener.afterItemChangeHook(lstLeft);
 					}
 				}
-			});
-		
+			});			
 		}
+		
+		if( (allows&ALLOW_SALL)!=0 )
+		{
+			btnSAll = new JButton(">>");
+			btnSAll.setEnabled(false);
+			btnSAll.addActionListener(e -> 
+			{
+				List<T> items = lstLeft.removeAllItems();
+				lstRight.addItems(items);
+			});
+		}
+
+		if( (allows&ALLOW_RALL)!=0 )
+		{
+			btnRAll = new JButton("<<");
+			btnRAll.setEnabled(false);
+			btnRAll.addActionListener(e -> 
+			{
+				List<T> items = lstRight.removeAllItems();
+				lstLeft.addItems(items);
+			});
+		}
+
 		
 		if( allows==0 )
 		{
-			return new MyPanel(3,0,3,0);
+			return new MyPanel(0,0,0,0);
 		}
 		else
 		{
 			MyPanel panel=new MyCenterLayout(3,0,3,0);
 	
 			if( btnAdd!=null )
-				panel.add(btnAdd,BorderLayout.WEST);
+				panel.add(btnAdd);
 
 			if( btnUdt!=null )
 				panel.add(btnUdt);
 			
 			if( btnRmv!=null )
 				panel.add(btnRmv);
-
+		
+			if( btnRAll!=null )
+				panel.add(btnRAll);
+		
+			if( btnSAll!=null )
+				panel.add(btnSAll);
+		
 			return panel;
 		}
 	}
@@ -288,16 +339,6 @@ public class MyDualListSelector<T>
 	public void setDualListListener(MyDualListListener<T> l)
 	{
 		this.listener=l;
-	}
-
-	public List<T> getItemsSeleccionados()
-	{
-		return lstRight.getItems();
-	}
-
-	public List<T> getItemsNoSeleccionados()
-	{
-		return lstLeft.getItems();
 	}
 
 	public Component c()
@@ -312,6 +353,14 @@ public class MyDualListSelector<T>
 		if( btnRmv!=null )
 			btnRmv.setEnabled(b);
 	}
+
+	public void removeAll()
+	{
+		lstLeft.removeAllItems();
+		lstRight.removeAllItems();
+		if( btnSAll!=null ) btnSAll.setEnabled(false);
+		if( btnRAll!=null ) btnRAll.setEnabled(false);
+	}
 	
 	class EscuchaItems implements ListSelectionListener
 	{
@@ -322,4 +371,5 @@ public class MyDualListSelector<T>
 			_enableDisableButtons(idx>=0);
 		}
 	}
+
 }
