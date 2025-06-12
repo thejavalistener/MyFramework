@@ -45,6 +45,9 @@ public class FactoryStatement
 			case "drop":
 				stm = ctx.getBean(DDLStatement.class);										
 				break;
+			case "insert":
+				stm = ctx.getBean(InsertStatement.class);
+				break;
 			default:
 				stm = ctx.getBean(ErrorStatement.class);
 		}
