@@ -8,8 +8,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -123,8 +125,16 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 		form.addRow().add(cbEntities.c());
 		form.addSeparator();
 		
-		// trate todos los campos anotados con @Column o con @ManyToOne
-		Field[] fields = MyBean.getDeclaredFields(entityClass,f->f.getAnnotation(Column.class)!=null||f.getAnnotation(ManyToOne.class)!=null);
+		// trate todos los campos anotados con @Column o con @ManyToOne omitiendo los finales y estáticos
+		
+		Function<Field,Boolean> func = f->{
+			boolean esFinalOEstatico = Modifier.isFinal(f.getModifiers())||Modifier.isStatic(f.getModifiers());
+			boolean tieneColumn = f.getAnnotation(Column.class)!=null;
+			boolean tieneManyToOne = f.getAnnotation(ManyToOne.class)!=null;
+			return !esFinalOEstatico && (tieneColumn || tieneManyToOne);
+		};
+		
+		Field[] fields = MyBean.getDeclaredFields(entityClass,func);
 		for(int i=0; i<fields.length; i++)
 		{
 			Field field = fields[i];

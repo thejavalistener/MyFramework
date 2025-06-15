@@ -112,8 +112,20 @@ public class MyBean
 	{
 		try
 		{
+			Class<?> oClass = o.getClass();
 			String mtdName = "set"+MyString.switchCase(att,0);
-			Method mtd = o.getClass().getMethod(mtdName,value.getClass());
+			
+			Method mtd;
+			
+			if( value!=null )
+			{
+				mtd = oClass.getMethod(mtdName,value.getClass());
+			}
+			else
+			{
+				mtd = oClass.getMethod(mtdName,oClass.getDeclaredField(att).getType());				
+			}
+			
 			mtd.invoke(o,value);
 		}
 		catch(Exception e)
@@ -121,7 +133,7 @@ public class MyBean
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-	}
+	}	
 
 	public static List<Object> getValues(Object o)
 	{
@@ -143,7 +155,7 @@ public class MyBean
 	public static Field[] getDeclaredFields(Class<?> clazz,Function<Field,Boolean> func)
 	{
 		Field[] fields = clazz.getDeclaredFields();
-		return Stream.of(fields).filter(f->func.apply(f)!=null).toArray(Field[]::new);
+		return Stream.of(fields).filter(f->func.apply(f)).toArray(Field[]::new);
 	}
 	
 

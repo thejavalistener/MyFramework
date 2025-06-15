@@ -35,7 +35,7 @@ public class UpdateStatement extends AbstractStatement
 		{
 			if( _confirmTransaction(updateCount) )
 			{				
-				getScreen().showInformationMessage(updateCount+" filas fueron afecatadas.","Transacción exitosa");
+				getScreen().showInformationMessage(updateCount+" filas fueron afecatadas","Transacción exitosa");
 			}
 			else
 			{

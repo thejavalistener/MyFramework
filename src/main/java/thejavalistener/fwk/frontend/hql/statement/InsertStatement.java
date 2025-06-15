@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Primary;
@@ -24,20 +23,19 @@ public class InsertStatement extends AbstractStatement
 	public void process()
 	{
 		String sql = getSql(); 
-		
+
 		Object x = procesarInsert(sql);
-		
-		em.persist(x);
+		em.persist(x);			
 		
 		if( _confirmTransaction(1) )
 		{				
-			getScreen().showInformationMessage("Se insertó 1 fila.","Transacción exitosa");
+			getScreen().showInformationMessage("Se insertó 1 fila","Transacción exitosa");
 		}
 		else
 		{
 			getScreen().showInformationMessage("Ninguna fila resultó afectada","Transacción revertida");
 			throw new MyRollbackException();
-		}
+		}			
 	}
 
     public static Object procesarInsert(String hql) {

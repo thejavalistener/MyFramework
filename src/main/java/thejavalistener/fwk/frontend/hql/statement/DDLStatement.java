@@ -57,6 +57,7 @@ public class DDLStatement extends AbstractStatement
 		}
 		catch(Exception ex)
 		{
+			ex.printStackTrace();
 			MySqlException mex = new MySqlException(ex);
 			getScreen().showExceptionMessage(mex);
 		}

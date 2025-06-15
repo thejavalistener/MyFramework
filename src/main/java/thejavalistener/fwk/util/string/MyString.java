@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import thejavalistener.fwk.util.MyThread;
@@ -197,8 +198,6 @@ public class MyString
 			int end=text.indexOf("\n\n",index);
 			bounds[1]=end==-1?text.length():end; // Si no hay, el final es el
 													// largo del texto
-
-			System.out.println("start:"+start+", end:"+end);
 			if(start==end)
 			{
 				if(start<0)
@@ -226,7 +225,7 @@ public class MyString
 		}
 
 	}
-
+	
 	public static List<String> wordList(String s)
 	{
 		return wordList(s,x -> x);

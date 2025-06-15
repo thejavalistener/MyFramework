@@ -98,10 +98,9 @@ public class HQLScreen extends MyAbstractScreen
 		MyLeftLayout  pNorth = new MyLeftLayout();
 		
 		_addLink("Execute:","[ALT+X]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_X,'X',pNorth);		
-//		_addLink("|    Predefined Queries:","[ALT+Q]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_Q,'Q',pNorth);
-//		_addLink("|    Save/Edit Query:","[ALT+E]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_E,'E',pNorth);
 		_addLink("|    Create New Object:","[ALT+N]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_N,'N',pNorth);
 		_addLink("|    Clear All:","[ALT+C]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_C,'C',pNorth);
+		_addLink("|    Save:","[ALT+S]",KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_S,'S',pNorth);
 
 		pCenter.add(new MyInsets(pNorth,10,10,0,5),BorderLayout.NORTH);
 		
@@ -134,6 +133,7 @@ public class HQLScreen extends MyAbstractScreen
 	{
 		addResult(sql,result,null);
 	}
+	
 	public void addResult(String sql,Object result,Object[] headers)
 	{
 		MyLink lnk = new MyLink(sql,MyLink.LINK);
@@ -184,8 +184,13 @@ public class HQLScreen extends MyAbstractScreen
 	@Override
 	public void destroy()
 	{
+		_saveConsola();
+	}
+	
+	private void _saveConsola()
+	{
 		String txt = taSQL.getText();
-		getProperties().putString(getClass(),"console",txt);
+		getProperties().putString(getClass(),"console",txt);		
 	}
 	
 	@Override
@@ -217,6 +222,14 @@ public class HQLScreen extends MyAbstractScreen
 		    	return;
 	        }
 
+	    	// ALT+S - Save
+	    	if(e.isAltDown() && Character.toLowerCase(e.getKeyChar()) == 's') 
+	        {
+	    		_saveConsola();
+	    		showInformationMessage("La consola ha sido gardada","Bien!");
+	    		return;
+	        }
+
 	    	
 	    	// ALT+X - Ejecutar
 	    	if(e.isAltDown() && Character.toLowerCase(e.getKeyChar()) == 'x') 
@@ -228,48 +241,17 @@ public class HQLScreen extends MyAbstractScreen
 
 		    	_accionEjecutarHQL(txt);
 
+		    	_saveConsola();
 		    	return;
 	        }
-	    	
-//	    	// ALT+E - Grabar
-//	    	if(e.isAltDown() && Character.toLowerCase(e.getKeyChar()) == 'e') 
-//	        {
-//	    		txt = txt==null?"":txt;
-//	    		values.putValueFor(HQLSelectPredefQueryEdit.class,"newHQL",txt,getOuter());
-////		    	NamedValue<String> querySeleccionado=(NamedValue)getMyApp().showScreen(HQLSelectPredefQueryEdit.class).size(.7).centerH(150).apply();		    	
-//		    	getMyApp().showScreen(HQLSelectPredefQueryEdit.class).size(.7).centerH(150).apply();	
-////		    	_ejecutarPredefQuery(querySeleccionado);		    	
-//		    	return;
-//	        }
-	        
-//	    	// ALT+Q - Ejecutar predefinido
-//	        if(e.isAltDown() && Character.toLowerCase(e.getKeyChar()) == 'q') 
-//	        {
-//		    	NamedValue<String> querySeleccionado;
-//		    	querySeleccionado = (NamedValue)getMyApp().showScreen(HQLSelectPredefQuery.class).pack().centerH(150).apply();
-//		    	_ejecutarPredefQuery(querySeleccionado);
-//		    	return;
-//	        }
-	        
+	    		        
 	    	// ALT+N - New Object
 	        if(e.isAltDown() && Character.toLowerCase(e.getKeyCode()) == 'n') 
 	        {
 				getMyApp().showScreen(HQLCreateNewEntity.class).pack().centerH(150).apply();
+				return;
 	        }
 	    }
-	}
-	
-	private void _ejecutarPredefQuery(NamedValue<String> qSelected)
-	{
-		if( qSelected!=null)
-		{
-			String hql = qSelected.getValue();
-			taSQL.insert(hql+"\n\n",0);
-			taSQL.setCaretPosition(0);
-			_selectTextLine(taSQL.getText(),0);
-			taSQL.requestFocus();
-			escuchaConsola.keyPressed(new KeyEvent(taSQL.c(),0,0,KeyEvent.ALT_DOWN_MASK,KeyEvent.VK_X,'X'));
-		}
 	}
 
 	class EscuchaNewEntityCreated implements MyScreenMessageListener
