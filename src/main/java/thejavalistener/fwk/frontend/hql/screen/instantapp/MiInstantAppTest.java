@@ -10,6 +10,9 @@ public class MiInstantAppTest
 	public static void main(String[] args)
 	{
 		MyInstantApp x = new MyInstantApp();
+		x.addButton("Capo","capo");
+		x.addButton("Total","total");
+		x.addButton("Loccooo","loco");
 		x.addScreenPanel("1",MiPanel1.class);
 		x.addScreenPanel("2",MiPanel2.class);
 		x.setSelected(0);
@@ -22,6 +25,12 @@ public class MiInstantAppTest
 	static class MiPanel1 extends MyInstantAppScreen
 	{
 		private JCheckBox chb;
+		
+		@Override
+		public void onButtonPressed(String action)
+		{
+			System.out.println("p1 ----------> "+action);
+		}
 		
 		public MiPanel1()
 		{
@@ -37,16 +46,7 @@ public class MiInstantAppTest
 			MyLog.println();
 		}
 
-		@Override
-		public void onAccept()
-		{
-		}
-
-		@Override
-		public boolean onClose()
-		{
-			return true;
-		}
+		
 
 		@Override
 		public void dataUpdated()
@@ -73,24 +73,19 @@ public class MiInstantAppTest
 		{
 			setBackground(MyColor.random());
 		}
+		
+		@Override
+		public void onButtonPressed(String action)
+		{
+			System.out.println("p2 ----------> "+action);
+		}
+		
+
 
 		@Override
 		public void init(Object... args)
 		{
 			MyLog.println();
-		}
-
-		@Override
-		public void onAccept()
-		{
-			MyLog.println();
-		}
-
-		@Override
-		public boolean onClose()
-		{
-			MyLog.println();
-			return true;
 		}
 
 		@Override

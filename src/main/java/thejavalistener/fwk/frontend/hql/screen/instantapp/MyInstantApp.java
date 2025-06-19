@@ -2,14 +2,17 @@ package thejavalistener.fwk.frontend.hql.screen.instantapp;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -22,7 +25,6 @@ import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.panel.MyRightLayout;
 import thejavalistener.fwk.awt.tabbedpane.MyTabbedPane;
 import thejavalistener.fwk.frontend.MyAbstractScreen;
-import thejavalistener.fwk.util.MyLog;
 
 @Component
 @Scope("prototype")
@@ -30,7 +32,13 @@ public class MyInstantApp
 {
 	private JDialog dialog;
 	private MyTabbedPane tabbedPane;
-	private JButton bAccept,bCancel;
+//	private JButton bAccept,bCancel;
+	
+	private EscuchaButton escuchaButtons;
+	private MyRightLayout pButtons;
+	
+	
+	private Map<String,JButton> buttons = new LinkedHashMap<>();
 	
 	@Autowired
 	private ApplicationContext ctx;
@@ -53,42 +61,47 @@ public class MyInstantApp
 		tabbedPane = new MyTabbedPane();
 		dialog.add(tabbedPane.c(),BorderLayout.CENTER);
 		
-		MyRightLayout r = new MyRightLayout(5,5,8,5);
-		r.add(bAccept = new JButton("Accept"));
-		bAccept.addActionListener(l->
-		{
-			screens.get(currScreen).onAccept();	
-		});
-		
-		r.add(bCancel = new JButton("Cancel"));
-		bCancel.addActionListener(l->
-		{
-			boolean ok = screens.get(currScreen).onClose(); 
-			if( ok )
-			{
-				close();
-			}	
-		});
-		
-		dialog.add(r,BorderLayout.SOUTH);
+		escuchaButtons = new EscuchaButton();
+		pButtons = new MyRightLayout(5,5,8,5);
+		dialog.add(pButtons,BorderLayout.SOUTH);
 		
 		dialog.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e) 
 			{
-				boolean ok = screens.get(currScreen).onClose();
-				if( ok )
-				{
-					close();
-				}	
+				close();
 			};
 		});
 	}
 	
 	public void close()
 	{
-		dialog.setVisible(false);
-		dialog.dispose();
+		MyInstantAppScreen curr = screens.get(currScreen);
+		if( curr.stop() )
+		{
+			dialog.setVisible(false);
+			dialog.dispose();
+		}
+	}
+	
+	public void addButton(String label,String action)
+	{
+		JButton b = new JButton(label);
+		b.setActionCommand(action);
+		b.addActionListener(escuchaButtons);
+		buttons.put(action,b);
+		pButtons.add(b);
+	}
+	
+	class EscuchaButton implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{		
+			JButton b = (JButton)e.getSource();
+			MyInstantAppScreen curr = screens.get(currScreen);
+			curr.onButtonPressed(b.getActionCommand());
+		}
 	}
 	
 	public void addScreenPanel(String label,Class<? extends MyInstantAppScreen> panelClazz)
@@ -113,7 +126,7 @@ public class MyInstantApp
 		}
 		catch(ClassCastException e)
 		{
-			throw new RuntimeException("la clase "+panelClazz.getName()+"debe ser subclase de JPanel");
+			throw new RuntimeException("la clase "+panelClazz.getName()+"debe ser subclase de MyInstantAppScreen");
 		}
 		catch(Exception e)
 		{

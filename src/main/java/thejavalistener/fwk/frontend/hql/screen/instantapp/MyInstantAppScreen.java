@@ -8,11 +8,12 @@ public class MyInstantAppScreen extends MyBorderLayout
 	private MyInstantApp app;
 
 	public void init(Object ...args) {};
-	public void onAccept() {};
-	public boolean onClose() {return true;};
 	public void dataUpdated() {};
 	public void start() {};
 	public boolean stop() {return true;};
+	public void onButtonPressed(String action)
+	{
+	}
 	
 	void setMyInstantApp(MyInstantApp app)
 	{
