@@ -172,7 +172,7 @@ public class MyString
 
 		return false;
 	}
-
+	
 	public static int[] findParagraphBounds(String text, int index)
 	{
 		try

@@ -95,15 +95,17 @@ public class MyInstantApp
 	{	
 		try
 		{
-			JPanel panel;
+			MyInstantAppScreen panel;
 			if(panelClazz.getAnnotation(Component.class)!=null )
 			{
-				panel = (JPanel)ctx.getBean(panelClazz);
+				panel = ctx.getBean(panelClazz);
 			}
 			else
 			{
-				panel = (JPanel)panelClazz.getDeclaredConstructor().newInstance();			
+				panel = panelClazz.getDeclaredConstructor().newInstance();			
 			}
+			
+			panel.setMyInstantApp(this);
 			
 			screens.add((MyInstantAppScreen)panel);			
 			tabbedPane.addTab(label,panel,false);
@@ -145,7 +147,7 @@ public class MyInstantApp
 	{
 		for(MyInstantAppScreen s:screens)
 		{
-			s.init(this,args);
+			s.init(args);
 		}
 		
 		tabbedPane.setChangeListener(new EscuchaTab(),true);

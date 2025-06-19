@@ -68,7 +68,9 @@ public class InsertStatement extends AbstractStatement
             Object instancia = clazz.getDeclaredConstructor().newInstance();
 
             // Separar asignaciones
-            String[] asignaciones = valores.split("\\s*,\\s*");
+//            String[] asignaciones = valores.split("\\s*,\\s*");
+         // Divide solo por comas que están fuera de comillas simples
+            String[] asignaciones = valores.split(",(?=(?:[^']*'[^']*')*[^']*$)");
 
             for (String asignacion : asignaciones) {
                 String[] partesAsignacion = asignacion.split("=");

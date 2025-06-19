@@ -2,7 +2,6 @@ package thejavalistener.fwk.frontend.hql.screen.instantapp;
 
 import javax.swing.JCheckBox;
 
-import thejavalistener.fwk.awt.panel.MyPanel;
 import thejavalistener.fwk.util.MyColor;
 import thejavalistener.fwk.util.MyLog;
 
@@ -20,13 +19,12 @@ public class MiInstantAppTest
 		x.size(450,300).show();
 	}
 	
-	static class MiPanel1 extends MyPanel implements MyInstantAppScreen
+	static class MiPanel1 extends MyInstantAppScreen
 	{
 		private JCheckBox chb;
 		
 		public MiPanel1()
 		{
-			super(1,1,1,1);
 			setBackground(MyColor.random());
 			
 			chb = new JCheckBox("Evitar cambio...");
@@ -34,7 +32,7 @@ public class MiInstantAppTest
 		}
 
 		@Override
-		public void init(MyInstantApp app, Object... args)
+		public void init(Object... args)
 		{
 			MyLog.println();
 		}
@@ -69,16 +67,15 @@ public class MiInstantAppTest
 		}
 	}
 	
-	static class MiPanel2 extends MyPanel implements MyInstantAppScreen
+	static class MiPanel2 extends MyInstantAppScreen
 	{
 		public MiPanel2()
 		{
-			super(1,1,1,1);
 			setBackground(MyColor.random());
 		}
 
 		@Override
-		public void init(MyInstantApp app, Object... args)
+		public void init(Object... args)
 		{
 			MyLog.println();
 		}
