@@ -5,7 +5,23 @@ import thejavalistener.fwk.awt.panel.MyBorderLayout;
 
 public class MyInstantAppScreen extends MyBorderLayout
 {
+	static final int INITED = 1;
+	static final int STARTED = 2;
+	static final int STOPPED = 3;
+	int currState = 0;
+	
+	void setState(int newState)
+	{
+		currState = newState;
+	}
+	
+	int getState()
+	{
+		return currState;
+	}
+	
 	private MyInstantApp app;
+	
 
 	public void init(Object ...args) {};
 	public void dataUpdated() {};
@@ -41,5 +57,8 @@ public class MyInstantAppScreen extends MyBorderLayout
 	public int showConfirmYES_NO(String mssg,String title)
 	{
 		return MyAwt.showConfirmYES_NO(mssg,title,app.c());		
+	}
+	public void handleSharedObject(Object shared, MyInstantAppScreen sender)
+	{
 	}	
 }

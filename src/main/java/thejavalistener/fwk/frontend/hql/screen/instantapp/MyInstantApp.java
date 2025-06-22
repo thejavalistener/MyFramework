@@ -22,9 +22,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import thejavalistener.fwk.awt.MyAwt;
+import thejavalistener.fwk.awt.MyException;
 import thejavalistener.fwk.awt.panel.MyRightLayout;
 import thejavalistener.fwk.awt.tabbedpane.MyTabbedPane;
 import thejavalistener.fwk.frontend.MyAbstractScreen;
+import thejavalistener.fwk.util.MyCollection;
 
 @Component
 @Scope("prototype")
@@ -32,7 +34,6 @@ public class MyInstantApp
 {
 	private JDialog dialog;
 	private MyTabbedPane tabbedPane;
-//	private JButton bAccept,bCancel;
 	
 	private EscuchaButton escuchaButtons;
 	private MyRightLayout pButtons;
@@ -45,7 +46,7 @@ public class MyInstantApp
 	
 	private List<MyInstantAppScreen> screens;
 	
-	private Integer currScreen = null;
+	private Integer currScreenIdx = null;
 
 	private Container parent;
 
@@ -76,9 +77,10 @@ public class MyInstantApp
 	
 	public void close()
 	{
-		MyInstantAppScreen curr = screens.get(currScreen);
+		MyInstantAppScreen curr = screens.get(currScreenIdx);
 		if( curr.stop() )
 		{
+			curr.setState(MyInstantAppScreen.STOPPED);
 			dialog.setVisible(false);
 			dialog.dispose();
 		}
@@ -99,7 +101,7 @@ public class MyInstantApp
 		public void actionPerformed(ActionEvent e)
 		{		
 			JButton b = (JButton)e.getSource();
-			MyInstantAppScreen curr = screens.get(currScreen);
+			MyInstantAppScreen curr = screens.get(currScreenIdx);
 			curr.onButtonPressed(b.getActionCommand());
 		}
 	}
@@ -144,7 +146,7 @@ public class MyInstantApp
 	{
 		for(MyInstantAppScreen s:screens)
 		{
-			if( !s.equals(screens.get(currScreen)) )
+			if( !s.equals(screens.get(currScreenIdx)) )
 			{
 				s.dataUpdated();
 			}
@@ -161,6 +163,7 @@ public class MyInstantApp
 		for(MyInstantAppScreen s:screens)
 		{
 			s.init(args);
+			s.setState(MyInstantAppScreen.INITED);
 		}
 		
 		tabbedPane.setChangeListener(new EscuchaTab(),true);
@@ -181,17 +184,19 @@ public class MyInstantApp
 		dialog.setVisible(true);
 	}
 	
-	public void setSelected(int i)
+//	public void setSelected(int i)
+//	{
+//		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
+//		tabbedPane.setSelectedTab(i);
+//	}
+	
+	public void setSelected(Class<? extends MyInstantAppScreen> clazz)
 	{
-		if( currScreen!=null )
-		{
-			screens.get(currScreen).stop();
-		}
-		
-		currScreen = i;
-		screens.get(i).start();
-		tabbedPane.setSelectedTab(i);
+		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
+		int pos = MyCollection.findPos(screens,clazz,(s,c)->s.getClass().equals(c));
+		tabbedPane.setSelectedTab(pos);
 	}
+	
 	
 	public JDialog getDialog()
 	{
@@ -203,20 +208,29 @@ public class MyInstantApp
 		@Override
 		public void stateChanged(ChangeEvent e)
 		{
-			if( currScreen!=null )
+			// primera vez
+			if( currScreenIdx==null )
 			{
-				boolean okCambio = screens.get(currScreen).stop();
-				if( !okCambio )
+				currScreenIdx = tabbedPane.c().getSelectedIndex();
+				screens.get(currScreenIdx).start();
+			}
+			else
+			{
+				MyInstantAppScreen curr = screens.get(currScreenIdx);
+				
+				if( !curr.stop() )
 				{
 					tabbedPane.setListenerWorking(false);
-					tabbedPane.setSelectedTab(currScreen);
+					tabbedPane.setSelectedTab(currScreenIdx);
 					tabbedPane.setListenerWorking(true);
-					return;
+				}
+				else
+				{
+					currScreenIdx = tabbedPane.c().getSelectedIndex();
+					curr = screens.get(currScreenIdx);
+					curr.start();
 				}
 			}
-			
-			currScreen = tabbedPane.c().getSelectedIndex();
-			screens.get(currScreen).start();
 		}
 	}
 
@@ -225,5 +239,16 @@ public class MyInstantApp
 		MyAwt.center(dialog,MyAwt.getMainWindow(c));
 		return this;
 	}
-	
+
+	public void shareObject(Object shared)
+	{
+		MyInstantAppScreen pantallaActual = screens.get(currScreenIdx);
+		for(MyInstantAppScreen scr:screens)
+		{
+			if( !scr.equals(pantallaActual) )
+			{
+				scr.handleSharedObject(shared,pantallaActual);
+			}
+		}
+	}
 }

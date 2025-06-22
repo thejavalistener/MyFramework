@@ -2,7 +2,6 @@ package thejavalistener.fwk.awt.list;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,7 +21,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import thejavalistener.fwk.awt.MyException;
-import thejavalistener.fwk.util.MyBean;
 import thejavalistener.fwk.util.string.MyString;
 
 public class MyList<T> 
@@ -34,7 +32,6 @@ public class MyList<T>
 	private DefaultListModel<String> model;
 
 	private ListSelectionListener listener=null;
-	private MouseListener mouseListener=null;
 	private boolean listenerIsWorking=true;
 	private EscuchaList escuchaList;
 
@@ -241,22 +238,6 @@ public class MyList<T>
 		setItemListenerWorking(prev);
 	}
 
-	public void setSpecialItem(String item)
-	{
-		MyBean.unsoportedMethod();
-	}
-
-	public void selectSpecialItem()
-	{
-		MyBean.unsoportedMethod();
-	}
-
-	public boolean isSpecialItemSelected()
-	{
-		MyBean.unsoportedMethod();
-		return false;
-	}
-
 	public boolean removeItem(Function<T,Boolean> tEqT)
 	{
 		boolean prev=isItemListenerWorking();
@@ -312,7 +293,6 @@ public class MyList<T>
 	public void removeListSelectionListener()
 	{
 		this.listener=null;
-		this.mouseListener=null;
 	}
 
 	public boolean setItemListenerWorking(boolean b)
@@ -333,11 +313,6 @@ public class MyList<T>
 		{
 			throw new MyException(mssgError,title,JOptionPane.ERROR_MESSAGE);
 		}
-	}
-
-	public void forceItemEvent()
-	{
-		MyBean.unsoportedMethod();
 	}
 
 	public void forceListSelectionEvent()
@@ -369,21 +344,6 @@ public class MyList<T>
 		setUnselected();
 	}
 
-	public void setItemListener(ItemListener lst)
-	{
-		MyBean.unsoportedMethod();
-	}
-
-	public void setItemListener(ItemListener lst, boolean itemListenerWorking)
-	{
-		MyBean.unsoportedMethod();
-	}
-
-	public void removeItemListener()
-	{
-		MyBean.unsoportedMethod();
-	}
-	
 	public int size()
 	{
 		return model.size();

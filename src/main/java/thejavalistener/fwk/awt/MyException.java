@@ -1,5 +1,7 @@
 package thejavalistener.fwk.awt;
 
+import java.util.function.Supplier;
+
 import javax.swing.JOptionPane;
 
 public class MyException extends Exception
@@ -40,4 +42,12 @@ public class MyException extends Exception
 	{
 		return printStackStrace?super.fillInStackTrace():this;
     }
+
+	public static void throwIf(Supplier<Boolean> f,String mssg)
+	{
+		if( f.get() )
+		{
+			throw new RuntimeException(mssg);
+		}
+	}
 }

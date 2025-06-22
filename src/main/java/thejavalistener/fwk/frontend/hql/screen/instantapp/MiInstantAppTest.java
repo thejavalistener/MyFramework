@@ -15,7 +15,7 @@ public class MiInstantAppTest
 		x.addButton("Loccooo","loco");
 		x.addScreenPanel("1",MiPanel1.class);
 		x.addScreenPanel("2",MiPanel2.class);
-		x.setSelected(0);
+		x.setSelected(MiPanel1.class);
 		
 		x.init();
 		
