@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -75,12 +76,23 @@ public class MyInstantApp
 		});
 	}
 	
+	public void configureWestPanel(JPanel panel)
+	{
+		dialog.add(panel,BorderLayout.WEST);
+	}
+	
+	public void configureEastPanel(JPanel panel)
+	{
+		dialog.add(panel,BorderLayout.EAST);
+	}
+
 	public void close()
 	{
 		MyInstantAppScreen curr = screens.get(currScreenIdx);
 		if( curr.stop() )
 		{
 			curr.setState(MyInstantAppScreen.STOPPED);
+			System.out.println(dialog.getSize());
 			dialog.setVisible(false);
 			dialog.dispose();
 		}
@@ -250,5 +262,10 @@ public class MyInstantApp
 				scr.handleSharedObject(shared,pantallaActual);
 			}
 		}
+	}
+
+	public void setTitle(String title)
+	{
+		dialog.setTitle(title);
 	}
 }
