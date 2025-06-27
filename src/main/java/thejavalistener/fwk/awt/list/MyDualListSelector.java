@@ -51,9 +51,6 @@ public class MyDualListSelector<T>
 		contentPane.setLayout(new GridLayout(1,2,5,0));
 
 		lstLeft=new MyList<T>();
-		
-		EscuchaItems escuchaItems = new EscuchaItems();
-		lstLeft.setListSelectionListener(escuchaItems);
 		lstRight=new MyList<>();
 
 		// Panel izquierdo con lista y botones
@@ -68,47 +65,8 @@ public class MyDualListSelector<T>
 		// Panel derecho sólo con lista
 		MyPanel panelDerecho=new MyBorderLayout();
 		panelDerecho.add(new MyScrollPane(lstRight.c()),BorderLayout.CENTER);
-
-		lstLeft.setMouseListener(new MouseAdapter()
-		{
-			public void mouseClicked(MouseEvent e)
-			{
-				if(e.getClickCount()==2)
-				{
-					T item=lstLeft.getSelectedItem();
-					if(item!=null)
-					{
-						T t=lstLeft.removeSelectedItem();						
-						lstRight.addItem(t);
-						lstRight.setSelectedItem(x->x.equals(t));
-						lstRight.ensureSelectedIsVisible();
-						_enableDisableButtons(false);						
-						_enableDisableAllButtons();
-
-					}
-				}
-			}
-		});
-
-		lstRight.setMouseListener(new MouseAdapter()
-		{
-			public void mouseClicked(MouseEvent e)
-			{
-				if(e.getClickCount()==2)
-				{
-					T item=lstRight.getSelectedItem();
-					if(item!=null)
-					{
-						lstLeft.addItem(lstRight.removeSelectedItem());
-						lstLeft.sort((a,b)->a.toString().compareTo(b.toString()));
-						lstLeft.setSelectedItem(x->x.equals(item));
-						lstLeft.ensureSelectedIsVisible();
-						_enableDisableButtons(true);
-						_enableDisableAllButtons();
-					}
-				}
-			}
-		});
+		lstLeft.setListListener(new EscuchaLeft());
+		lstRight.setListListener(new EscuchaRight());
 
 		contentPane.add(panelIzquierdo);
 		contentPane.add(panelDerecho);
@@ -371,5 +329,52 @@ public class MyDualListSelector<T>
 			_enableDisableButtons(idx>=0);
 		}
 	}
+	
+	class EscuchaLeft implements MyListListener<T>
+	{
+		@Override
+		public void valueChanged(MyListEvent<T> e)
+		{
+			if(e.getClickCount()==2)
+			{
+				T item=lstLeft.getSelectedItem();
+				if(item!=null)
+				{
+					T t=lstLeft.removeSelectedItem();						
+					lstRight.addItem(t);
+					lstRight.setSelectedItem(x->x.equals(t));
+					lstRight.ensureSelectedIsVisible();
+					_enableDisableButtons(false);						
+					_enableDisableAllButtons();
+
+				}
+			}
+			
+		}
+		
+	}
+	
+	class EscuchaRight implements MyListListener<T>
+	{
+		@Override
+		public void valueChanged(MyListEvent<T> e)
+		{
+			if(e.getClickCount()==2)
+			{
+				T item=lstRight.getSelectedItem();
+				if(item!=null)
+				{
+					lstLeft.addItem(lstRight.removeSelectedItem());
+					lstLeft.sort((a,b)->a.toString().compareTo(b.toString()));
+					lstLeft.setSelectedItem(x->x.equals(item));
+					lstLeft.ensureSelectedIsVisible();
+					_enableDisableButtons(true);
+					_enableDisableAllButtons();
+				}
+			}			
+		}
+		
+	}
+
 
 }

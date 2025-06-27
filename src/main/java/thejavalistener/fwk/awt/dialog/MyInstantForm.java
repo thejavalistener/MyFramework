@@ -123,7 +123,7 @@ public class MyInstantForm
 		dialog.pack();
 		MyAwt.center(dialog,parent);
 		dialog.setVisible(true);
-		return returnValue;
+		return returnValue.isEmpty()?null:returnValue;
 	}
 	
 	private void _closeDialog(boolean canceled)

@@ -16,15 +16,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import thejavalistener.fwk.awt.list.MyComboBox;
 import thejavalistener.fwk.awt.panel.MyPanel;
 
 public class MyAwt
@@ -211,6 +213,22 @@ public class MyAwt
 		int newSize=currentFont.getSize()+factor;
 		Font newFont=currentFont.deriveFont((float)newSize);
 		c.setFont(newFont);
+	}
+	
+	public static <T> T selectOption(String mssg,String title,List<T> options,Function<T,String> tToString,Container owner)
+	{
+		MyComboBox<T> combo = new MyComboBox<>(tToString);
+		combo.setItems(options);
+		int resultado = JOptionPane.showConfirmDialog(
+			    owner,
+			    combo.c(),
+			    mssg,
+			    JOptionPane.OK_CANCEL_OPTION,
+			    JOptionPane.QUESTION_MESSAGE
+			);
+
+		return options.get(resultado);
+
 	}
 
 	/** Retorna: 0=>no, 1=> si */

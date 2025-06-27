@@ -1,17 +1,18 @@
 package thejavalistener.fwk.awt.list;
 
-public interface MyDualListListener<T>
+public interface MyDualListListener<R>
 {
-	/** Retorna true si acepta que se remueva el item */
-	public boolean removeItemRequested(final T item);
+/** Retorna true si acepta que se remueva el item */
+	public boolean removeItemRequested(final R item);
 	
 	/** Retorna el item modificado o null si no acepta la modificacion */
-	public T updateItemRequested(final T item);
+	public R updateItemRequested(final R item);
 	
 	/** Retorna el item que se acaba de crear o null si no acepta agregar nada nuevo */
-	public T createItemRequested();
+	public R createItemRequested();
 	
-	public void afterItemChangeHook(MyList<T> list);
+	public void afterItemChangeHook(MyList<R> list);
 	
+//	public void afterRequest(MyList<String> list);
 	
 }

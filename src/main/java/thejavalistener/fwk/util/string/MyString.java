@@ -571,12 +571,13 @@ public class MyString
 
 		return aux;
 	}
-
-	public static String remove(String s, String pattern)
-	{
-		return replace(s,pattern,"");
+	
+	public static String remove(String s, String charsToRemove) {
+	    // Escapá los caracteres especiales de regex dentro de un "character class"
+	    String regex = "[" + Pattern.quote(charsToRemove) + "]";
+	    return s.replaceAll(regex, "");
 	}
-
+	
 	public static String replace(String s, Function<Character,Character> func)
 	{
 		StringBuffer sb=new StringBuffer();

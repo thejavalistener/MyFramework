@@ -82,10 +82,11 @@ public class MyTestUI implements MyTestUIInterface
 		return (JTextField)textfields.get(tfname).c();
 	}
 
-	public void run()
+	public MyTestUI run()
 	{
 		repack(frame);
 		frame.setVisible(true);
+		return this;
 	}
 	
 	public MyTestUI addTextField(String string)

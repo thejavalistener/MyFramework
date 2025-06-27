@@ -31,7 +31,7 @@ public class MyList<T>
 	private JList<String> jList;
 	private DefaultListModel<String> model;
 
-	private ListSelectionListener listener=null;
+	private MyListListener<T> listener=null;
 	private boolean listenerIsWorking=true;
 	private EscuchaList escuchaList;
 
@@ -113,11 +113,6 @@ public class MyList<T>
 		setItemListenerWorking(prev);
 	}
 
-	public void setListDataListener(ListDataListener listDataListener)
-	{
-		jList.getModel().addListDataListener(listDataListener);
-	}
-	
 	public T getSelectedItem()
 	{
 		int idx=getSelectedIndex();
@@ -274,21 +269,26 @@ public class MyList<T>
 		jList.requestFocus();
 	}
 
-	public void setMouseListener(MouseListener lst)
+	public void setListListener(MyListListener<T> lst)
 	{
-		jList.addMouseListener(lst);
+		setListListener(lst,true);
 	}
-
-	public void setListSelectionListener(ListSelectionListener lst)
-	{
-		setListSelectionListener(lst,true);
-	}
-
-	public void setListSelectionListener(ListSelectionListener lst, boolean itemListenerWorking)
+	public void setListListener(MyListListener<T> lst,boolean listenerWorking)
 	{
 		this.listener=lst;
-		this.listenerIsWorking=itemListenerWorking;
+		this.listenerIsWorking=listenerWorking;
 	}
+	
+//	public void setListSelectionListener(ListSelectionListener lst)
+//	{
+//		setListSelectionListener(lst,true);
+//	}
+//
+//	public void setListSelectionListener(ListSelectionListener lst, boolean itemListenerWorking)
+//	{
+//		this.listener=lst;
+//		this.listenerIsWorking=itemListenerWorking;
+//	}
 
 	public void removeListSelectionListener()
 	{
@@ -315,14 +315,16 @@ public class MyList<T>
 		}
 	}
 
-	public void forceListSelectionEvent()
-	{
-		if(listener!=null&&listenerIsWorking)
-		{
-			ListSelectionEvent e=new ListSelectionEvent(jList,getSelectedIndex(),getSelectedIndex(),false);
-			listener.valueChanged(e);
-		}
-	}
+//	public void forceListSelectionEvent()
+//	{
+//		if(listener!=null&&listenerIsWorking)
+//		{
+//			MyListEvent<T> xx = new MyListEvent(0,jList,getSelectedItem(),getSelectedItem(),1);
+//
+//			ListSelectionEvent e=new ListSelectionEvent(jList,getSelectedIndex(),getSelectedIndex(),false);
+//			listener.valueChanged(e);
+//		}
+//	}
 
 	public List<T> getItems()
 	{
@@ -359,7 +361,6 @@ public class MyList<T>
 		setItemListenerWorking(prev);
 	}
 
-
 	class EscuchaList extends MouseAdapter
 	{
 		@Override
@@ -383,6 +384,7 @@ public class MyList<T>
 						x=new MyListEvent<>(eventType,outer,item,prevItemSelected,2);
 						break;
 				}
+				
 				if(x!=null)
 				{
 					listener.valueChanged(x);
@@ -417,14 +419,8 @@ public class MyList<T>
 		}
 	}
 
-	static class EscuchaItem implements ListSelectionListener
+	public boolean getIsEmpty()
 	{
-		@Override
-		public void valueChanged(ListSelectionEvent e)
-		{
-			MyListEvent<?> ee=(MyListEvent)e;
-			System.out.println(ee);
-		}
+		return getItems().size()==0;
 	}
-
 }
