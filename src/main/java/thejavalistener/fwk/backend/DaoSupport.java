@@ -58,6 +58,10 @@ public class DaoSupport
 		Query q = em.createQuery(hql);
 		for(int i=0; i<params.length; i+=2)
 		{
+		    String nombre = params[i].toString();
+		    Object valor = params[i + 1];
+		    System.out.println("Seteando parámetro: " + nombre + " = " + valor + " (" + valor.getClass().getName() + ")");
+						
 			q.setParameter(params[i].toString(),params[i+1]);
 		}
 		return q.getResultList();

@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import thejavalistener.fwk.awt.MyException;
+import thejavalistener.fwk.frontend.MyValidation;
 import thejavalistener.fwk.util.string.MyString;
 
 public class MyList<T> 
