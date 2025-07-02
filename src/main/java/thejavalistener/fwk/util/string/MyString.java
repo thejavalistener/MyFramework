@@ -1005,6 +1005,12 @@ public class MyString
 			return s;
 		}
 	}
+	
+	public static String ifEmpty(String s,String defaultIfEmpty)
+	{
+		return s!=null&&s.trim().isEmpty()?defaultIfEmpty:s;
+	}
+
 
 	public static String ifNull(Object o, String defaultIfNull)
 	{
