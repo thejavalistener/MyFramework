@@ -27,12 +27,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.text.StyledDocument;
 
-import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.textarea.MyTextPane;
 import thejavalistener.fwk.util.MyCollection;
 import thejavalistener.fwk.util.MyColor;
-import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.TriFunction;
 import thejavalistener.fwk.util.string.MyString;
 

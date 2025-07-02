@@ -21,6 +21,9 @@ public class MyComboBox<T> implements MyComponent
 	private String specialItem = null;
 	private ItemListener itemListener;
 
+	private Integer prevItemIndex = null;
+	private Integer prevPrevItemIndex = null;
+	
 	private boolean itemListenerWorking = true;
 	
 	public MyComboBox()
@@ -82,7 +85,37 @@ public class MyComboBox<T> implements MyComponent
 	
 	public void setSelectedItem(int i)
 	{
-		comboBox.setSelectedIndex(i);
+	    prevPrevItemIndex = prevItemIndex;
+	    prevItemIndex = comboBox.getSelectedIndex();
+	    comboBox.setSelectedIndex(i);
+	}
+	
+	public T getPreviousSelectedItem()
+	{
+		if( prevItemIndex==null || prevItemIndex<0 )
+		{
+			return null;
+		}
+		else
+		{
+			return getItemAt(prevItemIndex);
+		}
+	}
+	
+	public void restorePreviousSelectedItem()
+	{
+	    boolean x = setItemListenerWorking(false);
+
+	    if( prevItemIndex==null || prevItemIndex<0 )
+	    {
+	        setUnselected();
+	    }
+	    else
+	    {
+	        comboBox.setSelectedIndex(prevItemIndex);
+	    }
+
+	    setItemListenerWorking(x);
 	}
 
 	public void setSelectedItem(Function<T,Boolean> tEqT)

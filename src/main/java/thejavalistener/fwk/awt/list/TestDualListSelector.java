@@ -24,7 +24,7 @@ public class TestDualListSelector
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setSize(500,350);
 
-			MyDualListSelector<String> selector=new MyDualListSelector<>(MyDualListSelector.ALLOW_ADD+MyDualListSelector.ALLOW_RMV);
+			MyDualListSelector<String> selector=new MyDualListSelector<>(MyDualListSelector.ALLOW_ADD+MyDualListSelector.ALLOW_RMV+MyDualListSelector.ALLOW_SALL+MyDualListSelector.ALLOW_RALL);
 			selector.setItems(todos,seleccionados);
 
 			selector.setDualListListener(new EscuchaSelector());
@@ -66,6 +66,12 @@ public class TestDualListSelector
 		@Override
 		public void afterItemChangeHook(MyList<String> list)
 		{
+		}
+
+		@Override
+		public void itemMoved(String item, MyList<String> fromList, MyList<String> toList)
+		{
+			System.out.println(item+" pasó de ...");
 		}
 	}
 }

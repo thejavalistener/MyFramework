@@ -1,5 +1,7 @@
 package thejavalistener.fwk.frontend.hql.screen.instantapp;
 
+import java.util.Map;
+
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 
@@ -8,6 +10,7 @@ public class MyInstantAppScreen extends MyBorderLayout
 	static final int INITED = 1;
 	static final int STARTED = 2;
 	static final int STOPPED = 3;
+	
 	int currState = 0;
 	
 	void setState(int newState)
@@ -22,11 +25,11 @@ public class MyInstantAppScreen extends MyBorderLayout
 	
 	private MyInstantApp app;
 	
-
 	public void init(Object ...args) {};
 	public void dataUpdated() {};
 	public void start() {};
 	public boolean stop() {return true;};
+
 	public void onButtonPressed(String action)
 	{
 	}
@@ -58,7 +61,7 @@ public class MyInstantAppScreen extends MyBorderLayout
 	{
 		return MyAwt.showConfirmYES_NO(mssg,title,app.c());		
 	}
-	public void handleSharedObject(Object shared, MyInstantAppScreen sender)
+	public void handleSharedObject(String key,Object shared, MyInstantAppScreen sender)
 	{
 	}	
 }

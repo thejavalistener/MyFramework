@@ -252,6 +252,10 @@ public class MyDualListSelector<T>
 			{
 				List<T> items = lstLeft.removeAllItems();
 				lstRight.addItems(items);
+				if( listener!=null ) 
+					for(T i:items)
+						listener.itemMoved(i,lstLeft,lstRight);
+
 			});
 		}
 
@@ -261,8 +265,12 @@ public class MyDualListSelector<T>
 			btnRAll.setEnabled(false);
 			btnRAll.addActionListener(e -> 
 			{
-				List<T> items = lstRight.removeAllItems();
+				List<T> items = lstRight.removeAllItems();				
 				lstLeft.addItems(items);
+				if( listener!=null ) 
+					for(T i:items)
+						listener.itemMoved(i,lstRight,lstLeft);
+
 			});
 		}
 
@@ -342,16 +350,14 @@ public class MyDualListSelector<T>
 				{
 					T t=lstLeft.removeSelectedItem();						
 					lstRight.addItem(t);
+					if( listener!=null ) listener.itemMoved(item,lstLeft,lstLeft);
 					lstRight.setSelectedItem(x->x.equals(t));
 					lstRight.ensureSelectedIsVisible();
 					_enableDisableButtons(false);						
 					_enableDisableAllButtons();
-
 				}
-			}
-			
-		}
-		
+			}	
+		}		
 	}
 	
 	class EscuchaRight implements MyListListener<T>
@@ -365,6 +371,7 @@ public class MyDualListSelector<T>
 				if(item!=null)
 				{
 					lstLeft.addItem(lstRight.removeSelectedItem());
+					if( listener!=null ) listener.itemMoved(item,lstRight,lstLeft);
 					lstLeft.sort((a,b)->a.toString().compareTo(b.toString()));
 					lstLeft.setSelectedItem(x->x.equals(item));
 					lstLeft.ensureSelectedIsVisible();

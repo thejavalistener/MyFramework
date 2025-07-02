@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class MyInstantApp
 	private EscuchaButton escuchaButtons;
 	private MyRightLayout pButtons;
 	
+	private Map<String,Object> sharedObjects;
 	
 	private Map<String,JButton> buttons = new LinkedHashMap<>();
 	
@@ -66,6 +68,8 @@ public class MyInstantApp
 		escuchaButtons = new EscuchaButton();
 		pButtons = new MyRightLayout(5,5,8,5);
 		dialog.add(pButtons,BorderLayout.SOUTH);
+
+		sharedObjects = new HashMap<>();
 		
 		dialog.addWindowListener(new WindowAdapter()
 		{
@@ -207,6 +211,7 @@ public class MyInstantApp
 		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
 		int pos = MyCollection.findPos(screens,clazz,(s,c)->s.getClass().equals(c));
 		tabbedPane.setSelectedTab(pos);
+		currScreenIdx = pos;
 	}
 	
 	
@@ -251,15 +256,23 @@ public class MyInstantApp
 		MyAwt.center(dialog,MyAwt.getMainWindow(c));
 		return this;
 	}
-
-	public void shareObject(Object shared)
+	
+	public <T> T getSharedObject(String key)
 	{
+		return (T)sharedObjects.get(key);
+	}
+
+	public void shareObject(String key,Object shared)
+	{
+		currScreenIdx = currScreenIdx==null?0:currScreenIdx;
 		MyInstantAppScreen pantallaActual = screens.get(currScreenIdx);
+		
+		sharedObjects.put(key,shared);
 		for(MyInstantAppScreen scr:screens)
 		{
 			if( !scr.equals(pantallaActual) )
 			{
-				scr.handleSharedObject(shared,pantallaActual);
+				scr.handleSharedObject(key,shared,pantallaActual);
 			}
 		}
 	}

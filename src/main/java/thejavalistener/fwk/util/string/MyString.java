@@ -890,7 +890,14 @@ public class MyString
 		
 		try
 		{
-			return Integer.parseInt(text);
+			if( defValue==null )
+			{
+				return null;
+			}
+			else
+			{
+				return Integer.parseInt(text);
+			}
 		}
 		catch(Exception e)
 		{
