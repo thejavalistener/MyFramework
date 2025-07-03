@@ -3,6 +3,7 @@ package thejavalistener.fwk.awt.link;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -406,7 +407,7 @@ public class MyLink
 			jLabel.setForeground(style.linkForegroundUnselected);
 			contentPane.setInsets(style.linkInsets);
 			contentPane.setBackground(style.linkBackground);
-	
+			
 			backgroundPane.setBackground(style.linkBackground);
 			backgroundPane.setInsets(style.linkBackgroundInsets);		
 		}
