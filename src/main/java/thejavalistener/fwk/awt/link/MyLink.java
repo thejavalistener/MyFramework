@@ -80,6 +80,11 @@ public class MyLink
 		this(text,linkType,null,null);
 	}
 	
+	public JLabel getJLabel()
+	{
+		return jLabel;
+	}
+	
 	public MyLink(String text,int linkType,String actionKey,Object actionObject)
 	{
 		jLabel = new JLabel(text);
