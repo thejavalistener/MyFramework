@@ -19,7 +19,7 @@ import thejavalistener.fwk.awt.panel.MyBorderLayout;
 import thejavalistener.fwk.awt.panel.MyLeftLayout;
 import thejavalistener.fwk.awt.panel.MyPanel;
 
-public class MyLink
+public class MyLinkBKP
 {
 	public static final int NO_BORDER=0;
 	public static final int TOP_BORDER = MyPanel.TOP_BORDER;
@@ -52,31 +52,30 @@ public class MyLink
 	
 	private HashMap<String,Object> relatedObjects = null;
 	
-	private MyLink outer;
+	private MyLinkBKP outer;
 	
 	// estilo
 	private MyLinkStyle style = new MyLinkStyle();
 		
 	// ctor
-	public MyLink(String text)
+	public MyLinkBKP(String text)
 	{
 		this(text,LABEL);
 	}
 	
 	// ctor
-	public MyLink()
+	public MyLinkBKP()
 	{
 		this("",LABEL);
 	}
 
 	public JPanel c()
 	{
-//		SwingUtilities.invokeLater(() -> applyStyle());
 		applyStyle();
 		return contentPane;
 	}
 	
-	public MyLink(String text,int linkType)
+	public MyLinkBKP(String text,int linkType)
 	{
 		this(text,linkType,null,null);
 	}
@@ -86,7 +85,7 @@ public class MyLink
 		return jLabel;
 	}
 	
-	public MyLink(String text,int linkType,String actionKey,Object actionObject)
+	public MyLinkBKP(String text,int linkType,String actionKey,Object actionObject)
 	{
 		jLabel = new JLabel(text);
 		backgroundPane = new MyLeftLayout();
@@ -404,21 +403,28 @@ public class MyLink
 		this.style = style;
 	}
 	
+	boolean xxx=false;
 	public void applyStyle()
 	{
-		jLabel.setFont(style.linkFont);
-		contentPane.setInsets(style.linkInsets);
-		contentPane.setBackground(style.linkBackground);		
-		backgroundPane.setBackground(style.linkBackground);
-		backgroundPane.setInsets(style.linkBackgroundInsets);			
+		if( !xxx )
+		{
+			jLabel.setFont(style.linkFont);
+	
+			jLabel.setForeground(style.linkForegroundUnselected);
+			contentPane.setInsets(style.linkInsets);
+			contentPane.setBackground(style.linkBackground);
+			
+			backgroundPane.setBackground(style.linkBackground);
+			backgroundPane.setInsets(style.linkBackgroundInsets);			
+		}
 		
-		_applyStyle(selected,false);
-		contentPane.revalidate(); // ver si vuelan estas dos líneas
-		contentPane.repaint();
- 	}
+		setBorder(style.borderUnselected, style.borderWidth, style.borderColor);
+ 
+	}
 	
 	private void _applyStyle(boolean selected,boolean rollover)
 	{
+		xxx = true;
 		if( selected )
 		{
 			if( !rollover )
@@ -431,24 +437,27 @@ public class MyLink
 				jLabel.setForeground(style.linkForegroundRolloverSelected);
 				backgroundPane.setBackground(style.linkBackgroundRolloverSelected);			
 			}
-
-			contentPane.drawLine(style.borderSelected,style.borderWidth,style.borderColor);
+//			contentPane.drawLine(style.borderSelected,style.borderWidth,style.borderColor);
+			setBorder(style.borderSelected,style.borderWidth,style.borderColor);
 		}
 		else
 		{
 			if( !rollover )
 			{
+//				contentPane.drawLine(0,style.borderWidth,style.borderColor);
 				jLabel.setForeground(style.linkForegroundUnselected);
 				backgroundPane.setBackground(style.linkBackgroundUnselected);
-				contentPane.drawLine(style.borderUnselected,style.borderWidth,style.borderColor);
+				contentPane.drawLine(0,style.borderWidth,style.borderColor);
 			}
 			else
 			{
+//				contentPane.drawLine(style.borderRollover,style.borderWidth,style.borderColor);
 				jLabel.setForeground(style.linkForegroundRolloverUnselected);
 				backgroundPane.setBackground(style.linkBackgroundRolloverUnselected);			
 				contentPane.drawLine(style.borderRollover,style.borderWidth,style.borderColor);
 			}			
-		}			
+		}	
+		
 	}
 	
 	@Override

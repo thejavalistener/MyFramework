@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import thejavalistener.fwk.awt.MyAwt;
-import thejavalistener.fwk.awt.testui.MyTestUI;
 import thejavalistener.fwk.util.MyLog;
 import thejavalistener.fwk.util.string.MyString;
 
@@ -81,34 +80,69 @@ public class MyPanel extends JPanel {
     public final static int BOTTOM_BORDER = 4;
     public final static int RIGHT_BORDER = 8;
     
+//    public void drawLine(int border, int px, Color c) {
+//        Graphics g = getGraphics();
+//        if (g == null) return; // Aseguramos que el objeto Graphics no sea nulo
+//
+//        // Si border es 0, limpiamos el componente y salimos
+//        if (border == 0) {
+//            repaint(); // Redibuja el componente, eliminando cualquier dibujo previo
+//            return;
+//        }
+//        
+//        g.setColor(c); // Establecemos el color de la línea
+//
+//        int width = getWidth();
+//        int height = getHeight();
+//
+//        if ((border & 1) == 1) { // Borde superior
+//            g.fillRect(0, 0, width, px);
+//        }
+//        if ((border & 2) == 2) { // Borde izquierdo
+//            g.fillRect(0, 0, px, height);
+//        }
+//        if ((border & 4) == 4) { // Borde inferior
+//            g.fillRect(0, height - px, width, px);
+//        }
+//        if ((border & 8) == 8) { // Borde derecho
+//            g.fillRect(width - px, 0, px, height);
+//        }
+//        revalidate();
+//    }
+
+    
+    private int lineBorder;
+    private int linePx;
+    private Color lineColor;
     public void drawLine(int border, int px, Color c) {
-        Graphics g = getGraphics();
-        if (g == null) return; // Aseguramos que el objeto Graphics no sea nulo
+        this.lineBorder = border;
+        this.linePx = px;
+        this.lineColor = c;
+        repaint(); // ¡Esto sí llama a paintComponent!
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-        // Si border es 0, limpiamos el componente y salimos
-        if (border == 0) {
-            repaint(); // Redibuja el componente, eliminando cualquier dibujo previo
-            return;
-        }
-        
-        g.setColor(c); // Establecemos el color de la línea
+        if (lineBorder == 0 || lineColor == null) return;
 
+        g.setColor(lineColor);
         int width = getWidth();
         int height = getHeight();
 
-        if ((border & 1) == 1) { // Borde superior
-            g.fillRect(0, 0, width, px);
+        if ((lineBorder & 1) == 1) { // Borde superior
+            g.fillRect(0, 0, width, linePx);
         }
-        if ((border & 2) == 2) { // Borde izquierdo
-            g.fillRect(0, 0, px, height);
+        if ((lineBorder & 2) == 2) { // Borde izquierdo
+            g.fillRect(0, 0, linePx, height);
         }
-        if ((border & 4) == 4) { // Borde inferior
-            g.fillRect(0, height - px, width, px);
+        if ((lineBorder & 4) == 4) { // Borde inferior
+            g.fillRect(0, height - linePx, width, linePx);
         }
-        if ((border & 8) == 8) { // Borde derecho
-            g.fillRect(width - px, 0, px, height);
+        if ((lineBorder & 8) == 8) { // Borde derecho
+            g.fillRect(width - linePx, 0, linePx, height);
         }
-        revalidate();
-    }   
+    }
     
 }
