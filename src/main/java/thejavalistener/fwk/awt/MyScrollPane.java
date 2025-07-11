@@ -28,7 +28,13 @@ public class MyScrollPane extends JScrollPane
 	public void configureScrollBars(int w,Color fg)
 	{
 		configureScrollBars(w,getBackground(),fg);
-	} 
+	}
+	
+	public void repos()
+	{
+		getVerticalScrollBar().setValue(0);
+		getHorizontalScrollBar().setValue(0);
+	}
 	
 	public void configureScrollBars(int w,Color bg,Color fg)
 	{
