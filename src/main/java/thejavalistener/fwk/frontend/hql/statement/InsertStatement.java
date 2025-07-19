@@ -39,202 +39,240 @@ public class InsertStatement extends AbstractStatement
 		}
 	}
 
-	// public static Object procesarInsert(String hql) {
-	// try {
-	// hql = hql.trim();
-	// String hqlLower = hql.toLowerCase();
-	//
-	// if (!hqlLower.startsWith("insert into")) throw new
-	// IllegalArgumentException("Sentencia inválida");
-	//
-	// int idxValues = hqlLower.indexOf("values");
-	// if (idxValues == -1) throw new IllegalArgumentException("Falta cláusula
-	// VALUES");
-	//
-	// String cabecera = hql.substring(0, idxValues).trim();
-	// String valoresRaw = hql.substring(idxValues + 6).trim();
-	//
-	// if (!valoresRaw.startsWith("(") || !valoresRaw.endsWith(")")) {
-	// throw new IllegalArgumentException("Los valores deben estar entre
-	// paréntesis.");
-	// }
-	//
-	// String valores = valoresRaw.substring(1, valoresRaw.length() - 1).trim();
-	//
-	// // Extraer clase y alias
-	// String[] tokens = cabecera.split("\\s+");
-	// if (tokens.length < 4) throw new IllegalArgumentException("Falta clase o
-	// alias.");
-	//
-	// String className = tokens[2]; // Ej: app.mapping.AlbumArtista
-	// String alias = tokens[3]; // Ej: aa
-	//
-	// Class<?> clazz = Class.forName(className);
-	// Object instancia = clazz.getDeclaredConstructor().newInstance();
-	//
-	// // Separar asignaciones
-	//// String[] asignaciones = valores.split("\\s*,\\s*");
-	// // Divide solo por comas que están fuera de comillas simples
-	// String[] asignaciones = valores.split(",(?=(?:[^']*'[^']*')*[^']*$)");
-	//
-	// for (String asignacion : asignaciones) {
-	// String[] partesAsignacion = asignacion.split("=");
-	// if (partesAsignacion.length != 2) {
-	// throw new IllegalArgumentException("Asignación inválida: " + asignacion);
-	// }
-	//
-	// String campoCompuesto = partesAsignacion[0].trim();
-	// String valorStr = partesAsignacion[1].trim();
-	//
-	// if (!campoCompuesto.startsWith(alias + ".")) continue;
-	//
-	// String path = campoCompuesto.substring(alias.length() + 1);
-	// String[] atributos = path.split("\\.");
-	//
-	// if (atributos.length == 1) {
-	// // Campo simple
-	// Field field = clazz.getDeclaredField(atributos[0]);
-	// field.setAccessible(true);
-	// Object valor = parseValue(field.getType(), valorStr);
-	// field.set(instancia, valor);
-	//
-	// } else if (atributos.length == 2) {
-	// // Relación manyToOne
-	// String relacion = atributos[0];
-	// String subcampo = atributos[1];
-	//
-	// Field fieldRelacion = clazz.getDeclaredField(relacion);
-	// fieldRelacion.setAccessible(true);
-	//
-	// Class<?> claseRelacion = fieldRelacion.getType();
-	// Object objetoRelacionado =
-	// claseRelacion.getDeclaredConstructor().newInstance();
-	//
-	// Field fieldSub = claseRelacion.getDeclaredField(subcampo);
-	// fieldSub.setAccessible(true);
-	// Object valor = parseValue(fieldSub.getType(), valorStr);
-	// fieldSub.set(objetoRelacionado, valor);
-	//
-	// fieldRelacion.set(instancia, objetoRelacionado);
-	//
-	// } else {
-	// throw new IllegalArgumentException("Profundidad no soportada: " + path);
-	// }
-	// }
-	//
-	// return instancia;
-	//
-	// } catch (Exception e) {
-	// throw new RuntimeException("Error procesando INSERT: " + hql, e);
-	// }
-	// }
+//	public Object procesarInsert(String hql)
+//	{
+//		try
+//		{
+//			hql=hql.trim();
+//			String hqlLower=hql.toLowerCase();
+//
+//			if(!hqlLower.startsWith("insert into")) throw new IllegalArgumentException("Sentencia inválida");
+//
+//			int idxValues=hqlLower.indexOf("values");
+//			if(idxValues==-1) throw new IllegalArgumentException("Falta cláusula VALUES");
+//
+//			String cabecera=hql.substring(0,idxValues).trim();
+//			String valoresRaw=hql.substring(idxValues+6).trim();
+//
+//			// Paréntesis opcionales
+//			String valores;
+//			if(valoresRaw.startsWith("(")&&valoresRaw.endsWith(")"))
+//			{
+//				valores=valoresRaw.substring(1,valoresRaw.length()-1).trim();
+//			}
+//			else
+//			{
+//				valores=valoresRaw;
+//			}
+//
+//			// Extraer clase y alias
+//			String[] tokens=cabecera.split("\\s+");
+//			if(tokens.length<4) throw new IllegalArgumentException("Falta clase o alias.");
+//
+//			String className=tokens[2]; // Puede ser AlbumArtista o
+//										// app.mapping.AlbumArtista
+//			String alias=tokens[3];
+//
+//			// Si no tiene punto, buscar en el Metamodel
+//			if(!className.contains("."))
+//			{
+//				String simpleClassName=className;
+//				className=null;
+//				for(EntityType<?> entity:em.getMetamodel().getEntities())
+//				{
+//					if(entity.getJavaType().getSimpleName().equals(simpleClassName))
+//					{
+//						className=entity.getJavaType().getName();
+//						break;
+//					}
+//				}
+//				if(className==null)
+//				{
+//					throw new IllegalArgumentException("Clase no encontrada en el Metamodel: "+simpleClassName);
+//				}
+//			}
+//
+//			// Cargar la clase y crear la instancia
+//			Class<?> clazz=Class.forName(className);
+//			Object instancia=clazz.getDeclaredConstructor().newInstance();
+//
+//			// Separar asignaciones respetando comillas simples
+//			String[] asignaciones=valores.split(",(?=(?:[^']*'[^']*')*[^']*$)");
+//
+//			for(String asignacion:asignaciones)
+//			{
+//				String[] partesAsignacion=asignacion.split("=");
+//				if(partesAsignacion.length!=2)
+//				{
+//					throw new IllegalArgumentException("Asignación inválida: "+asignacion);
+//				}
+//
+//				String campoCompuesto=partesAsignacion[0].trim();
+//				String valorStr=partesAsignacion[1].trim();
+//
+//				if(!campoCompuesto.startsWith(alias+".")) continue;
+//
+//				String path=campoCompuesto.substring(alias.length()+1);
+//				String[] atributos=path.split("\\.");
+//
+//				if(atributos.length==1)
+//				{
+//					Field field=clazz.getDeclaredField(atributos[0]);
+//					field.setAccessible(true);
+//					Object valor=parseValue(field.getType(),valorStr);
+//					field.set(instancia,valor);
+//
+//				}
+//				else if(atributos.length==2)
+//				{
+//					String relacion=atributos[0];
+//					String subcampo=atributos[1];
+//
+//					Field fieldRelacion=clazz.getDeclaredField(relacion);
+//					fieldRelacion.setAccessible(true);
+//
+//					Class<?> claseRelacion=fieldRelacion.getType();
+//					Object objetoRelacionado=claseRelacion.getDeclaredConstructor().newInstance();
+//
+//					Field fieldSub=claseRelacion.getDeclaredField(subcampo);
+//					fieldSub.setAccessible(true);
+//					Object valor=parseValue(fieldSub.getType(),valorStr);
+//					fieldSub.set(objetoRelacionado,valor);
+//
+//					fieldRelacion.set(instancia,objetoRelacionado);
+//
+//				}
+//				else
+//				{
+//					throw new IllegalArgumentException("Profundidad no soportada: "+path);
+//				}
+//			}
+//
+//			return instancia;
+//
+//		}
+//		catch(Exception e)
+//		{
+//			throw new RuntimeException("Error procesando INSERT: "+hql,e);
+//		}
+//	}
 
 	public Object procesarInsert(String hql)
 	{
 		try
 		{
-			hql=hql.trim();
-			String hqlLower=hql.toLowerCase();
+			hql = hql.trim();
+			String hqlLower = hql.toLowerCase();
 
 			if(!hqlLower.startsWith("insert into")) throw new IllegalArgumentException("Sentencia inválida");
 
-			int idxValues=hqlLower.indexOf("values");
-			if(idxValues==-1) throw new IllegalArgumentException("Falta cláusula VALUES");
+			int idxValues = hqlLower.indexOf("values");
+			if(idxValues == -1) throw new IllegalArgumentException("Falta cláusula VALUES");
 
-			String cabecera=hql.substring(0,idxValues).trim();
-			String valoresRaw=hql.substring(idxValues+6).trim();
+			String cabecera = hql.substring(0, idxValues).trim();
+			String valoresRaw = hql.substring(idxValues + 6).trim();
 
 			// Paréntesis opcionales
 			String valores;
-			if(valoresRaw.startsWith("(")&&valoresRaw.endsWith(")"))
+			if(valoresRaw.startsWith("(") && valoresRaw.endsWith(")"))
 			{
-				valores=valoresRaw.substring(1,valoresRaw.length()-1).trim();
+				valores = valoresRaw.substring(1, valoresRaw.length() - 1).trim();
 			}
 			else
 			{
-				valores=valoresRaw;
+				valores = valoresRaw;
 			}
 
-			// Extraer clase y alias
-			String[] tokens=cabecera.split("\\s+");
-			if(tokens.length<4) throw new IllegalArgumentException("Falta clase o alias.");
+			// Extraer clase y alias opcional
+			String[] tokens = cabecera.split("\\s+");
+			if(tokens.length < 3) throw new IllegalArgumentException("Falta clase.");
 
-			String className=tokens[2]; // Puede ser AlbumArtista o
-										// app.mapping.AlbumArtista
-			String alias=tokens[3];
+			String className = tokens[2];
+			String alias = null;
+
+			if(tokens.length >= 4)
+			{
+				alias = tokens[3];
+			}
 
 			// Si no tiene punto, buscar en el Metamodel
 			if(!className.contains("."))
 			{
-				String simpleClassName=className;
-				className=null;
-				for(EntityType<?> entity:em.getMetamodel().getEntities())
+				String simpleClassName = className;
+				className = null;
+				for(EntityType<?> entity : em.getMetamodel().getEntities())
 				{
-					if(entity.getJavaType().getSimpleName().equals(simpleClassName))
+					if(entity.getJavaType().getSimpleName().equalsIgnoreCase(simpleClassName))
 					{
-						className=entity.getJavaType().getName();
+						className = entity.getJavaType().getName();
 						break;
 					}
 				}
-				if(className==null)
+				if(className == null)
 				{
-					throw new IllegalArgumentException("Clase no encontrada en el Metamodel: "+simpleClassName);
+					throw new IllegalArgumentException("Clase no encontrada en el Metamodel: " + simpleClassName);
 				}
 			}
 
 			// Cargar la clase y crear la instancia
-			Class<?> clazz=Class.forName(className);
-			Object instancia=clazz.getDeclaredConstructor().newInstance();
+			Class<?> clazz = Class.forName(className);
+			Object instancia = clazz.getDeclaredConstructor().newInstance();
 
 			// Separar asignaciones respetando comillas simples
-			String[] asignaciones=valores.split(",(?=(?:[^']*'[^']*')*[^']*$)");
+			String[] asignaciones = valores.split(",(?=(?:[^']*'[^']*')*[^']*$)");
 
-			for(String asignacion:asignaciones)
+			for(String asignacion : asignaciones)
 			{
-				String[] partesAsignacion=asignacion.split("=");
-				if(partesAsignacion.length!=2)
+				String[] partesAsignacion = asignacion.split("=");
+				if(partesAsignacion.length != 2)
 				{
-					throw new IllegalArgumentException("Asignación inválida: "+asignacion);
+					throw new IllegalArgumentException("Asignación inválida: " + asignacion);
 				}
 
-				String campoCompuesto=partesAsignacion[0].trim();
-				String valorStr=partesAsignacion[1].trim();
+				String campoCompuesto = partesAsignacion[0].trim();
+				String valorStr = partesAsignacion[1].trim();
 
-				if(!campoCompuesto.startsWith(alias+".")) continue;
-
-				String path=campoCompuesto.substring(alias.length()+1);
-				String[] atributos=path.split("\\.");
-
-				if(atributos.length==1)
+				String path;
+				if(alias != null)
 				{
-					Field field=clazz.getDeclaredField(atributos[0]);
-					field.setAccessible(true);
-					Object valor=parseValue(field.getType(),valorStr);
-					field.set(instancia,valor);
-
-				}
-				else if(atributos.length==2)
-				{
-					String relacion=atributos[0];
-					String subcampo=atributos[1];
-
-					Field fieldRelacion=clazz.getDeclaredField(relacion);
-					fieldRelacion.setAccessible(true);
-
-					Class<?> claseRelacion=fieldRelacion.getType();
-					Object objetoRelacionado=claseRelacion.getDeclaredConstructor().newInstance();
-
-					Field fieldSub=claseRelacion.getDeclaredField(subcampo);
-					fieldSub.setAccessible(true);
-					Object valor=parseValue(fieldSub.getType(),valorStr);
-					fieldSub.set(objetoRelacionado,valor);
-
-					fieldRelacion.set(instancia,objetoRelacionado);
-
+					if(!campoCompuesto.startsWith(alias + ".")) continue;
+					path = campoCompuesto.substring(alias.length() + 1);
 				}
 				else
 				{
-					throw new IllegalArgumentException("Profundidad no soportada: "+path);
+					path = campoCompuesto;
+				}
+
+				String[] atributos = path.split("\\.");
+
+				if(atributos.length == 1)
+				{
+					Field field = clazz.getDeclaredField(atributos[0]);
+					field.setAccessible(true);
+					Object valor = parseValue(field.getType(), valorStr);
+					field.set(instancia, valor);
+				}
+				else if(atributos.length == 2)
+				{
+					String relacion = atributos[0];
+					String subcampo = atributos[1];
+
+					Field fieldRelacion = clazz.getDeclaredField(relacion);
+					fieldRelacion.setAccessible(true);
+
+					Class<?> claseRelacion = fieldRelacion.getType();
+					Object objetoRelacionado = claseRelacion.getDeclaredConstructor().newInstance();
+
+					Field fieldSub = claseRelacion.getDeclaredField(subcampo);
+					fieldSub.setAccessible(true);
+					Object valor = parseValue(fieldSub.getType(), valorStr);
+					fieldSub.set(objetoRelacionado, valor);
+
+					fieldRelacion.set(instancia, objetoRelacionado);
+				}
+				else
+				{
+					throw new IllegalArgumentException("Profundidad no soportada: " + path);
 				}
 			}
 
@@ -243,10 +281,11 @@ public class InsertStatement extends AbstractStatement
 		}
 		catch(Exception e)
 		{
-			throw new RuntimeException("Error procesando INSERT: "+hql,e);
+			throw new RuntimeException("Error procesando INSERT: " + hql, e);
 		}
 	}
-
+	
+	
 	private static Object parseValue(Class<?> tipo, String valor) throws Exception
 	{
 		valor=valor.trim();

@@ -12,8 +12,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.persistence.metamodel.EntityType;
-
 public class MyCollection
 {
 	public static <T> boolean isNotIn(T t,T ...args)
@@ -329,5 +327,10 @@ public class MyCollection
 		}
 		
 		return sb.toString();
+	}
+
+	public static <T> List<T> clone(List<T> lst)
+	{
+		return extract(lst,t->t);
 	}
 }
