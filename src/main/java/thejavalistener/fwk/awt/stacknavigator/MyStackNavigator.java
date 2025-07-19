@@ -15,6 +15,8 @@ public class MyStackNavigator<T>
 	private MyStackNavigatorArrow aFwd;
 	private JPanel contentPane;
 
+	public MyStackNavigatorStyle style = new MyStackNavigatorStyle();
+	
 	// dos pilas
 	public Stack<T> stackBack;
 	public  Stack<T> stackFwd;
@@ -32,11 +34,11 @@ public class MyStackNavigator<T>
 		contentPane=new JPanel();
 
 		
-		aBack=new MyStackNavigatorArrow(MyStackNavigatorArrow.LEFT,"back");
+		aBack=new MyStackNavigatorArrow(MyStackNavigatorArrow.LEFT,"back",style);
 		aBack.setEnabled(false);
 		
 		contentPane.add(aBack.c());
-		aFwd=new MyStackNavigatorArrow(MyStackNavigatorArrow.RIGHT,"fwd");
+		aFwd=new MyStackNavigatorArrow(MyStackNavigatorArrow.RIGHT,"fwd",style);
 		aFwd.setEnabled(false);
 		contentPane.add(aFwd.c());
 
@@ -47,6 +49,11 @@ public class MyStackNavigator<T>
 
 		stackBack=new Stack<>();
 		stackFwd=new Stack<>();
+	}
+	
+	public MyStackNavigatorStyle getStyle()
+	{
+		return style;
 	}
 
 	public JPanel getContentPane()
@@ -72,15 +79,23 @@ public class MyStackNavigator<T>
 
 	public Component c()
 	{
+		contentPane.setBackground(style.background);
 		return contentPane;
 	}
-
-	public void setBackground(Color c)
+	
+	public void applyStyle()
 	{
-		contentPane.setBackground(c);
-		aBack.setBackground(c);
-		aFwd.setBackground(c);
+		contentPane.setBackground(style.background);
+		aBack.setBackground(style.background);
+		aFwd.setBackground(style.background);		
 	}
+
+//	public void setBackground(Color c)
+//	{
+//		contentPane.setBackground(c);
+//		aBack.setBackground(c);
+//		aFwd.setBackground(c);
+//	}
 
 	public void setActionListener(ActionListener l)
 	{

@@ -1,6 +1,7 @@
 package thejavalistener.fwk.awt.stacknavigator;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,6 +22,7 @@ public class MyStackNavigatorTest
 	{
 		JFrame f = new JFrame();
 		stack = new MyStackNavigator<>();
+		
 		stack.setActionListener(new EscuchaStack());
 		f.add(stack.c(),BorderLayout.NORTH);
 	

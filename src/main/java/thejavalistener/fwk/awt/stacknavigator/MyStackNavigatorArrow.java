@@ -1,11 +1,21 @@
 package thejavalistener.fwk.awt.stacknavigator;
 
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import thejavalistener.fwk.awt.panel.MyCenterLayout;
-
-import java.awt.*;
-import java.awt.event.*;
 
 public class MyStackNavigatorArrow
 {
@@ -23,14 +33,16 @@ public class MyStackNavigatorArrow
 	private int direccion;
 	private int estado=ENABLED;
 
-	public MyStackNavigatorArrow(int direccion,String actionCoString)
+	public MyStackNavigatorStyle style;
+	
+	public MyStackNavigatorArrow(int direccion,String actionCoString,MyStackNavigatorStyle style)
 	{
 		this.direccion=direccion;
 		this.actionCommand=actionCoString;
+		this.style = style;
 		contentPane=new ContentPane();
 		contentPane.setPreferredSize(new Dimension(30,30));
 		contentPane.setOpaque(false);
-//		contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		contentPane.addMouseListener(new MouseAdapter()
 		{
@@ -74,12 +86,6 @@ public class MyStackNavigatorArrow
 		});
 	}
 
-	public void setBackground(Color c)
-	{
-		contentPane.setBackground(c);
-
-	}
-
 	public void setActionCommand(String ac)
 	{
 		this.actionCommand=ac;
@@ -89,9 +95,15 @@ public class MyStackNavigatorArrow
 	{
 		return this.actionCommand;
 	}
+	
+	public void setBackground(Color c)
+	{
+		contentPane.setBackground(c);
+	}
 
 	public Component c()
 	{
+		contentPane.setBackground(style.background);
 		return contentPane;
 	}
 
@@ -130,27 +142,27 @@ public class MyStackNavigatorArrow
 			switch(estado)
 			{
 				case ENABLED:
-					colorRelleno=new Color(120,120,120);
+					colorRelleno= style.foreground;
 					break;
 				case ROLLOVER:
-					colorRelleno=new Color(50,130,220);
+					colorRelleno= style.foregroundRollover;
 					break;
 				case DISABLED:
 				default:
-					colorRelleno=new Color(180,180,180);
+					colorRelleno= style.background;
 					break;
 			}
 			Color colorBorde=null;
 			switch(estado)
 			{
 				case ENABLED:
-					colorBorde=new Color(60,60,60);
+					colorBorde= style.border;
 					break;
 				case ROLLOVER:
-					colorBorde=new Color(30,90,190);
+					colorBorde= style.borderRollover;
 					break;
 				case DISABLED:
-					colorBorde=new Color(140,140,140);
+					colorBorde= style.background;//new Color(140,140,140);
 					break;
 			}
 			;
