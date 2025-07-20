@@ -2,13 +2,17 @@ package thejavalistener.fwk.frontend;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -25,6 +29,7 @@ import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.link.MyLink;
 import thejavalistener.fwk.awt.link.MyLinkedPane;
 import thejavalistener.fwk.properties.MyProperties;
+import thejavalistener.fwk.util.hotkey.KeyIdentifier;
 
 @Component
 public class MyAppContainer
@@ -66,7 +71,82 @@ public class MyAppContainer
 	{
 		return (MyApp)applications.getLinks().get(idx).getRelatedObject("app");
 	}
+
 	
+	// ------------- HOT KEY ------------
+	private final Map<KeyIdentifier, Runnable> hotKeyActions = new HashMap<>();
+
+	public void addHotkey(String combo, Runnable action) {
+	    combo = combo.trim().toUpperCase();
+
+	    // Separar partes (ej: ["CTRL", "ALT", "ENTER"])
+	    String[] parts = combo.split("\\+");
+	    String keyPart = parts[parts.length - 1]; // última parte = tecla principal
+
+	    int keyCode = parseKeyCode(keyPart);
+	    int modifiers = 0;
+
+	    for (int i = 0; i < parts.length - 1; i++) {
+	        switch (parts[i]) {
+	            case "CTRL"     -> modifiers |= InputEvent.CTRL_DOWN_MASK;
+	            case "ALT"      -> modifiers |= InputEvent.ALT_DOWN_MASK;
+	            case "SHIFT"    -> modifiers |= InputEvent.SHIFT_DOWN_MASK;
+	            case "ALTGR"    -> modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
+	            case "META"     -> modifiers |= InputEvent.META_DOWN_MASK;
+	        }
+	    }
+
+	    hotKeyActions.put(new KeyIdentifier(keyCode, modifiers), action);
+	}
+	
+	private int parseKeyCode(String key) {
+	    return switch (key) {
+	        case "ENTER"   -> KeyEvent.VK_ENTER;
+	        case "ESCAPE"  -> KeyEvent.VK_ESCAPE;
+	        case "TAB"     -> KeyEvent.VK_TAB;
+	        case "SPACE"   -> KeyEvent.VK_SPACE;
+	        case "BACKSPACE" -> KeyEvent.VK_BACK_SPACE;
+	        case "DELETE"  -> KeyEvent.VK_DELETE;
+	        case "UP"      -> KeyEvent.VK_UP;
+	        case "DOWN"    -> KeyEvent.VK_DOWN;
+	        case "LEFT"    -> KeyEvent.VK_LEFT;
+	        case "RIGHT"   -> KeyEvent.VK_RIGHT;
+	        default -> {
+	            if (key.matches("F\\d{1,2}")) {
+	                int n = Integer.parseInt(key.substring(1));
+	                yield KeyEvent.VK_F1 + (n - 1);
+	            } else {
+	                yield KeyEvent.getExtendedKeyCodeForChar(key.charAt(0));
+	            }
+	        }
+	    };
+	}
+	
+	private void _registerHotKeys() 
+	{
+		if( !hotKeyActions.isEmpty() )
+		{
+		    KeyboardFocusManager.getCurrentKeyboardFocusManager()
+		        .addKeyEventDispatcher(e -> {
+		            if (e.getID() != KeyEvent.KEY_PRESSED)
+		                return false;
+	
+		            KeyIdentifier id = new KeyIdentifier(e.getKeyCode(), e.getModifiersEx());
+		            Runnable r = hotKeyActions.get(id);
+	
+		            if (r != null) {
+		                r.run();
+		                return true;
+		            }
+	
+		            return false;
+		        });
+		}
+	}
+	
+	// ------------- HOT KEY ------------
+
+		
     public static JTextPane TRUCHOOfindTextPane(java.awt.Component component) {
         if (component instanceof JTextPane) {
             return (JTextPane) component; // Encontrado, lo retornamos
@@ -84,9 +164,17 @@ public class MyAppContainer
         return null; // No encontrado
     }
 	
+
+    private boolean appsAreDisplayed = true;
     public void showApps(boolean b)
     {
+    	appsAreDisplayed = b;
     	applications.showLinks(b);
+    }
+    
+    public void toggleApps()
+    {
+    	showApps(!appsAreDisplayed);
     }
     
 	public void init()
@@ -110,6 +198,8 @@ public class MyAppContainer
 		
 		applyStyle();
 
+		
+		_registerHotKeys();
 		jFrame.setVisible(true);
 	}
 	

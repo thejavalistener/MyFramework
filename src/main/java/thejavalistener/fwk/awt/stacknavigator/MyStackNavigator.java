@@ -29,6 +29,8 @@ public class MyStackNavigator<T>
 
 	private ActionListener actionListener;
 
+	private EscuchaArrow escuchaArrow;
+	
 	public MyStackNavigator()
 	{
 		contentPane=new JPanel();
@@ -43,7 +45,7 @@ public class MyStackNavigator<T>
 		contentPane.add(aFwd.c());
 
 		// escucho las flechas
-		EscuchaArrow escuchaArrow=new EscuchaArrow();
+		escuchaArrow=new EscuchaArrow();
 		aBack.setActionListener(escuchaArrow);
 		aFwd.setActionListener(escuchaArrow);
 
@@ -98,6 +100,24 @@ public class MyStackNavigator<T>
 	public T getElement()
 	{
 		return currElement;
+	}
+	
+	public void popBack()
+	{
+		if( aBack.isEnabled() )
+		{
+			ActionEvent e = new ActionEvent(aBack,1,"back");
+			escuchaArrow.actionPerformed(e);
+		}
+	}
+	
+	public void popFwd()
+	{
+		if( aFwd.isEnabled() )
+		{
+			ActionEvent e = new ActionEvent(aBack,1,"fwd");
+			escuchaArrow.actionPerformed(e);
+		}
 	}
 
 	class EscuchaArrow implements ActionListener
