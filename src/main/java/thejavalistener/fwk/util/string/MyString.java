@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import thejavalistener.fwk.util.MyThread;
@@ -1283,5 +1283,11 @@ public class MyString
 		{
 			return false;
 		}
+	}
+	
+	public static String normalize(String s)
+	{
+	    String normalizado = Normalizer.normalize(s, Normalizer.Form.NFD);
+	    return normalizado.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
 }

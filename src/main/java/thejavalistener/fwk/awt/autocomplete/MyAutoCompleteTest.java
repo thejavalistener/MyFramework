@@ -12,7 +12,6 @@ public class MyAutoCompleteTest
 	{
 		MyAutoCompleteField<String> ac = new MyAutoCompleteField<>();
 		ac.setItems(List.of("Alberto","Pablo","Andrea","Paola","Paula","Angi","Iván","Ignacio"));
-		
 		MyBorderLayout p = new MyBorderLayout();
 		p.add(ac.c(),BorderLayout.NORTH);
 		

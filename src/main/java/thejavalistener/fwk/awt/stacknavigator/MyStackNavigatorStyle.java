@@ -8,5 +8,6 @@ public class MyStackNavigatorStyle
 	public Color foregroundRollover = new Color(50,130,220);
 	public Color border = new Color(60,60,60);
 	public Color borderRollover = new Color(30,90,190);
+	public Color disabled;
 	public Color background;// = Color.WHITE; // new Color(180,180,180)
 }

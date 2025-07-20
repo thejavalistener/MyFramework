@@ -90,13 +90,6 @@ public class MyStackNavigator<T>
 		aFwd.setBackground(style.background);		
 	}
 
-//	public void setBackground(Color c)
-//	{
-//		contentPane.setBackground(c);
-//		aBack.setBackground(c);
-//		aFwd.setBackground(c);
-//	}
-
 	public void setActionListener(ActionListener l)
 	{
 		this.actionListener=l;

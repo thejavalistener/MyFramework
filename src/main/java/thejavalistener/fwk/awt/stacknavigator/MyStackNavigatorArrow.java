@@ -125,10 +125,10 @@ public class MyStackNavigatorArrow
 		{
 			super.paintComponent(g);
 
-			if(estado==DISABLED)
-			{
-				return; // No dibujar nada
-			}
+//			if(estado==DISABLED)
+//			{
+//				return; // No dibujar nada
+//			}
 
 			Graphics2D g2=(Graphics2D)g.create();
 
@@ -148,6 +148,8 @@ public class MyStackNavigatorArrow
 					colorRelleno= style.foregroundRollover;
 					break;
 				case DISABLED:
+					colorRelleno= style.disabled;
+					break;
 				default:
 					colorRelleno= style.background;
 					break;
@@ -162,7 +164,8 @@ public class MyStackNavigatorArrow
 					colorBorde= style.borderRollover;
 					break;
 				case DISABLED:
-					colorBorde= style.background;//new Color(140,140,140);
+//					colorBorde= style.background;//new Color(140,140,140);
+					colorBorde = style.disabled;
 					break;
 			}
 			;
