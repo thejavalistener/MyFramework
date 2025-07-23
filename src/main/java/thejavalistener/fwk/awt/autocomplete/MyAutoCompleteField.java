@@ -164,6 +164,9 @@ public class MyAutoCompleteField<T>
 	        }
 	    }
 	}
-	
-	
+
+	public void requestFocus()
+	{
+		textField.requestFocus();
+	}
 }
