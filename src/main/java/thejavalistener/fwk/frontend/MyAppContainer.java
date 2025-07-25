@@ -262,6 +262,18 @@ public class MyAppContainer
 		}
 	}
 	
+	public void switchToApp(int i)
+	{
+		applications.setSelectedTab(i);
+	}
+	
+	public void showNextApp()
+	{
+		int idx = applications.getSelectedIndex();
+		int next = ++idx%applications.getTabCount();
+		switchToApp(next);
+	}
+	
 	public void setStyle(MyAppContainerStyle style)
 	{
 		this.style = style;
