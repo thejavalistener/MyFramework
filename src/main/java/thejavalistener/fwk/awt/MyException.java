@@ -1,5 +1,6 @@
 package thejavalistener.fwk.awt;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
@@ -48,6 +49,19 @@ public class MyException extends Exception
 		if( f.get() )
 		{
 			throw new RuntimeException(mssg);
+		}
+	}
+	
+	public static boolean tryCatch(Runnable r)
+	{
+		try
+		{
+			r.run();
+			return true;
+		}
+		catch(Exception ex)
+		{
+			return false;
 		}
 	}
 }

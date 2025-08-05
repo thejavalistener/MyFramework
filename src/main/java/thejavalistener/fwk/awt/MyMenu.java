@@ -93,12 +93,18 @@ public class MyMenu
                 {
                     JMenuItem item = new JMenuItem(name);
 
+//                    String iconPath = icons.get(name);
+//                    if (iconPath != null)
+//                    {
+//                        item.setIcon(new ImageIcon(iconPath));
+//                    }
                     String iconPath = icons.get(name);
                     if (iconPath != null)
                     {
-                        item.setIcon(new ImageIcon(iconPath));
+                        ImageIcon originalIcon = new ImageIcon(iconPath);
+                        Image scaledImage = originalIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH); // tamaño estándar
+                        item.setIcon(new ImageIcon(scaledImage));
                     }
-
                     parent.add(item);
 
                     ActionListener itemListener = listeners.get(name);
@@ -162,14 +168,14 @@ public class MyMenu
         JButton button = new JButton("Mostrar Menú con íconos");
         MyMenu menu = new MyMenu();
 
-        menu.addItem("/Archivo/Abrir", "C:/icons/open.png", e -> System.out.println("Abrir"));
-        menu.addItem("/Archivo/Guardar", "C:/icons/save.png", e -> System.out.println("Guardar"));
+        menu.addItem("/Archivo/Abrir", "a.png", e -> System.out.println("Abrir"));
+        menu.addItem("/Archivo/Guardar", "b.png", e -> System.out.println("Guardar"));
         menu.addItem("/Archivo/-----", null);
         menu.addItem("/Archivo/Salir", e -> System.exit(0));
         menu.addItem("/Edición/Deshacer", e -> System.out.println("Deshacer"));
         menu.addItem("/Edición/-----", null);
         menu.addItem("/Edición/Copiar", "/Java64/Workspace/MyJavaMusicLibrary/imagenes/roles/piano.png", e -> System.out.println("Copiar"));
-        menu.addItem("/Edición/Pegar", "C:/icons/paste.png", e -> System.out.println("Pegar"));
+        menu.addItem("/Edición/Pegar", "d.png", e -> System.out.println("Pegar"));
 
         button.addActionListener(e -> menu.show(button, 1, 10, 0)); // 1: derecha
 

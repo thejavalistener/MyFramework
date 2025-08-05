@@ -37,19 +37,23 @@ public class MyTabbedPane
 		setListenerWorking(working);
 	}
 	
-	public void setListenerWorking(boolean b)
+	public boolean setListenerWorking(boolean b)
 	{
+		boolean ret = listener!=null;
+		
 		if( listener!=null )
 		{
 			if( !b )
 			{
-				tabbedPane.removeChangeListener(listener);			
+				tabbedPane.removeChangeListener(listener);
 			}
 			else
 			{
 				tabbedPane.addChangeListener(listener);						
 			}
 		}
+		
+		return ret;
 	}
 
 	public void addTab(String title, Component component,boolean closeable)
@@ -108,6 +112,11 @@ public class MyTabbedPane
 		tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(component),pestania);
 		tabbedPane.setSelectedComponent(component);
 		
+	}
+	
+	public int getSelectedIndex() 
+	{
+		return tabbedPane.getSelectedIndex();
 	}
 
 	class EscuchaSelect implements ChangeListener

@@ -23,4 +23,9 @@ public class MyMap<K,V> extends LinkedHashMap<K,V>
 	{
 		return new ArrayList<>(keySet());
 	}
+	
+	public V getByIndex(int idx)
+	{
+		return get(keys().get(idx));
+	}
 }

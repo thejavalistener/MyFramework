@@ -123,6 +123,11 @@ public class MyInstantApp
 	}
 	
 	public void addScreenPanel(String label,Class<? extends MyInstantAppScreen> panelClazz)
+	{
+		addScreenPanel(label,panelClazz,false);
+	}
+	
+	public void addScreenPanel(String label,Class<? extends MyInstantAppScreen> panelClazz,boolean selected)
 	{	
 		try
 		{
@@ -140,6 +145,13 @@ public class MyInstantApp
 			
 			screens.add((MyInstantAppScreen)panel);			
 			tabbedPane.addTab(label,panel,false);
+			
+			int currSelected = tabbedPane.getSelectedIndex();
+			if( !selected )
+			{
+				tabbedPane.setSelectedTab(currSelected);
+			}
+			
 			
 		}
 		catch(ClassCastException e)
@@ -209,10 +221,21 @@ public class MyInstantApp
 	public void setSelected(Class<? extends MyInstantAppScreen> clazz)
 	{
 		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
+
 		int pos = MyCollection.findPos(screens,clazz,(s,c)->s.getClass().equals(c));
+		
 		tabbedPane.setSelectedTab(pos);
 		currScreenIdx = pos;
 	}
+	
+//	public void setDefaultSelectedTab(Class<? extends MyInstantAppScreen> clazz)
+//	{
+//		boolean curr = tabbedPane.setListenerWorking(false);
+//
+//		setSelected(clazz);
+//		
+//		tabbedPane.setListenerWorking(curr);
+//	}
 	
 	
 	public JDialog getDialog()
