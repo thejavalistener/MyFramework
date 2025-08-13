@@ -1,7 +1,5 @@
 package thejavalistener.fwk.frontend.hql.screen.instantapp;
 
-import java.util.Map;
-
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.panel.MyBorderLayout;
 

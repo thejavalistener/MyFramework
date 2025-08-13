@@ -1,6 +1,8 @@
 package thejavalistener.fwk.awt.table;
 
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -81,6 +85,31 @@ public class MyTable<T>
 		jTable.getSelectionModel().addListSelectionListener(new EscuchaTable());
 		
 		jTable.setBorder(null);
+		
+		jTable.getActionMap().put("copyRow", new EscuchaCopy());
+	
+	}
+	
+	class EscuchaCopy extends AbstractAction{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			int row = jTable.getSelectedRow();
+	        if (row >= 0) {
+	            StringBuilder sb = new StringBuilder();
+	            for (int col = 0; col < jTable.getColumnCount(); col++) {
+	                Object value = jTable.getValueAt(row, col);
+	                sb.append(value != null ? value.toString() : "").append("\t");
+	            }
+	            String rowText = sb.toString().trim();
+	            Toolkit.getDefaultToolkit().getSystemClipboard()
+	                   .setContents(new StringSelection(rowText), null);
+	            System.out.println("Fila copiada: " + rowText);
+	        }
+		}
+		
+		
 	}
 
 	public MyTable<T> headers(Object... headers)

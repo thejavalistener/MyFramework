@@ -49,6 +49,12 @@ public class MyColor
 		return String.format("#%02X%02X%02X",r,g,b);
 	}
 	
+	public static String toHexColor(int r, int g, int b,boolean without0x)
+	{
+		String x = toHexColor(r,g,b);
+		return without0x?x.substring(2):x;
+	}
+	
 	public static String toHexColor(int r, int g, int b)
 	{
 		return String.format("0x%02X%02X%02X",r,g,b);

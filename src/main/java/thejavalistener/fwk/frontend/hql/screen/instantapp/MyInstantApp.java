@@ -212,12 +212,6 @@ public class MyInstantApp
 		dialog.setVisible(true);
 	}
 	
-//	public void setSelected(int i)
-//	{
-//		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
-//		tabbedPane.setSelectedTab(i);
-//	}
-	
 	public void setSelected(Class<? extends MyInstantAppScreen> clazz)
 	{
 		MyException.throwIf(()->!inited,"Primero debes invocar al método init sobre la instancias de MyInstantApp");		
@@ -227,16 +221,6 @@ public class MyInstantApp
 		tabbedPane.setSelectedTab(pos);
 		currScreenIdx = pos;
 	}
-	
-//	public void setDefaultSelectedTab(Class<? extends MyInstantAppScreen> clazz)
-//	{
-//		boolean curr = tabbedPane.setListenerWorking(false);
-//
-//		setSelected(clazz);
-//		
-//		tabbedPane.setListenerWorking(curr);
-//	}
-	
 	
 	public JDialog getDialog()
 	{
@@ -258,17 +242,19 @@ public class MyInstantApp
 			{
 				MyInstantAppScreen curr = screens.get(currScreenIdx);
 				
-				if( !curr.stop() )
+				if( curr.getState()==MyInstantAppScreen.STARTED && !curr.stop() )
 				{
 					tabbedPane.setListenerWorking(false);
 					tabbedPane.setSelectedTab(currScreenIdx);
 					tabbedPane.setListenerWorking(true);
+					curr.setState(MyInstantAppScreen.STOPPED);
 				}
 				else
 				{
 					currScreenIdx = tabbedPane.c().getSelectedIndex();
 					curr = screens.get(currScreenIdx);
 					curr.start();
+					curr.setState(MyInstantAppScreen.STARTED);
 				}
 			}
 		}

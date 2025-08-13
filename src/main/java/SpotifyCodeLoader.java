@@ -10,6 +10,7 @@ public class SpotifyCodeLoader extends JFrame {
     private JTextField uriField;
     private JLabel imageLabel;
 
+
     public SpotifyCodeLoader() {
         setTitle("Visualizador de Spotify Code");
         setSize(500, 550);
@@ -33,7 +34,7 @@ public class SpotifyCodeLoader extends JFrame {
             String uri = uriField.getText().trim();
             try {
                 String encodedUri = java.net.URLEncoder.encode(uri, "UTF-8");
-                String url = "https://scannables.scdn.co/uri/plain/png/000000/white/640/" + encodedUri;
+                String url = "https://scannables.scdn.co/uri/plain/png/000000/white/280/" + encodedUri;
                 BufferedImage image = ImageIO.read(new URL(url));
                 imageLabel.setIcon(new ImageIcon(image));
             } catch (IOException ex) {
