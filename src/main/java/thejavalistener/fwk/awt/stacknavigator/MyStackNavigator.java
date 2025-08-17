@@ -1,6 +1,5 @@
 package thejavalistener.fwk.awt.stacknavigator;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

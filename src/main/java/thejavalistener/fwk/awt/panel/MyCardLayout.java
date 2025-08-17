@@ -13,6 +13,7 @@ public class MyCardLayout
 	public MyCardLayout()
 	{
 		cardPanel = new MyPanel(0,0,0,0);
+		cardPanel.setBorder(null);
 		cardPanel.setLayout(cardLayout = new CardLayout());
 	}
 	
@@ -45,4 +46,7 @@ public class MyCardLayout
 		Component c = cardPanel.getComponent(idx);
 		cardLayout.removeLayoutComponent(c);
 	}
-}
+
+	public void toggleNext() {
+		cardLayout.next(cardPanel);
+	}}
