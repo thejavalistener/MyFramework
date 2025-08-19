@@ -27,6 +27,7 @@ public class MyApp
 	
 	private int state;
 	
+	private MyAppListener listener;
 	
 	private String appName = null;
 	private MyAppContainer appContainer = null;
@@ -44,6 +45,11 @@ public class MyApp
 		screens.setSeparatorBeforeLinks('»');
 		screens.setActionListener(new EscuchaScreens());
 		this.appName = appName;
+	}
+	
+	public void setAppListener(MyAppListener listener)
+	{
+		this.listener = listener;
 	}
 	
 	public void showScreens(boolean b)
@@ -217,6 +223,11 @@ public class MyApp
 		while( getScreenCount()>0 )
 		{
 			popScreen();
+		}
+		
+		if( listener!=null )
+		{
+			listener.appDestroyed(this);
 		}
 	}
 	

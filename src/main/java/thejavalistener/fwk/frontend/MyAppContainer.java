@@ -12,7 +12,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -228,11 +232,23 @@ public class MyAppContainer
 		
 	public void createApp(String appName,Class<? extends MyAbstractScreen> mainScreenClass)
 	{
+		createApp(appName,mainScreenClass,null);
+	}
+	
+	public void createApp(String appName,Class<? extends MyAbstractScreen> mainScreenClass,Class<? extends MyAppListener> listenerClass)
+	{		
 		// creo la aplicacion y la agrego al linkedPane de aplicaciones
 		MyApp app = ctx.getBean(MyApp.class,appName);
-
-		// ESTA LINEA ESTABA.....
 		app.setMyAppContainer(this);
+
+		if( listenerClass!=null )
+		{
+			MyAppListener listener= ctx.getBean(listenerClass);
+			app.setAppListener(listener);
+			listener.appInited(app);
+		}
+		
+		
 		
 		app.pushScreen(mainScreenClass);
 
@@ -322,27 +338,32 @@ public class MyAppContainer
 		@Override
 		public void windowClosing(WindowEvent e)
 		{
-			for(int i=0; i<getMyAppCount(); i++)
-			{
-				MyApp app = getMyApp(i);
-				app.destroy();
-			}
-						
-			PreparedStatement pstm = null;
-			
 			try
 			{
 				// grabo la posición de la ventana
 				properties.put(MyAppContainer.class,"bounds",jFrame.getBounds());
+				
+				for(int i=0; i<getMyAppCount(); i++)
+				{
+					MyApp app = getMyApp(i);
+					app.destroy();
+				}
+				
+				PreparedStatement pstm = null;
 				
 				// cierro la database
 				Connection con = ds.getConnection();
 				pstm = con.prepareStatement("shutdown");
 				pstm.execute();
 				
-				// cierro la ventana
-				jFrame.setVisible(false);
-				jFrame.dispose();
+				// destructores
+				List<Destroyable> lst = new ArrayList<>(ctx.getBeansOfType(Destroyable.class).values());
+				lst.sort(Comparator.comparingInt(Destroyable::getPriority));
+
+				for(Destroyable d:lst)
+				{
+					d.destroy();
+				}
 				
 				// cierro el contexto
 				if( ctx!=null )
@@ -353,6 +374,11 @@ public class MyAppContainer
 						x.close();
 					}
 				}
+												
+				// cierro la ventana
+				jFrame.setVisible(false);
+				jFrame.dispose();
+				
 
 				Thread.sleep(100);
 				System.exit(0);
@@ -363,5 +389,4 @@ public class MyAppContainer
 			}
 		}
 	}
-
 }
