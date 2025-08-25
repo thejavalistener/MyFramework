@@ -1290,4 +1290,9 @@ public class MyString
 	    String normalizado = Normalizer.normalize(s, Normalizer.Form.NFD);
 	    return normalizado.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
+
+	public static String removeSuffix(String s, String suff)
+	{
+		return s.endsWith(suff)?s.substring(0,s.lastIndexOf(suff)):s;
+	}
 }
