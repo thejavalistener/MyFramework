@@ -105,4 +105,9 @@ public abstract class MyAbstractScreen extends MyAbstractScreenBase
 	{
 		return new MyInstantForm(title,getMyApp().getMyAppContainer().c());
 	}
+	
+	public void setTitle(String title)
+	{
+		getMyApp().getMyAppContainer().c().setTitle(title);
+	}
 }
