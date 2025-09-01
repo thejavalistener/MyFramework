@@ -81,7 +81,16 @@ public class MyTable<T>
 		dataO=new ArrayList<>();
 		dataA=new ArrayList<>();
 
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		// Permitir selección múltiple
+		jTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		// Habilitar selección de filas y columnas
+		jTable.setRowSelectionAllowed(true);
+		jTable.setColumnSelectionAllowed(true);
+
+		
+//		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTable.getSelectionModel().addListSelectionListener(new EscuchaTable());
 		
 		jTable.setBorder(null);
