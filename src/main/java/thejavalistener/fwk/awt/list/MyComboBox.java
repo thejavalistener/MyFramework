@@ -1,5 +1,7 @@
 package thejavalistener.fwk.awt.list;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -7,7 +9,11 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
 
 import thejavalistener.fwk.awt.MyComponent;
 import thejavalistener.fwk.awt.MyException;
@@ -484,4 +490,5 @@ public class MyComboBox<T> implements MyComponent
 			setSpecialItem(specialItem);
 		}
 	}
+	
 }

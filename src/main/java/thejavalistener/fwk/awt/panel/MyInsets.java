@@ -10,6 +10,7 @@ public class MyInsets extends MyPanel
     {
     	super(top,left,bottom,right);
     	setLayout(new BorderLayout(0,0));
+    	setOpaque(false);
     	add(c,BorderLayout.CENTER);
     }
 }
