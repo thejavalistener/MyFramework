@@ -28,7 +28,7 @@ import thejavalistener.fwk.properties.MyProperties;
 @Component
 public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 {
-	@Autowired
+	@Autowired(required=false)
 	private MyEmailDatasourceSender emailDatasourceSender;
 	
 	@Autowired

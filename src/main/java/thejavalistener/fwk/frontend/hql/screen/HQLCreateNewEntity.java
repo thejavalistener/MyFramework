@@ -35,7 +35,7 @@ import thejavalistener.fwk.awt.textarea.MyTextField;
 import thejavalistener.fwk.frontend.MyAbstractScreen;
 import thejavalistener.fwk.frontend.messages.MyScreenMessageEvent;
 import thejavalistener.fwk.frontend.messages.MyScreenMessageListener;
-import thejavalistener.fwk.util.MyBean;
+import thejavalistener.fwk.util.MyReflection;
 import thejavalistener.fwk.util.string.MyString;
 
 @Scope("prototype")
@@ -135,7 +135,7 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 			return !esFinalOEstatico && (tieneColumn || tieneManyToOne);
 		};
 		
-		Field[] fields = MyBean.getDeclaredFields(entityClass,func);
+		Field[] fields = MyReflection.clasz.getDeclaredFields(entityClass,func);
 		for(int i=0; i<fields.length; i++)
 		{
 			Field field = fields[i];
@@ -212,13 +212,13 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 			Class<?> entityClass = cbEntities.getSelectedItem();
 			
 			Object ret = entityClass.getConstructor().newInstance();
-			Field[] fields = MyBean.getDeclaredFields(entityClass,f->f.getAnnotation(Column.class)!=null||f.getAnnotation(ManyToOne.class)!=null);
+			Field[] fields = MyReflection.clasz.getDeclaredFields(entityClass,f->f.getAnnotation(Column.class)!=null||f.getAnnotation(ManyToOne.class)!=null);
 			for(Field field:fields)
 			{
 				int idx = labels.indexOf(field.getName());
 				Object value = myComponents.get(idx).getValue();
 
-				if( MyBean.isFinalClass(field.getType()))
+				if( MyReflection.clasz.isFinalClass(field.getType()))
 				{
 					String sValue = (String)value;
 					if( sValue==null ) continue;
@@ -226,7 +226,7 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 					value = MyString.parseTo(sValue,field.getType());
 				}
 				
-				MyBean.invokeSetter(ret,field.getName(),value);					
+				MyReflection.object.invokeSetter(ret,field.getName(),value);					
 
 			}
 			
@@ -319,8 +319,8 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 				
 				returnValue = obj;
 				
-				Field fId = MyBean.getDeclaredField(obj.getClass(),Id.class);
-				Object oId = MyBean.invokeGetter(obj,fId.getName());
+				Field fId = MyReflection.clasz.getDeclaredField(obj.getClass(),Id.class);
+				Object oId = MyReflection.object.invokeGetter(obj,fId.getName());
 				String sClass = obj.getClass().getSimpleName();
 				String msg = "Se creó una instancia de "+sClass+" con "+fId.getName()+"="+oId.toString();
 				showInformationMessage(msg,"Se creó un nuevo objeto");
@@ -360,8 +360,23 @@ public class HQLCreateNewEntity extends MyAbstractScreen implements MyScreenMess
 			MyComboBox<Object> cb = (MyComboBox)myComponents.get(idx);
 			cb.setItems(items);
 			
-			cb.setSelectedItem(t->MyBean.equalsById(t,newObject));
+			cb.setSelectedItem(t->_equalsById(t,newObject));
 		}
+
+		private boolean _equalsById(Object a, Object b)
+		{
+			if(a==null&&b==null) return true;
+			if(a==null&&b!=null||a!=null&&b==null) return false;
+	
+			Field aId=MyReflection.clasz.getDeclaredField(a.getClass(),Id.class);
+			Field bId=MyReflection.clasz.getDeclaredField(b.getClass(),Id.class);
+	
+			Object aV=MyReflection.object.invokeGetter(a,aId.getName());
+			Object bV=MyReflection.object.invokeGetter(b,bId.getName());
+	
+			return aV.equals(bV);
+		}
+
 	}
 	
 	class EscuchaCancel implements ActionListener

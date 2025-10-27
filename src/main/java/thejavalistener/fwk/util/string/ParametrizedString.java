@@ -3,8 +3,7 @@ package thejavalistener.fwk.util.string;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import thejavalistener.fwk.util.MyBean;
-import thejavalistener.fwk.util.reflect.MyObject;
+import thejavalistener.fwk.util.MyReflection;
 
 public class ParametrizedString
 {
@@ -51,12 +50,12 @@ public class ParametrizedString
 		{
 			if(!x.get(0).equals("this"))
 			{
-				aux = MyBean.invokeGetter(target,x.get(0));
+				aux = MyReflection.object.invokeGetter(target,x.get(0));
 			}
 			x.remove(0);
 		}
-		
-		Object fieldValue = MyObject.invokeGetter(aux,x.get(0));
+//		Object fieldValue = MyObject.invokeGetter(aux,x.get(0));
+		Object fieldValue = MyReflection.object.invokeGetter(aux,x.get(0));
 		String ret = fieldValue!=null?fieldValue.toString():"null";
 		setParameterValue(param,ret);
 	}
@@ -75,12 +74,14 @@ public class ParametrizedString
 		{
 			if(!x.get(0).equals("this"))
 			{
-				aux = MyObject.getFieldValue(target,x.get(0));
+//				aux = MyObject.getFieldValue(target,x.get(0));				
+				aux = MyReflection.object.getFieldValue(target,x.get(0));
 			}
 			x.remove(0);
 		}
 		
-		Object val = MyObject.invokeMethod(aux,x.get(0));
+//		Object val = MyObject.invokeMethod(aux,x.get(0));
+		Object val = MyReflection.object.invokeMethod(aux,x.get(0));
 		String ret = val!=null?val.toString():"null";
 		setParameterValue(param,ret);
 	}

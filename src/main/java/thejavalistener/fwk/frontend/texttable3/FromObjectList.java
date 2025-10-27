@@ -2,7 +2,7 @@ package thejavalistener.fwk.frontend.texttable3;
 
 import java.util.List;
 
-import thejavalistener.fwk.util.MyBean;
+import thejavalistener.fwk.util.MyReflection;
 
 public class FromObjectList implements DataLoader
 {
@@ -21,7 +21,7 @@ public class FromObjectList implements DataLoader
 		
 		Object o = data.get(nextRowIdx++);
 
-		List<Object> values = MyBean.getValues(o);	
+		List<Object> values = MyReflection.object.getValues(o);	
 		
 		if( values.size()==0 )
 		{
@@ -43,7 +43,7 @@ public class FromObjectList implements DataLoader
 	{
 		if( data.size()>0 )
 		{
-			List<String> atts = MyBean.getAttributes(data.get(0));
+			List<String> atts = MyReflection.clasz.getAttributes(data.get(0).getClass());
 			if(atts.size()==0) atts.add("c1");
 			String[] ret = new String[atts.size()];
 			int i=0;

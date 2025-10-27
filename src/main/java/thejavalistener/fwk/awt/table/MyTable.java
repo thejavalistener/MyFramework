@@ -26,7 +26,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import thejavalistener.fwk.util.MyBean;
+import thejavalistener.fwk.util.MyReflection;
 
 public class MyTable<T>
 {
@@ -40,8 +40,8 @@ public class MyTable<T>
 	public ListSelectionListener listSelectionListener;
 	public ActionListener actionListener;
 
-	private Function<T,Object[]> beanToObjectArrayPolicy = (o)->MyBean.getValues(o).toArray();
-	private Function<Class<?>,Object[]> beanClassToHeaderPolicy = (c)->MyBean.isFinalClass(c)?new Object[]{c.getSimpleName()}:MyBean.getAttributes(c).toArray();
+	private Function<T,Object[]> beanToObjectArrayPolicy = (o)->MyReflection.object.getValues(o).toArray();
+	private Function<Class<?>,Object[]> beanClassToHeaderPolicy = (c)->MyReflection.clasz.isFinalClass(c)?new Object[]{c.getSimpleName()}:MyReflection.clasz.getAttributes(c).toArray();
 	
 	private boolean hayHeaders = false;
 	private  boolean autoSortable = true;
@@ -152,7 +152,7 @@ public class MyTable<T>
 
 		dataO.add(obj);
 		
-		if( !MyBean.isFinalClass(obj.getClass()))
+		if( !MyReflection.clasz.isFinalClass(obj.getClass()))
 		{
 			addRow(beanToObjectArrayPolicy.apply(obj));			
 		}
@@ -228,7 +228,7 @@ public class MyTable<T>
 			}
 			
 			// List<Bean>
-			if( !MyBean.isFinalClass(lst.get(0).getClass()) && !(lst.get(0) instanceof List) ) 
+			if( !MyReflection.clasz.isFinalClass(lst.get(0).getClass()) && !(lst.get(0) instanceof List) ) 
 			{
 //				for(Object o:lst) addRow(beanToObjectArrayPolicy.apply((T)o) );
 				
@@ -241,7 +241,7 @@ public class MyTable<T>
 			}
 
 			// List<ObjFinal>
-			if( MyBean.isFinalClass(lst.get(0).getClass()) ) 
+			if( MyReflection.clasz.isFinalClass(lst.get(0).getClass()) ) 
 			{
 				headers(new Object[]{lst.get(0).getClass().getSimpleName()});
 				for(Object o:lst) addRow(o);

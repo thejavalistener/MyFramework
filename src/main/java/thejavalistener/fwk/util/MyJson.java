@@ -34,7 +34,7 @@ public class MyJson
         
         
         // Deserializa el objeto usando la información del tipo
-        Class<?> clazz = MyBean.forName(className);
+        Class<?> clazz = MyReflection.clasz.forName(className);
         T deserializedObject = (T)gson.fromJson(data, clazz);
 		
 		return deserializedObject;

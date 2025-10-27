@@ -1,22 +1,11 @@
 package thejavalistener.fwk.frontend;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.util.Map;
-
-import javax.swing.JOptionPane;
 
 import org.springframework.stereotype.Component;
 
-import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.console.MyConsole;
 import thejavalistener.fwk.console.MyConsoleListener;
-import thejavalistener.fwk.util.MyLog;
-import thejavalistener.fwk.util.MyThread;
 
 @Component
 public abstract class ScreenConsoleTemplate extends MyAbstractScreen

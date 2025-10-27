@@ -127,12 +127,10 @@ public class MyProperties
 	public <T> T get(String name)
 	{
 		String pkg = getClass().getPackageName();
-//		String sql = "SELECT p.value FROM "+pkg+".MyFrameworkProperty p WHERE p.name=:name ";
 		String sql = "SELECT p.value FROM "+pkg+".MyFrameworkProperty p WHERE p.name='"+name+"' ";
 		MyLog.println("name="+name);
 		MyLog.println(sql);
 		
-//		String jsonString = querySingleRow(sql,"name");
 		String jsonString = daoSupport.querySingleRow(sql);
 		
 		if( jsonString==null )
