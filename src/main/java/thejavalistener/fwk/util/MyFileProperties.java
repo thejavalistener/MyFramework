@@ -428,5 +428,80 @@ public class MyFileProperties
 			return "Persona [nombre="+nombre+", direccion="+direccion+", dni="+dni+"]";
 		}
 	}
+	
+	// -----------------------------------------------------------
+	// Obtención de keys por dominio
+	// -----------------------------------------------------------
+	public List<String> getAllKeys(String domain)
+	{
+	    List<String> result = new ArrayList<>();
+	    if (properties == null || properties.isEmpty())
+	        return result;
+
+	    // Normaliza el dominio: si no termina en ".", se lo agrega
+	    String prefix = (domain == null || domain.isEmpty()) ? "" : domain;
+	    if (!prefix.isEmpty() && !prefix.endsWith(".")) {
+	        prefix += ".";
+	    }
+
+	    for (String key : properties.stringPropertyNames()) {
+	        if (key.startsWith(prefix)) {
+	            result.add(key);
+	        }
+	    }
+
+	    return result;
+	}
+	
+	public List<Object> getAllValues()
+	{
+		return _getValues(getAllKeys());
+	}
+	
+	public List<Object> getAllValues(String domain)
+	{
+		return _getValues(getAllKeys(domain));
+	}
+	
+	public List<Pair> getAll(String domain)
+	{
+		return _getAll(getAllKeys(domain));
+	}
+	public List<Pair> getAll()
+	{
+		return _getAll(getAllKeys());
+	}
+	
+	public List<Pair> _getAll(List<String> keys)
+	{
+		List<Pair> ret = new ArrayList<>();
+		for(String k:keys)
+		{
+			ret.add(new Pair(k,getObject(k)));
+		}
+		
+		return ret;		
+	}
+	
+	private List<Object> _getValues(List<String> keys)
+	{
+		List<Object> ret = new ArrayList<>();
+		for(String k:keys)
+		{
+			ret.add(getObject(k));
+		}
+		
+		return ret;
+	}
+
+
+	// -----------------------------------------------------------
+	// Sobrecarga sin parámetros: devuelve todas las claves
+	// -----------------------------------------------------------
+	public List<String> getAllKeys()
+	{
+	    return new ArrayList<>(properties.stringPropertyNames());
+	}
+
 
 }
