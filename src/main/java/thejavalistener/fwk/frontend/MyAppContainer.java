@@ -13,7 +13,6 @@ import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -32,15 +31,14 @@ import org.springframework.stereotype.Component;
 import thejavalistener.fwk.awt.MyAwt;
 import thejavalistener.fwk.awt.link.MyLink;
 import thejavalistener.fwk.awt.link.MyLinkedPane;
-import thejavalistener.fwk.properties.MyProperties;
+import thejavalistener.fwk.util.MyFileProperties;
 import thejavalistener.fwk.util.hotkey.KeyIdentifier;
 
 @Component
 public class MyAppContainer
 {
 	@Autowired
-	private MyProperties properties;
-	
+	private MyFileProperties properties;
 	
 	@Autowired
 	private ApplicationContext ctx;
@@ -214,7 +212,7 @@ public class MyAppContainer
 	
 	private void _resizeFrame(Double porc,JFrame jFrame)
 	{
-		Rectangle bounds = properties.get(MyAppContainer.class,"bounds");
+		Rectangle bounds = properties.getObject("myappcontainer.bounds");
 		
 		if( bounds==null )
 		{
@@ -346,7 +344,7 @@ public class MyAppContainer
 			try
 			{
 				// grabo la posición de la ventana
-				properties.put(MyAppContainer.class,"bounds",jFrame.getBounds());
+				properties.putObject("myappcontainer.bounds",jFrame.getBounds());
 				
 				for(int i=0; i<getMyAppCount(); i++)
 				{

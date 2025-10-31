@@ -18,42 +18,52 @@ public class MyJson
 		
 		return gson.toJson(jsonObject);
 	}
-	
+		
+	@SuppressWarnings("unchecked")
 	public static <T> T fromJson(String jsonString)
 	{
-        Gson gson = new GsonBuilder().create();
-		
-//		JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
-//        String className = jsonObject.get("type").getAsString();
-//        JsonElement data = jsonObject.getAsJsonObject("data");
+	    if (jsonString == null) return null;
 
-        JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
-        String className = jsonObject.get("type").getAsString();
-        JsonElement data = jsonObject.get("data");
+	    Gson gson = new GsonBuilder().create();
+	    JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
 
-        
-        
-        // Deserializa el objeto usando la información del tipo
-        Class<?> clazz = MyReflection.clasz.forName(className);
-        T deserializedObject = (T)gson.fromJson(data, clazz);
-		
-		return deserializedObject;
-	}
-	
+	    String className = jsonObject.get("type").getAsString();
+	    JsonElement data = jsonObject.get("data");
 
-	public static void main(String[] args)
-	{
-		Persona p = new Persona();
-		p.setDni(22);
-		p.setNombre("popo");
-		String json = MyJson.toJson(p);
-		
-		
-		
-		System.out.println(json);
-		
-		Persona x = MyJson.fromJson(json);
-		System.out.println(x);
+	    try
+	    {
+	        Class<?> clazz = Class.forName(className);
+
+	     // --- Caso especial: Class ---
+	        if (clazz.equals(Class.class)) {
+	            String innerName = data.getAsString();
+	            return (T) Class.forName(innerName);
+	        }
+
+	        
+	        // 🔹 Normalizar tipos problemáticos (List.of, Map.of, etc.)
+	        if (clazz.getName().startsWith("java.util.ImmutableCollections$List"))
+	        {
+	            return (T) gson.fromJson(data, java.util.ArrayList.class);
+	        }
+	        else if (clazz.getName().startsWith("java.util.ImmutableCollections$Map"))
+	        {
+	            return (T) gson.fromJson(data, java.util.LinkedHashMap.class);
+	        }
+	        else if (clazz.getName().startsWith("java.util.ImmutableCollections$Set"))
+	        {
+	            return (T) gson.fromJson(data, java.util.LinkedHashSet.class);
+	        }
+	        else
+	        {
+	            // 🔹 Tipo normal
+	            return (T) gson.fromJson(data, clazz);
+	        }
+	    }
+	    catch (ClassNotFoundException e)
+	    {
+	        throw new RuntimeException("Clase no encontrada: " + className, e);
+	    }
 	}
 	
 }

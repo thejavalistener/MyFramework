@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import thejavalistener.fwk.awt.MyAwt;
@@ -17,37 +15,26 @@ import thejavalistener.fwk.awt.dialog.Returnable;
 import thejavalistener.fwk.awt.panel.MyPanel;
 import thejavalistener.fwk.awt.searchbox.MySearchBox;
 import thejavalistener.fwk.awt.searchbox.MySearchBoxController;
-import thejavalistener.fwk.backend.email.MyEmailController;
-import thejavalistener.fwk.backend.email.MyEmailControllerBasicImple;
-import thejavalistener.fwk.backend.email.MyEmailDatasource;
-import thejavalistener.fwk.backend.email.MyEmailDatasourceSender;
 import thejavalistener.fwk.frontend.messages.MyScreenMessageExchange;
 import thejavalistener.fwk.frontend.messages.MyScreenValuesExchange;
-import thejavalistener.fwk.properties.MyProperties;
+import thejavalistener.fwk.util.MyFileProperties;
 
 @Component
 public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 {
-	@Autowired(required=false)
-	private MyEmailDatasourceSender emailDatasourceSender;
-	
 	@Autowired
 	private MyScreenValuesExchange values;
 	
 	@Autowired
 	private MyScreenMessageExchange messages;
-	
+		
 	@Autowired
-	private JavaMailSender javaMailSender;
-	
-	@Autowired
-	private MyProperties properties;
+	private MyFileProperties properties;
 	
 	private MyApp myApp = null;
 	
 	public Object returnValue;
 	public MyDialog myDialog;
-	
 	
 	public MyDialog getMyDialog()
 	{
@@ -64,7 +51,7 @@ public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 		return returnValue;
 	}
 
-	public MyProperties getProperties()
+	public MyFileProperties getProperties()
 	{
 		return properties;
 	}
@@ -146,20 +133,20 @@ public abstract class MyAbstractScreenBase extends MyPanel implements Returnable
 		return values.removeValueFrom(getOuter(),sender,valName);
 	}
 	
-	public void sendEmail(SimpleMailMessage smm)
-	{
-		javaMailSender.send(smm);
-	}
+//	public void sendEmail(SimpleMailMessage smm)
+//	{
+//		javaMailSender.send(smm);
+//	}
+//	
+//	public void sendEmails(MyEmailDatasource dataSource)
+//	{
+//		emailDatasourceSender.sendEmails(dataSource,new MyEmailControllerBasicImple());
+//	}
+//	public void sendEmails(MyEmailDatasource dataSource,MyEmailController controller)
+//	{
+//		emailDatasourceSender.sendEmails(dataSource,controller);
+//	}
 	
-	public void sendEmails(MyEmailDatasource dataSource)
-	{
-		emailDatasourceSender.sendEmails(dataSource,new MyEmailControllerBasicImple());
-	}
-	public void sendEmails(MyEmailDatasource dataSource,MyEmailController controller)
-	{
-		emailDatasourceSender.sendEmails(dataSource,controller);
-	}
-
 	public <T> MySearchBox<T> createSearchBox(Class<T> clazz,MySearchBoxController<T> controller)
 	{
 		// parent

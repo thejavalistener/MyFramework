@@ -78,9 +78,10 @@ public class HQLScreen extends MyAbstractScreen
 		splitPane = new MySplitPane(MySplitPane.VERTICAL,scrollSQL,tpResultados.c());
 		
 		String pkg = getClass().getName();
-		Integer dividerLocation = getProperties().discover(pkg+".dividerLocation",200);
+		
+		Integer dividerLocation = getProperties().putObjectIfAbsent(pkg+".dividerLocation",200);
 		splitPane.setDividerLocation(dividerLocation);
-		splitPane.setMySplitePaneListener(i->getProperties().put(pkg+".dividerLocation",(Integer)i));
+		splitPane.setMySplitePaneListener(i->getProperties().putObject(pkg+".dividerLocation",(Integer)i));
 		splitPane.setDividerSize(1);
 
 		JPanel pCenter = new JPanel(new BorderLayout());
@@ -177,7 +178,7 @@ public class HQLScreen extends MyAbstractScreen
 	@Override
 	public void init()
 	{
-		String txt = getProperties().getString(getClass(),"console");
+		String txt = getProperties().getString("hqlscreen.console");
 		taSQL.setText(MyString.ifNull(txt,""));
 	}
 	
@@ -190,7 +191,7 @@ public class HQLScreen extends MyAbstractScreen
 	private void _saveConsola()
 	{
 		String txt = taSQL.getText();
-		getProperties().putString(getClass(),"console",txt);		
+		getProperties().putString("hqlscreen.console",txt);		
 	}
 	
 	@Override
